@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+  # name: Source Block
+  # key: src-lisp
+# --
+
+ #+BEGIN_SRC ${0:Language}
+  $0
+ #+END_SRC
