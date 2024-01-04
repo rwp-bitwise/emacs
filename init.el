@@ -13,7 +13,7 @@
 
 (use-package corfu
   :custom
-    (corfu-auto t)
+    (corfu-xdauto t)
     (corfu-auto-delay 0.0)
     (corfu-quit-at-boundary 'seperator)
     (corfu-echo-documentation 0.25)
@@ -29,8 +29,6 @@
     :init)
 
 
-(adaptive-wrap-prefix-mode)
-(global-visual-line-mode +1)
 
 (global-flycheck-mode)
 (global-company-mode)
@@ -93,7 +91,6 @@
 
 (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
 (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
-
 (add-hook 'python-mode-hook
   (lambda () (setq indent-tabs-mode t)))  
 (setq tab-width 2)
@@ -105,6 +102,9 @@
 (load-theme 'alect-dark t)
 (tool-bar-mode -1)
 (osx-clipboard-mode +1)
+(adaptive-wrap-prefix-mode)
+(global-visual-line-mode +1)
+(yas-global-mode t)
 
  
 ;;
@@ -113,10 +113,10 @@
 (use-package org
   :config
   (setq org-agenda-start-wirh-log-mode t
-	org-log-done 'time
-	org-hide-leading-stars t
-  org-startup-folded t
-  org-indent-mode t))
+	  org-log-done 'time
+	  org-hide-leading-stars t
+    ;;org-startup-folded t
+    org-indent-mode t))
 
 ;;
 ;; Function to fold all DONE items
