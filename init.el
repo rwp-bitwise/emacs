@@ -82,17 +82,6 @@
   :config
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
   (yas-global-mode 1))
-
-(defun yas/org-very-safe-expand ()
-  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
-  
-(add-hook 'org-mode-hook
-          (lambda ()
-            (make-variable-buffer-local 'yas/trigger-key)
-            (setq yas/trigger-key [tab])
-            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-            (define-key yas/keymap [tab] 'yas/next-field)))
-
  
 (global-flycheck-mode)
 (global-company-mode)
@@ -126,12 +115,14 @@
 ;; Org mode settings
 ;;
 (use-package org
+  :mode (("\\.org$" . org-mode))
+  :ensure org)
   :config
-  (setq org-agenda-start-wirh-log-mode t
-	  org-log-done 'time
-	  org-hide-leading-stars t
-    ;;org-startup-folded t
-    org-indent-mode t))
+(setq org-agenda-start-with-log-mode t
+      org-log-done 'time
+			org-hide-leading-stars t
+;;org-startup-folded t
+      org-indent-mode t)
 
 ;;
 ;; Set default frame size based on display resolution
