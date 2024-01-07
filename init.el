@@ -33,12 +33,12 @@
  '(ac-ispell-fuzzy-limit 4)
  '(ac-ispell-requires 4)
  '(org-agenda-files
-   '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
+  '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
  '(package-archives
-   '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa" . "https://melpa.org/packages/")))
+  '(("gnu" . "https://elpa.gnu.org/packages/")
+    ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+  '(mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
 ;(package-initialize)
 (custom-set-faces
@@ -61,6 +61,9 @@
   :init
   (elpy-enable))
 
+;;
+;; Completion with pop-ups
+;;
 (use-package corfu
   :custom
     (corfu-xdauto t)
@@ -82,13 +85,26 @@
   :config
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
   (yas-global-mode 1))
- 
+
+;;
+;; Org mode settings
+;;
+(use-package org
+  :mode (("\\.org$" . org-mode))
+  :ensure org
+  :config
+  (setq
+      org-log-done 'time
+			org-hide-leading-stars t
+      org-indent-mode t
+      org-agenda-start-with-log-mode t))
+
+;;(use-package mu4easy-mode)
+;;(setq mu4e-mu-binary (executable-find "mu"))
+    
 (global-flycheck-mode)
 (global-company-mode)
 (global-corfu-mode)
-
-;; Completion words longer than 4 characters
-
 
 (eval-after-load "auto-complete"
   '(progn
@@ -110,19 +126,6 @@
 (adaptive-wrap-prefix-mode)
 (global-visual-line-mode +1)
 
-
-;;
-;; Org mode settings
-;;
-(use-package org
-  :mode (("\\.org$" . org-mode))
-  :ensure org)
-  :config
-(setq org-agenda-start-with-log-mode t
-      org-log-done 'time
-			org-hide-leading-stars t
-;;org-startup-folded t
-      org-indent-mode t)
 
 ;;
 ;; Set default frame size based on display resolution
@@ -152,4 +155,5 @@
 (setq-default tab-width 2)
 (setq indent-line-function 'insert-tab)
 
+(server-start)
 

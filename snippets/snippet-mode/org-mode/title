@@ -5,3 +5,5 @@
   #+TITLE: ${1:title}
   #+DATE: \date
   #+BIND: org-latex-prefer-user-labels t
+
+  
