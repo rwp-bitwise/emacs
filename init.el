@@ -95,13 +95,13 @@
   :config
   (setq
       org-log-done 'time
-			org-hide-leading-stars t
+			org-hide-leading-stars t 
       org-indent-mode t
       org-agenda-start-with-log-mode t))
 
 ;;(use-package mu4easy-mode)
 ;;(setq mu4e-mu-binary (executable-find "mu"))
-    
+
 (global-flycheck-mode)
 (global-company-mode)
 (global-corfu-mode)
