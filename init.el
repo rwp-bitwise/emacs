@@ -1,11 +1,19 @@
 (require 'package)
 
+(use-package use-package-ensure-system-package
+      :ensure t)
 
+(use-package vterm
+    :ensure t
+    :ensure-system-package libtool-bin)
+
+;; Makesure libtool, libtool-bin, and cmake are installed
 ;; Declare packages
 (setq my-packages
-      '(cider
-        projectile
-        clojure-mode
+      '(
+				adaptive-wrap
+				osx-clipboard
+				alect-themes
         expand-region
         helm
         jinja2-mode
@@ -14,9 +22,8 @@
         paredit
         wrap-region
         yaml-mode
-	      elpy
-        vterm
         yasnippet
+        vterm
         json-mode))
 
 ;; Iterate on packages and install missing ones
