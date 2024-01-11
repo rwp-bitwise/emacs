@@ -3,10 +3,6 @@
 (use-package use-package-ensure-system-package
       :ensure t)
 
-(use-package vterm
-    :ensure t
-    :ensure-system-package libtool-bin)
-
 ;; Makesure libtool, libtool-bin, and cmake are installed
 ;; Declare packages
 (setq my-packages
