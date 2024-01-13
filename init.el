@@ -3,34 +3,93 @@
 
 ;;; Code:
 
-(use-package use-package-ensure-system-package
-      :ensure t)
+;; first, declare repositories
+(setq package-archives
+	'(("gnu" . "http://elpa.gnu.org/packages/")
+    ("marmalade" . "http://marmalade-repo.org/packages/")
+    ("melpa" . "http://melpa.org/packages/")))
 
-;; Makesure libtool, libtool-bin, and cmake are installed
-;; Declare packages
-(defvar my-packages
-      '(
-	adaptive-wrap
-	osx-clipboard
-	alect-themes
-        expand-region
-        helm
-        jinja2-mode
-        magit
-        markdown-mode
-        paredit
-        wrap-region
-        yaml-mode
-        yasnippet
-        vterm
-        org-bullets
-        adaptive-wrap
-        json-mode))
+(use-package use-package-ensure-system-package
+  :ensure t)
+
+(use-package org-bullets
+	:hook (org-mode . org-bullets-mode))
+
+
+(use-package elpy
+  :ensure t
+  :init
+  (elpy-enable))
+
+;;
+;; Completion with pop-ups
+;;
+(use-package corfu
+  :custom
+    (corfu-xdauto t)
+    (corfu-auto-delay 0.0)
+    (corfu-quit-at-boundary 'seperator)
+    (corfu-echo-documentation 0.25)
+    (corfu-preview-current 'insert)
+    (corfu-preselect-first nil)
+
+    :bind (:map corfu-map
+                ("M-SPC" . corfu-insert-seperator)
+                ("RET"   . nil)
+                ("TAB"   . corfu-next)
+                ("S-TAB" . corfu-previous)
+                ("S-<return>" . corfu-insert))
+    :init)
+
+(use-package yasnippet
+  :config
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+  (yas-global-mode 1))
+  
+;;
+;; Org mode settings
+;;
+(use-package org
+  :mode (("\\.org$" . org-mode))
+  :ensure org
+  :config
+  (setq
+      org-log-done 'time
+			org-hide-leading-stars t
+      org-startup-indented t
+			org-hide-emphasis-markers t))
+
+(font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+;;(use-package org-bullets
+;;    :config
+;;    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+;; ;; Makesure libtool, libtool-bin, and cmake are installed
+;; ;; Declare packages
+;; (defvar my-packages
+;;       '(adaptive-wrap
+;; 				osx-clipboard
+;; 				alect-themes
+;;         expand-region
+;;         helm
+;;         jinja2-mode
+;;         magit
+;;         markdown-mode
+;;         paredit
+;;         wrap-region
+;;         yaml-mode
+;;         yasnippet
+;;         vterm
+;;         adaptive-wrap
+;;         json-mode))
 
 ;; Iterate on packages and install missing ones
-(dolist (pkg my-packages)
-  (unless (package-installed-p pkg)
-    (package-install pkg)))
+;;(dolist (pkg my-packages)
+;;  (unless (package-installed-p pkg)
+;;    (package-install pkg)))
 
 
 (custom-set-variables
@@ -64,65 +123,6 @@
  '(org-level-7 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande"))))
  '(org-level-8 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande")))))
 
-; first, declare repositories
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("marmalade" . "http://marmalade-repo.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")))
-
-(use-package elpy
-  :ensure t
-  :init
-  (elpy-enable))
-
-;;
-;; Completion with pop-ups
-;;
-(use-package corfu
-  :custom
-    (corfu-xdauto t)
-    (corfu-auto-delay 0.0)
-    (corfu-quit-at-boundary 'seperator)
-    (corfu-echo-documentation 0.25)
-    (corfu-preview-current 'insert)
-    (corfu-preselect-first nil)
-
-    :bind (:map corfu-map
-                ("M-SPC" . corfu-insert-seperator)
-                ("RET"   . nil)
-                ("TAB"   . corfu-next)
-                ("S-TAB" . corfu-previous)
-                ("S-<return>" . corfu-insert))
-    :init)
-
-(use-package yasnippet
-  :config
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
-  (yas-global-mode 1))
-
-
-  
-;;
-;; Org mode settings
-;;
-(use-package org
-  :mode (("\\.org$" . org-mode))
-  :ensure org
-  :config
-  (setq
-      org-log-done 'time
-			org-hide-leading-stars t
-      org-startup-indented t))
-;;			org-indent-mode t))
-
-(setq org-hide-emphasis-markers t)
-(font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-(use-package org-bullets
-    :config
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
