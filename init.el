@@ -1,26 +1,18 @@
 
 (require 'package)
 
-<<<<<<< HEAD
-;;(use-package use-package-ensure-system-package
-;;      :ensure t)
-
-
-=======
-
 ;;; Code:
 
 (use-package use-package-ensure-system-package
       :ensure t)
 
->>>>>>> new-org-mode
 ;; Makesure libtool, libtool-bin, and cmake are installed
 ;; Declare packages
 (defvar my-packages
       '(
-				adaptive-wrap
-				osx-clipboard
-				alect-themes
+	adaptive-wrap
+	osx-clipboard
+	alect-themes
         expand-region
         helm
         jinja2-mode
@@ -226,12 +218,8 @@ Shamelessly bottowed from Bryan Oakley."
 (setq-default tab-width 2)
 (setq indent-line-function 'insert-tab)
 
-<<<<<<< HEAD
-;;(server-start)
-=======
 (server-start)
 (desktop-save-mode 1)
 
 ;;; init.el ends here
->>>>>>> new-org-mode
 
