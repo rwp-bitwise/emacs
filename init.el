@@ -155,9 +155,14 @@
 
 ;;; Org values for variable pitch fonts, only works when a window-system is enabled
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+<<<<<<< HEAD
 
 (when window-system
 	(let* ((variable-tuple
+=======
+(when window-system
+(let* ((variable-tuple
+>>>>>>> 8a2585b (foo)
           (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
                 ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
@@ -193,11 +198,15 @@
    '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+<<<<<<< HEAD
 	)
 
 
 ;;; Various hooks
 	
+=======
+)
+>>>>>>> 8a2585b (foo)
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
 (org-babel-do-load-languages
