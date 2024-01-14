@@ -157,9 +157,6 @@
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
 (when window-system
-	(let* ((variable-tuple
-
-(when window-system
 (let* ((variable-tuple
           (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
