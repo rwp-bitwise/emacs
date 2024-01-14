@@ -224,10 +224,14 @@
 (visual-line-mode t)
 ;;(load-theme 'alect-dark t)
 (tool-bar-mode -1)
-(osx-clipboard-mode +1)
+
 ;;(adaptive-wrap-prefix-mode)
 (global-visual-line-mode +1)
 
+(cond
+ ((eq system-type 'darwin)
+	(setq osx-clipboard-mode +1)))
+	
 
 (defun set-frame-size-according-to-resolution ()
 	"Set the default frame size based on display resolution.
