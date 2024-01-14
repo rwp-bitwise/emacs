@@ -81,27 +81,27 @@
 
 ;; ;; Makesure libtool, libtool-bin, and cmake are installed
 ;; ;; Declare packages
-;; (defvar my-packages
-;;       '(adaptive-wrap
-;; 				osx-clipboard
-;; 				alect-themes
-;;         expand-region
-;;         helm
-;;         jinja2-mode
-;;         magit
-;;         markdown-mode
-;;         paredit
-;;         wrap-region
-;;         yaml-mode
-;;         yasnippet
-;;         vterm
-;;         adaptive-wrap
-;;         json-mode))
+ (defvar my-packages
+       '(adaptive-wrap
+ 				osx-clipboard
+ 				alect-themes
+         expand-region
+         helm
+         jinja2-mode
+         magit
+         markdown-mode
+         paredit
+         wrap-region
+         yaml-mode
+         yasnippet
+         vterm
+         adaptive-wrap
+         json-mode))
 
 ;; Iterate on packages and install missing ones
-;;(dolist (pkg my-packages)
-;;  (unless (package-installed-p pkg)
-;;    (package-install pkg)))
+(dolist (pkg my-packages)
+  (unless (package-installed-p pkg)
+    (package-install pkg)))
 
 
 ;;; Custum-set-variables
