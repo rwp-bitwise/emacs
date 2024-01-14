@@ -155,11 +155,10 @@
 
 ;;; Org values for variable pitch fonts, only works when a window-system is enabled
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-<<<<<<< HEAD
 
 (when window-system
 	(let* ((variable-tuple
-=======
+
 (when window-system
 (let* ((variable-tuple
           (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
