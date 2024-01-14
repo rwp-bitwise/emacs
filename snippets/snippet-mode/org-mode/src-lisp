@@ -3,6 +3,6 @@
   # key: src-lisp
 # --
 
- #+BEGIN_SRC ${0:Language}
+ #+BEGIN_SRC ${1:Language}
   $0
  #+END_SRC

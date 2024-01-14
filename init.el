@@ -5,10 +5,13 @@
 
 ;;; Code:
 
+
+;;; Package deffinitions
 ;; first, declare repositories
 (setq package-archives
 	'(("gnu" . "http://elpa.gnu.org/packages/")
     ("marmalade" . "http://marmalade-repo.org/packages/")
+		("melpa-stable" . "http://melpa-stable.org/packages/")
     ("melpa" . "http://melpa.org/packages/")))
 
 (use-package dracula-theme
@@ -53,7 +56,7 @@
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
 	:init
   (yas-global-mode 1))
-  
+
 ;;
 ;; Org mode settings
 ;;
@@ -65,7 +68,8 @@
       org-log-done 'time
 			org-hide-leading-stars t
       org-startup-indented t
-			org-hide-emphasis-markers t))
+			org-hide-emphasis-markers t)
+	:init)
 
 (font-lock-add-keywords 'org-mode
                           '(("^ *\\([-]\\) "
@@ -99,7 +103,8 @@
 ;;  (unless (package-installed-p pkg)
 ;;    (package-install pkg)))
 
-
+
+;;; Custum-set-variables
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -108,14 +113,14 @@
  '(ac-ispell-fuzzy-limit 4)
  '(ac-ispell-requires 4)
  '(custom-safe-themes
-	'("603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
+	 '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
  '(org-agenda-files
-	'("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
+	 '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
  '(package-archives
-	'(("gnu" . "https://elpa.gnu.org/packages/")
-		("melpa" . "https://melpa.org/packages/")))
+	 '(("gnu" . "https://elpa.gnu.org/packages/")
+		 ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-	'(dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+	 '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
 ;(package-initialize)
 (custom-set-faces
@@ -128,6 +133,7 @@
  '(org-document-info ((t (:foreground "dark orange"))))
  '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
  '(org-document-title ((t (:inherit default :weight bold :foreground "yellow" :font "Lucida Grande" :height 2.0 :underline nil))))
+ '(org-done ((t (:foreground "#00ff00" :weight bold))))
  '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
  '(org-level-1 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande" :height 1.75))))
  '(org-level-2 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande" :height 1.5))))
@@ -146,6 +152,8 @@
  '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
 
+
+;;; Org values for variable pitch fonts, only works when a window-system is enabled
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
 (when window-system
@@ -187,8 +195,10 @@
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 	)
 
+
+;;; Various hooks
+	
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
-(add-hook 'org-mode-hook 'visual-line-mode)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -236,7 +246,7 @@ Shamelessly bottowed from Bryan Oakley."
     ;; from the screen height (for panels, menubars and
     ;; whatnot), then divide by the height of a char to
     ;; get the height we want
-    (add-to-list 'default-frame-alist 
+    (add-to-list 'default-frame-alist
          (cons 'height (/ (- (x-display-pixel-height) 200)
                              (frame-char-height)))))))
 
@@ -246,9 +256,20 @@ Shamelessly bottowed from Bryan Oakley."
 (setq-default tab-width 2)
 (setq indent-line-function 'insert-tab)
 
-(hl-line-mode)
+;;(setq python-shell-interpreter "python3")
+(setenv "PYTHONPATH" "/the/python/path")
+
+(global-hl-line-mode)
 (server-start)
 (desktop-save-mode 1)
+
+
+;;; Python specific stuff
+(add-hook 'python-mode-hook
+      (lambda ()
+        (setq indent-tabs-mode t)
+        (setq tab-width 2)
+        (setq python-indent-offset 2)))
 
 ;;; init.el ends here
 
