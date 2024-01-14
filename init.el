@@ -10,7 +10,7 @@
 ;; first, declare repositories
 (setq package-archives
 	'(("gnu" . "http://elpa.gnu.org/packages/")
-    ("marmalade" . "http://marmalade-repo.org/packages/")
+    ;;("marmalade" . "http://marmalade-repo.org/packages/")
 		("melpa-stable" . "http://melpa-stable.org/packages/")
     ("melpa" . "http://melpa.org/packages/")))
 
@@ -162,7 +162,6 @@
 =======
 (when window-system
 (let* ((variable-tuple
->>>>>>> 8a2585b (foo)
           (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
                 ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
@@ -198,15 +197,10 @@
    '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-<<<<<<< HEAD
 	)
 
 
 ;;; Various hooks
-	
-=======
-)
->>>>>>> 8a2585b (foo)
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
 (org-babel-do-load-languages
