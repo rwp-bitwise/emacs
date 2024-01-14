@@ -1,3 +1,5 @@
+;;; package --- init.el
+;;; Commentary:
 
 (require 'package)
 
@@ -9,12 +11,16 @@
     ("marmalade" . "http://marmalade-repo.org/packages/")
     ("melpa" . "http://melpa.org/packages/")))
 
+(use-package dracula-theme
+	:ensure t
+	:init
+	(load-theme 'dracula t))
+
 (use-package use-package-ensure-system-package
   :ensure t)
 
 (use-package org-bullets
 	:hook (org-mode . org-bullets-mode))
-
 
 (use-package elpy
   :ensure t
@@ -39,11 +45,13 @@
                 ("TAB"   . corfu-next)
                 ("S-TAB" . corfu-previous)
                 ("S-<return>" . corfu-insert))
-    :init)
+    :init
+		(global-corfu-mode))
 
 (use-package yasnippet
   :config
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+	:init
   (yas-global-mode 1))
   
 ;;
@@ -99,13 +107,15 @@
  ;; If there is more than one, they won't work right.
  '(ac-ispell-fuzzy-limit 4)
  '(ac-ispell-requires 4)
+ '(custom-safe-themes
+	'("603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
  '(org-agenda-files
-  '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
+	'("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
  '(package-archives
-  '(("gnu" . "https://elpa.gnu.org/packages/")
-    ("melpa" . "https://melpa.org/packages/")))
+	'(("gnu" . "https://elpa.gnu.org/packages/")
+		("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-  '(org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+	'(dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
 ;(package-initialize)
 (custom-set-faces
@@ -113,7 +123,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-block ((t (:inherit fixed-pitch))))
+ '(org-code ((t (:inherit (shadow fixed-pitch)))))
+ '(org-document-info ((t (:foreground "dark orange"))))
+ '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
  '(org-document-title ((t (:inherit default :weight bold :foreground "yellow" :font "Lucida Grande" :height 2.0 :underline nil))))
+ '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
  '(org-level-1 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande" :height 1.75))))
  '(org-level-2 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande" :height 1.5))))
  '(org-level-3 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande" :height 1.25))))
@@ -121,12 +136,20 @@
  '(org-level-5 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande"))))
  '(org-level-6 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande"))))
  '(org-level-7 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande"))))
- '(org-level-8 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande")))))
+ '(org-level-8 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande"))))
+ '(org-link ((t (:foreground "royal blue" :underline t))))
+ '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-property-value ((t (:inherit fixed-pitch))))
+ '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+ '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+ '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
 
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
-(let* ((variable-tuple
+(when window-system
+	(let* ((variable-tuple
           (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
                 ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
@@ -136,19 +159,19 @@
          (base-font-color     (face-foreground 'default nil 'default))
          (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
 
-(custom-theme-set-faces
-  'user
- `(org-level-8 ((t (,@headline ,@variable-tuple))))
- `(org-level-7 ((t (,@headline ,@variable-tuple))))
- `(org-level-6 ((t (,@headline ,@variable-tuple))))
- `(org-level-5 ((t (,@headline ,@variable-tuple))))
- `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
- `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
- `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "royal blue"))))
- `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "red"))))
- `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+		(custom-theme-set-faces
+		 'user
+		 `(org-level-8 ((t (,@headline ,@variable-tuple))))
+		 `(org-level-7 ((t (,@headline ,@variable-tuple))))
+		 `(org-level-6 ((t (,@headline ,@variable-tuple))))
+		 `(org-level-5 ((t (,@headline ,@variable-tuple))))
+		 `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+		 `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+		 `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "royal blue"))))
+		 `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "red"))))
+		 `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
 
-(custom-theme-set-faces
+	(custom-theme-set-faces
    'user
    '(org-block ((t (:inherit fixed-pitch))))
    '(org-code ((t (:inherit (shadow fixed-pitch)))))
@@ -162,13 +185,18 @@
    '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+	)
 
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 (add-hook 'org-mode-hook 'visual-line-mode)
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
+
 (global-flycheck-mode)
 (global-company-mode)
-(global-corfu-mode)
+
 
 (eval-after-load "auto-complete"
   '(progn
@@ -185,7 +213,7 @@
 ;; General look and feel
 ;;
 (visual-line-mode t)
-(load-theme 'alect-dark t)
+;;(load-theme 'alect-dark t)
 (tool-bar-mode -1)
 (osx-clipboard-mode +1)
 ;;(adaptive-wrap-prefix-mode)
@@ -218,6 +246,7 @@ Shamelessly bottowed from Bryan Oakley."
 (setq-default tab-width 2)
 (setq indent-line-function 'insert-tab)
 
+(hl-line-mode)
 (server-start)
 (desktop-save-mode 1)
 
