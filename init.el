@@ -57,6 +57,10 @@
 	:init
   (yas-global-mode 1))
 
+(use-package flycheck-pycheckers)
+(use-package flycheck-pyre)
+(use-package flycheck-irony)
+(use-package irony)
 ;;
 ;; Org mode settings
 ;;
