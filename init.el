@@ -8,7 +8,8 @@
 
 ;;; Package deffinitions
 ;; first, declare repositories
-;; ;; Makesure libtool, libtool-bin, and cmake are installed
+;; Makesure libtool, libtool-bin, and cmake are installed
+;; pip install virtualenv if it doesn't already exist
 ;; ;; Declare packages
 (defvar my-packages
   '(adaptive-wrap
@@ -28,6 +29,7 @@
 		dracula-theme
 		corfu
 		elpy
+		pyenv
     json-mode))
 
 ;; Iterate on packages and install missing ones
@@ -206,7 +208,7 @@
  '((python . t)))
 
 (global-flycheck-mode)
-(global-company-mode)
+[(global-company-mode)
 
 
 (eval-after-load "auto-complete"
