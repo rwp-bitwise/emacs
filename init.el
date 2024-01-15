@@ -10,8 +10,8 @@
 ;; first, declare repositories
 (setq package-archives
 	'(("gnu" . "http://elpa.gnu.org/packages/")
-    ("marmalade" . "http://marmalade-repo.org/packages/")
-		("melpa-stable" . "http://melpa-stable.org/packages/")
+    ;;("marmalade" . "http://marmalade-repo.org/packages/")
+		;;("melpa-stable" . "http://melpa-stable.org/packages/")
     ("melpa" . "http://melpa.org/packages/")))
 
 (use-package dracula-theme
@@ -57,10 +57,6 @@
 	:init
   (yas-global-mode 1))
 
-(use-package flycheck-pycheckers)
-(use-package flycheck-pyre)
-(use-package flycheck-irony)
-(use-package irony)
 ;;
 ;; Org mode settings
 ;;
@@ -161,7 +157,7 @@
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
 (when window-system
-	(let* ((variable-tuple
+(let* ((variable-tuple
           (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
                 ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
@@ -201,7 +197,6 @@
 
 
 ;;; Various hooks
-	
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
 (org-babel-do-load-languages
@@ -229,10 +224,14 @@
 (visual-line-mode t)
 ;;(load-theme 'alect-dark t)
 (tool-bar-mode -1)
-(osx-clipboard-mode +1)
+
 ;;(adaptive-wrap-prefix-mode)
 (global-visual-line-mode +1)
 
+(cond
+ ((eq system-type 'darwin)
+	(setq osx-clipboard-mode +1)))
+	
 
 (defun set-frame-size-according-to-resolution ()
 	"Set the default frame size based on display resolution.
