@@ -215,7 +215,7 @@
 (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
 (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
 (add-hook 'python-mode-hook
-          (lambda () (setq indent-tabs-mode t)))
+					(lambda () (setq indent-tabs-mode t)))
 ;;(setq tab-width 2)
 
 ;;
