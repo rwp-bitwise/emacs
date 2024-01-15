@@ -8,11 +8,36 @@
 
 ;;; Package deffinitions
 ;; first, declare repositories
+;; ;; Makesure libtool, libtool-bin, and cmake are installed
+;; ;; Declare packages
+(defvar my-packages
+  '(adaptive-wrap
+ 		osx-clipboard
+ 		alect-themes
+    expand-region
+    helm
+    jinja2-mode
+    magit
+    markdown-mode
+    paredit
+    wrap-region
+    yaml-mode
+    yasnippet
+    vterm
+    adaptive-wrap
+		dracula-theme
+		corfu
+		elpy
+    json-mode))
+
+;; Iterate on packages and install missing ones
+(dolist (pkg my-packages)
+  (unless (package-installed-p pkg)
+    (package-install pkg)))
+
 (setq package-archives
-	'(("gnu" . "http://elpa.gnu.org/packages/")
-    ;;("marmalade" . "http://marmalade-repo.org/packages/")
-		;;("melpa-stable" . "http://melpa-stable.org/packages/")
-    ("melpa" . "http://melpa.org/packages/")))
+			'(("gnu" . "http://elpa.gnu.org/packages/")
+				("melpa" . "http://melpa.org/packages/")))
 
 (use-package dracula-theme
 	:ensure t
@@ -35,21 +60,21 @@
 ;;
 (use-package corfu
   :custom
-    (corfu-xdauto t)
-    (corfu-auto-delay 0.0)
-    (corfu-quit-at-boundary 'seperator)
-    (corfu-echo-documentation 0.25)
-    (corfu-preview-current 'insert)
-    (corfu-preselect-first nil)
+  (corfu-xdauto t)
+  (corfu-auto-delay 0.0)
+  (corfu-quit-at-boundary 'seperator)
+  (corfu-echo-documentation 0.25)
+  (corfu-preview-current 'insert)
+  (corfu-preselect-first nil)
 
-    :bind (:map corfu-map
-                ("M-SPC" . corfu-insert-seperator)
-                ("RET"   . nil)
-                ("TAB"   . corfu-next)
-                ("S-TAB" . corfu-previous)
-                ("S-<return>" . corfu-insert))
-    :init
-		(global-corfu-mode))
+  :bind (:map corfu-map
+              ("M-SPC" . corfu-insert-seperator)
+              ("RET"   . nil)
+              ("TAB"   . corfu-next)
+              ("S-TAB" . corfu-previous)
+              ("S-<return>" . corfu-insert))
+  :init
+	(global-corfu-mode))
 
 (use-package yasnippet
   :config
@@ -65,43 +90,20 @@
   :ensure org
   :config
   (setq
-      org-log-done 'time
-			org-hide-leading-stars t
-      org-startup-indented t
-			org-hide-emphasis-markers t)
+   org-log-done 'time
+	 org-hide-leading-stars t
+   org-startup-indented t
+	 org-hide-emphasis-markers t)
 	:init)
 
 (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+                        '(("^ *\\([-]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 ;;(use-package org-bullets
 ;;    :config
 ;;    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-;; ;; Makesure libtool, libtool-bin, and cmake are installed
-;; ;; Declare packages
- (defvar my-packages
-       '(adaptive-wrap
- 				osx-clipboard
- 				alect-themes
-         expand-region
-         helm
-         jinja2-mode
-         magit
-         markdown-mode
-         paredit
-         wrap-region
-         yaml-mode
-         yasnippet
-         vterm
-         adaptive-wrap
-         json-mode))
-
-;; Iterate on packages and install missing ones
-(dolist (pkg my-packages)
-  (unless (package-installed-p pkg)
-    (package-install pkg)))
 
 
 ;;; Custum-set-variables
@@ -122,7 +124,7 @@
  '(package-selected-packages
 	 '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
-;(package-initialize)
+																				;(package-initialize)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -157,7 +159,7 @@
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
 (when window-system
-(let* ((variable-tuple
+	(let* ((variable-tuple
           (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
                 ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
@@ -218,7 +220,7 @@
 					(lambda () (setq indent-tabs-mode t)))
 (with-eval-after-load 'magit-mode
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
- 
+
 ;;
 ;; General look and feel
 ;;
@@ -232,27 +234,27 @@
 (cond
  ((eq system-type 'darwin)
 	(setq osx-clipboard-mode +1)))
-	
+
 
 (defun set-frame-size-according-to-resolution ()
 	"Set the default frame size based on display resolution.
 Shamelessly bottowed from Bryan Oakley."
   (interactive)
   (if window-system
-  (progn
-    ;; use 120 char wide window for largeish displays
-    ;; and smaller 80 column windows for smaller displays
-    ;; pick whatever numbers make sense for you
-    (if (> (x-display-pixel-width) 1280)
-           (add-to-list 'default-frame-alist (cons 'width 220))
-           (add-to-list 'default-frame-alist (cons 'width 80)))
-    ;; for the height, subtract a couple hundred pixels
-    ;; from the screen height (for panels, menubars and
-    ;; whatnot), then divide by the height of a char to
-    ;; get the height we want
-    (add-to-list 'default-frame-alist
-         (cons 'height (/ (- (x-display-pixel-height) 200)
-                             (frame-char-height)))))))
+			(progn
+				;; use 120 char wide window for largeish displays
+				;; and smaller 80 column windows for smaller displays
+				;; pick whatever numbers make sense for you
+				(if (> (x-display-pixel-width) 1280)
+						(add-to-list 'default-frame-alist (cons 'width 220))
+          (add-to-list 'default-frame-alist (cons 'width 80)))
+				;; for the height, subtract a couple hundred pixels
+				;; from the screen height (for panels, menubars and
+				;; whatnot), then divide by the height of a char to
+				;; get the height we want
+				(add-to-list 'default-frame-alist
+										 (cons 'height (/ (- (x-display-pixel-height) 200)
+																			(frame-char-height)))))))
 
 (set-frame-size-according-to-resolution)
 
@@ -270,10 +272,10 @@ Shamelessly bottowed from Bryan Oakley."
 
 ;;; Python specific stuff
 (add-hook 'python-mode-hook
-      (lambda ()
-        (setq indent-tabs-mode t)
-        (setq tab-width 2)
-        (setq python-indent-offset 2)))
+					(lambda ()
+						(setq indent-tabs-mode t)
+						(setq tab-width 2)
+						(setq python-indent-offset 2)))
 
 ;;; init.el ends here
 
