@@ -215,9 +215,10 @@
 (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
 (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
 (add-hook 'python-mode-hook
-          (lambda () (setq indent-tabs-mode t)))
-;;(setq tab-width 2)
-
+					(lambda () (setq indent-tabs-mode t)))
+(with-eval-after-load 'magit-mode
+  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+ 
 ;;
 ;; General look and feel
 ;;
