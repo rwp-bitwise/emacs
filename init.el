@@ -1,11 +1,7 @@
-;;; package --- init.el
-;;; Commentary:
-
 (require 'package)
 
 ;;; Code:
 
-
 ;;; Package deffinitions
 ;; first, declare repositories
 ;; Makesure libtool, libtool-bin, and cmake are installed
@@ -13,8 +9,8 @@
 ;; ;; Declare packages
 (defvar my-packages
   '(adaptive-wrap
- 		osx-clipboard
- 		alect-themes
+    osx-clipboard
+    alect-themes
     expand-region
     helm
     jinja2-mode
@@ -26,10 +22,9 @@
     yasnippet
     vterm
     adaptive-wrap
-		dracula-theme
-		corfu
-		elpy
-		pyenv
+    dracula-theme
+    corfu
+    elpy
     json-mode))
 
 ;; Iterate on packages and install missing ones
@@ -38,8 +33,8 @@
     (package-install pkg)))
 
 (setq package-archives
-			'(("gnu" . "http://elpa.gnu.org/packages/")
-				("melpa" . "http://melpa.org/packages/")))
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")))
 
 (use-package dracula-theme
 	:ensure t
@@ -106,7 +101,6 @@
 ;;    :config
 ;;    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-
 
 ;;; Custum-set-variables
 (custom-set-variables
@@ -117,16 +111,16 @@
  '(ac-ispell-fuzzy-limit 4)
  '(ac-ispell-requires 4)
  '(custom-safe-themes
-	 '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
+   '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
  '(org-agenda-files
-	 '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
+   '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
  '(package-archives
-	 '(("gnu" . "https://elpa.gnu.org/packages/")
-		 ("melpa" . "https://melpa.org/packages/")))
+   '(("gnu" . "https://elpa.gnu.org/packages/")
+     ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-	 '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
-																				;(package-initialize)
+                                        ;(package-initialize)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -155,13 +149,11 @@
  '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
  '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
-
-
 ;;; Org values for variable pitch fonts, only works when a window-system is enabled
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
 (when window-system
-	(let* ((variable-tuple
+  (let* ((variable-tuple
           (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
                 ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
@@ -171,19 +163,19 @@
          (base-font-color     (face-foreground 'default nil 'default))
          (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
 
-		(custom-theme-set-faces
-		 'user
-		 `(org-level-8 ((t (,@headline ,@variable-tuple))))
-		 `(org-level-7 ((t (,@headline ,@variable-tuple))))
-		 `(org-level-6 ((t (,@headline ,@variable-tuple))))
-		 `(org-level-5 ((t (,@headline ,@variable-tuple))))
-		 `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-		 `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
-		 `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "royal blue"))))
-		 `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "red"))))
-		 `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+    (custom-theme-set-faces
+     'user
+     `(org-level-8 ((t (,@headline ,@variable-tuple))))
+     `(org-level-7 ((t (,@headline ,@variable-tuple))))
+     `(org-level-6 ((t (,@headline ,@variable-tuple))))
+     `(org-level-5 ((t (,@headline ,@variable-tuple))))
+     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+     `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "royal blue"))))
+     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "red"))))
+     `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
 
-	(custom-theme-set-faces
+  (custom-theme-set-faces
    'user
    '(org-block ((t (:inherit fixed-pitch))))
    '(org-code ((t (:inherit (shadow fixed-pitch)))))
@@ -197,9 +189,8 @@
    '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-	)
+  )
 
-
 ;;; Various hooks
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
@@ -208,20 +199,29 @@
  '((python . t)))
 
 (global-flycheck-mode)
-[(global-company-mode)
+(global-company-mode)
 
 
-(eval-after-load "auto-complete"
-  '(progn
-     (ac-ispell-setup)))
+ (eval-after-load "auto-complete"
+   '(progn
+      (ac-ispell-setup)))
 
-(add-hook 'org-mode-hook 'visual-line-mode)
-(add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
-(add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
-(add-hook 'python-mode-hook
-					(lambda () (setq indent-tabs-mode t)))
-(with-eval-after-load 'magit-mode
-  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+ (add-hook 'org-mode-hook 'visual-line-mode)
+ (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
+ (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
+ (add-hook 'python-mode-hook
+           (lambda () (setq indent-tabs-mode t)))
+ (with-eval-after-load 'magit-mode
+   (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+
+;;; Python specific stuff
+ (add-hook 'python-mode-hook
+           (lambda ()
+             (setq indent-tabs-mode t)
+             (setq tab-width 2)
+             (setq python-indent-offset 2)))
+;;(setq python-shell-interpreter "python3")
+(setenv "PYTHONPATH" "/the/python/path")
 
 ;;
 ;; General look and feel
@@ -233,30 +233,27 @@
 ;;(adaptive-wrap-prefix-mode)
 (global-visual-line-mode +1)
 
-(cond
- ((eq system-type 'darwin)
-	(setq osx-clipboard-mode +1)))
 
 
 (defun set-frame-size-according-to-resolution ()
-	"Set the default frame size based on display resolution.
+  "Set the default frame size based on display resolution.
 Shamelessly bottowed from Bryan Oakley."
   (interactive)
   (if window-system
-			(progn
-				;; use 120 char wide window for largeish displays
-				;; and smaller 80 column windows for smaller displays
-				;; pick whatever numbers make sense for you
-				(if (> (x-display-pixel-width) 1280)
-						(add-to-list 'default-frame-alist (cons 'width 220))
+      (progn
+        ;; use 120 char wide window for largeish displays
+        ;; and smaller 80 column windows for smaller displays
+        ;; pick whatever numbers make sense for you
+        (if (> (x-display-pixel-width) 1280)
+            (add-to-list 'default-frame-alist (cons 'width 220))
           (add-to-list 'default-frame-alist (cons 'width 80)))
-				;; for the height, subtract a couple hundred pixels
-				;; from the screen height (for panels, menubars and
-				;; whatnot), then divide by the height of a char to
-				;; get the height we want
-				(add-to-list 'default-frame-alist
-										 (cons 'height (/ (- (x-display-pixel-height) 200)
-																			(frame-char-height)))))))
+        ;; for the height, subtract a couple hundred pixels
+        ;; from the screen height (for panels, menubars and
+        ;; whatnot), then divide by the height of a char to
+        ;; get the height we want
+        (add-to-list 'default-frame-alist
+                     (cons 'height (/ (- (x-display-pixel-height) 200)
+                                      (frame-char-height)))))))
 
 (set-frame-size-according-to-resolution)
 
@@ -264,20 +261,11 @@ Shamelessly bottowed from Bryan Oakley."
 (setq-default tab-width 2)
 (setq indent-line-function 'insert-tab)
 
-;;(setq python-shell-interpreter "python3")
-(setenv "PYTHONPATH" "/the/python/path")
 
 (global-hl-line-mode)
 (server-start)
 (desktop-save-mode 1)
 
-
-;;; Python specific stuff
-(add-hook 'python-mode-hook
-					(lambda ()
-						(setq indent-tabs-mode t)
-						(setq tab-width 2)
-						(setq python-indent-offset 2)))
-
-;;; init.el ends here
-
+(cond
+ ((eq system-type 'darwin)
+  (setq osx-clipboard-mode +1)))
