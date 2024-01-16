@@ -34,8 +34,9 @@
 ;; Iterate on packages and install missing ones
 (dolist (pkg my-packages)
   (unless (package-installed-p pkg)
-    (when (require pkgload nil 'noerror)
-      (package-install pkg)))
+    (when (require pkg nil 'noerror)
+      (package-install pkg))))
+
 
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
