@@ -79,7 +79,6 @@ This is useful when using multiple hosts that you want to load your emacs init.e
       :hook
       (org-mode . org-bullets-mode))
 
-
     (use-package magit
       :ensure t
       :hook
