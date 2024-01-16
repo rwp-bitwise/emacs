@@ -2,66 +2,42 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Tue Jan 16 13:41:51 2024
+;; Created Tue Jan 16 14:59:13 2024
 ;; Desktop file format version 208
 ;; Emacs version 29.1
 
 ;; Global section:
-(setq desktop-saved-frameset [frameset 1 (26022 52719 590291 0) (desktop . "208") "rplace@salami.local" nil nil ((((minibuffer . t) (fontsize . 0) (font . "-*-Menlo-regular-normal-normal-*-12-*-*-*-m-0-iso10646-1") (border-width . 0) (internal-border-width . 2) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . right) (horizontal-scroll-bars) (foreground-color . "#f8f8f2") (background-color . "#282a36") (line-spacing) (left-fringe . 8) (right-fringe . 8) (no-special-glyphs) (undecorated) (ns-appearance) (ns-transparent-titlebar) (z-group) (no-focus-on-map) (no-accept-focus) (menu-bar-lines . 1) (tab-bar-lines . 0) (tool-bar-lines . 0) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 15) (scroll-bar-height . 15) (alpha) (alpha-background) (fullscreen . fullboth) (scroll-bar-foreground) (scroll-bar-background) (display-type . color) (background-mode . dark) (cursor-color . "#ccccc7") (font-parameter) (environment) (frameset--id . "FA73-C2BD-62EA-5D19") (frameset--mini t . t) (modeline . t) (unsplittable) (icon-name) (visibility . t) (display . "salami.local") (explicit-name) (tool-bar-position . top) (last-focus-update . t) (height . 80) (width . 252) (left . 1302) (top . 25)) ((min-height . 4) (min-width . 20) (min-height-ignore . 3) (min-width-ignore . 14) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 56) (min-pixel-width . 140) (min-pixel-height-ignore . 42) (min-pixel-width-ignore . 98) (min-pixel-height-safe . 14) (min-pixel-width-safe . 28)) hc (pixel-width . 1795) (pixel-height . 1106) (total-width . 256) (total-height . 79) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 899) (pixel-height . 1106) (total-width . 128) (total-height . 79) (normal-height . 1.0) (normal-width . 0.5) (buffer "magit: .emacs.d" (selected . t) (hscroll . 0) (fringes 8 8 nil nil) (margins nil) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 1) (start . 1)) (prev-buffers ("magit: .emacs.d" 1 202) ("init.org" 987 2040) ("*Buffer List*" 1 220) ("*Python Check*" 1 530) ("netstat.py" 1 1) ("magit: gol" 1 41))) (leaf (last . t) (pixel-width . 896) (pixel-height . 1106) (total-width . 128) (total-height . 79) (normal-height . 1.0) (normal-width . 0.5) (buffer "init.org" (selected) (hscroll . 0) (fringes 8 8 nil nil) (margins nil) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 12283) (start . 11063)) (prev-buffers ("magit-diff: .emacs.d" 1 19862) ("init.org" 11063 12283) ("magit: .emacs.d" 1 1)))))])
+(setq desktop-saved-frameset [frameset 1 (26022 57361 524716 0) (desktop . "208") "rplace@salami.local" nil nil ((((minibuffer . t) (fontsize . 0) (font . "-*-Menlo-regular-normal-normal-*-12-*-*-*-m-0-iso10646-1") (border-width . 0) (internal-border-width . 2) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . right) (horizontal-scroll-bars) (foreground-color . "#f8f8f2") (background-color . "#282a36") (line-spacing) (left-fringe . 8) (right-fringe . 8) (no-special-glyphs) (undecorated) (ns-appearance) (ns-transparent-titlebar) (z-group) (no-focus-on-map) (no-accept-focus) (menu-bar-lines . 1) (tab-bar-lines . 0) (tool-bar-lines . 0) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 15) (scroll-bar-height . 15) (alpha) (alpha-background) (fullscreen) (scroll-bar-foreground) (scroll-bar-background) (display-type . color) (background-mode . dark) (cursor-color . "#ccccc7") (font-parameter) (environment) (last-focus-update) (frameset--id . "ABF5-65ED-449E-18FD") (frameset--mini t . t) (modeline . t) (unsplittable) (icon-name) (visibility . t) (display . "salami.local") (explicit-name) (tool-bar-position . top) (height . 69) (width . 220) (left . 183) (top . 83)) ((min-height . 4) (min-width . 20) (min-height-ignore . 3) (min-width-ignore . 14) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 56) (min-pixel-width . 140) (min-pixel-height-ignore . 42) (min-pixel-width-ignore . 98) (min-pixel-height-safe . 14) (min-pixel-width-safe . 28)) hc (pixel-width . 1571) (pixel-height . 952) (total-width . 224) (total-height . 68) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 787) (pixel-height . 952) (total-width . 112) (total-height . 68) (normal-height . 1.0) (normal-width . 0.5) (buffer "init.org" (selected) (hscroll . 0) (fringes 8 8 nil nil) (margins nil) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 2225) (start . 1770)) (prev-buffers ("magit-diff: .emacs.d" 1 1) ("init.org" 1770 2225) ("init.el" 1616 2070) ("*scratch*" 1 1))) (leaf (last . t) (pixel-width . 784) (pixel-height . 952) (total-width . 112) (total-height . 68) (normal-height . 1.0) (normal-width . 0.5) (buffer "magit: .emacs.d" (selected . t) (hscroll . 0) (fringes 8 8 nil nil) (margins nil) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 187) (start . 1)) (prev-buffers ("magit: .emacs.d" 1 1)))))])
 (setq desktop-missing-file-warning nil)
 (setq tags-file-name nil)
 (setq tags-table-list nil)
-(setq search-ring '(#("magit" 0 5 (isearch-case-fold-search t isearch-regexp-function nil)) #("elpy" 0 4 (isearch-case-fold-search t isearch-regexp-function nil)) #("el" 0 2 (isearch-case-fold-search t isearch-regexp-function nil)) #("elp" 0 3 (isearch-case-fold-search t isearch-regexp-function nil)) #("dracu" 0 5 (isearch-case-fold-search t isearch-regexp-function nil)) #("osx" 0 3 (isearch-case-fold-search t isearch-regexp-function nil)) #("hecj" 0 4 (isearch-case-fold-search t isearch-regexp-function nil)) #("global" 0 6 (isearch-case-fold-search t isearch-regexp-function nil)) #("eval" 0 4 (isearch-case-fold-search t isearch-regexp-function nil)) #("yas" 0 3 (isearch-case-fold-search t isearch-regexp-function nil)) #("yas-sn" 0 6 (isearch-case-fold-search t isearch-regexp-function nil)) #("snipp" 0 5 (isearch-case-fold-search t isearch-regexp-function nil)) #("bull" 0 4 (isearch-case-fold-search t isearch-regexp-function nil)) #("bullet" 0 6 (isearch-case-fold-search t isearch-regexp-function nil)) #("spell" 0 5 (isearch-case-fold-search t isearch-regexp-function nil)) #("y" 0 1 (isearch-case-fold-search t isearch-regexp-function nil))))
+(setq search-ring nil)
 (setq regexp-search-ring nil)
 (setq register-alist nil)
-(setq file-name-history '("~/.emacs.d/init.el" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.org" "~/iCloudDrive/Recipies/Pizza Dough.pdf" "~/src/python/netstat.py" "~/src/python/gol/gol.py" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/src/python/databse/db_tools/mysql.py" "~/src/python/foo.py" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/snippets/snippet-mode/org-mode/src-lisp" "~/iCloudDrive/Notes/emacs.org" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.el" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.el" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.el" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.org" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.el" "~/src/python/netstat.py" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init-org.el" "~/.emacs.d/init.el" "~/.emacs.d/snippets/snippet-mode/org-mode/" "~/.emacs.d/init.org" "~/.emacs.d/.git/EDIT_DESCRIPTION" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.org" "~/.emacs.d/init.el" "~/.emacs.d/.git/MERGE_MSG" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.el" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/.git/EDIT_DESCRIPTION" "~/.emacs.d/init.el" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/early-init.el" "~/.emacs.d/init.org" "~/.emacs.d/" "~/iCloudDrive/Notes/hello.el" "~/iCloudDrive/Notes/emacs.org" "~/.emacs.d/init.el" "~/src/python/foo.py" "~/.emacs.d/init.el" "~/src/python/foo.py" "~/.emacs.d/init.el" "~/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org" "~/.emacs.d/init.el" "~/src/c/foo.c" "~/.emacs.d/init.el" "~/iCloudDrive/Notes/emacs.org" "~/.emacs.d/snippets/snippet-mode/org-mode/src-lisp" "~/.emacs.d/init.el" "~/iCloudDrive/Notes/programming/python.notes.org" "~/iCloudDrive/Notes/alldyn/general_notes.org" "~/src/haskell/interact.hs" "~/.emacs.d/init.el" "~/iCloudDrive/Notes/emacs.org" "~/.emacs.d/init.el" "~/src/python/databse/db_tools/mysql.py" "~/.emacs.d/init.el" "~/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org" "~/.emacs.d/init.el" "~/iCloudDrive/Notes/emacs.org" "~/.emacs.d/init.el" "~/iCloudDrive/Notes/emacs.org" "~/.emacs.d/init.el" "~/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org" "~/.emacs.d/init.el" "~/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org" "~/.emacs.d/init.el"))
+(setq file-name-history '("~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.el" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/init.el" "~/.emacs.d/" "~/.emacs.d/init.org" "~/.emacs.d/init.el"))
 
 ;; Buffer section -- buffers listed in same order as in buffer list:
 (desktop-create-buffer 208
   "/Users/rplace/.emacs.d/init.org"
   "init.org"
   'org-mode
-  '(visual-line-mode company-mode flycheck-mode font-lock-mode auto-revert-mode org-bullets-mode org-indent-mode)
-  12283
-  '(1939 nil)
-  nil
-  nil
-  '((indent-tabs-mode) (buffer-display-time 26022 52715 652508 0) (buffer-file-coding-system . utf-8-unix) (truncate-lines))
-  '((mark-ring (2007 1973 10431 694 111 111 111 111 111 111 111 111 111 111 111 1797))))
-
-(desktop-create-buffer 208
-  "/Users/rplace/src/python/gol/gol.py"
-  "gol.py"
-  'python-mode
-  '(visual-line-mode company-mode flycheck-mode font-lock-mode auto-revert-mode yas-minor-mode highlight-indentation-mode flymake-mode eldoc-mode elpy-mode)
-  1845
-  '(1018 nil)
-  nil
-  nil
-  '((tab-width . 2) (indent-tabs-mode . t) (buffer-display-time 26022 52041 140098 0) (buffer-file-coding-system . undecided-unix) (truncate-lines))
-  '((mark-ring nil)))
-
-(desktop-create-buffer 208
-  "/Users/rplace/src/python/netstat.py"
-  "netstat.py"
-  'python-mode
-  '(visual-line-mode company-mode flycheck-mode font-lock-mode yas-minor-mode highlight-indentation-mode flymake-mode eldoc-mode elpy-mode)
-  1
+  '(visual-line-mode company-mode flycheck-mode org-bullets-mode font-lock-mode org-indent-mode auto-revert-mode)
+  2225
   '(nil nil)
   nil
   nil
-  '((tab-width . 2) (indent-tabs-mode . t) (buffer-display-time 26022 50862 493541 0) (buffer-file-coding-system . undecided-unix) (truncate-lines))
+  '((indent-tabs-mode) (buffer-display-time 26022 57309 68130 0) (buffer-file-coding-system . utf-8-unix) (truncate-lines))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
-  "/Users/rplace/src/python/foo.py"
-  "foo.py"
-  'python-mode
-  '(visual-line-mode company-mode flycheck-mode yas-minor-mode highlight-indentation-mode flymake-mode eldoc-mode elpy-mode font-lock-mode)
-  131
-  '(nil nil)
+  "/Users/rplace/.emacs.d/init.el"
+  "init.el"
+  'emacs-lisp-mode
+  '(visual-line-mode company-mode flycheck-mode font-lock-mode eldoc-mode auto-revert-mode)
+  2070
+  '(1 nil)
   nil
   nil
-  '((tab-width . 2) (indent-tabs-mode . t) (buffer-display-time 26022 42528 445191 0) (buffer-file-coding-system . undecided-unix) (truncate-lines))
+  '((buffer-display-time 26022 57231 973994 0) (buffer-file-coding-system . utf-8-unix) (truncate-lines))
   '((mark-ring nil)))
 
