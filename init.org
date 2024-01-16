@@ -49,7 +49,6 @@ This is useful when using multiple hosts that you want to load your emacs init.e
       (when (require pkg nil 'noerror)
         (package-install pkg))))
 
-
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
@@ -57,37 +56,36 @@ This is useful when using multiple hosts that you want to load your emacs init.e
 ** Configure the packages
 
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (use-package osx-clipboard
-    :ensure t
-    :defer t
-    :if (eq system-type 'darwin))
+    (use-package elpy
+     :ensure t
+     :init
+     :commands
+     (elpy-enable))
 
-  (use-package dracula-theme
-    :ensure t
-    :init
-    (load-theme 'dracula t))
+    (use-package osx-clipboard
+      :ensure t
+      :defer t
+      :if (eq system-type 'darwin))
 
-  (use-package use-package-ensure-system-package
-    :ensure t)
+    (use-package dracula-theme
+      :ensure t
+      :init
+      (load-theme 'dracula t))
 
-  (use-package org-bullets
-    :hook
-    (org-mode . org-bullets-mode))
+    (use-package use-package-ensure-system-package
+      :ensure t)
 
-  (use-package magit
-    :hook
+    (use-package org-bullets
+      :hook
+      (org-mode . org-bullets-mode))
 
-    (git-commit-turn-on-flyspell)
-    (git-commit-turn-on-auto-fill)
-    :after
-    (after-save-hook magit-after-save-refresh-status))
 
-  (use-package elpy
-    :ensure t
-    :init
-    :commands
-    (elpy-enable)
-    :defer t)
+    (use-package magit
+      :ensure t
+      :hook
+      (git-commit-turn-on-flyspell)
+      (git-commit-turn-on-auto-fill)
+      (save-hook . magit-after-save-refresh-status))
 
   ;;
   ;; Completion with pop-ups
@@ -108,10 +106,8 @@ This is useful when using multiple hosts that you want to load your emacs init.e
                 ("S-TAB" . corfu-previous)
                 ("S-<return>" . corfu-insert))
     :init
-
     :commands
-    (global-corfu-mode)
-    :defer t)
+    (global-corfu-mode))
 
   (use-package yasnippet
     :config
@@ -131,8 +127,6 @@ This is useful when using multiple hosts that you want to load your emacs init.e
           org-hide-leading-stars t
           org-startup-indented t
           org-hide-emphasis-markers t))
-  :commands
-  (org-mode)
 
   (font-lock-add-keywords 'org-mode
                           '(("^ *\\([-]\\) "
@@ -270,8 +264,8 @@ This is where we gather up all of the various hooks used for various modes
    (add-hook 'python-mode-hook
              (lambda () (setq indent-tabs-mode t)))
   
-;;   (with-eval-after-load 'magit-mode
-;;     (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+   ;;(with-eval-after-load 'magit-mode
+   ;;  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 
   ;;; Python specific stuff
    (add-hook 'python-mode-hook

@@ -44,42 +44,40 @@
     (when (require pkg nil 'noerror)
       (package-install pkg))))
 
-
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
 
-(use-package osx-clipboard
-  :ensure t
-  :defer t
-  :if (eq system-type 'darwin))
-
-(use-package dracula-theme
-  :ensure t
-  :init
-  (load-theme 'dracula t))
-
-(use-package use-package-ensure-system-package
-  :ensure t)
-
-(use-package org-bullets
-  :hook
-  (org-mode . org-bullets-mode))
-
-(use-package magit
-  :hook
-
-  (git-commit-turn-on-flyspell)
-  (git-commit-turn-on-auto-fill)
-  :after
-  (after-save-hook magit-after-save-refresh-status))
-
 (use-package elpy
-  :ensure t
-  :init
-  :commands
-  (elpy-enable)
-  :defer t)
+   :ensure t
+   :init
+   :commands
+   (elpy-enable))
+
+  (use-package osx-clipboard
+    :ensure t
+    :defer t
+    :if (eq system-type 'darwin))
+
+  (use-package dracula-theme
+    :ensure t
+    :init
+    (load-theme 'dracula t))
+
+  (use-package use-package-ensure-system-package
+    :ensure t)
+
+  (use-package org-bullets
+    :hook
+    (org-mode . org-bullets-mode))
+
+
+  (use-package magit
+    :ensure t
+    :hook
+    (git-commit-turn-on-flyspell)
+    (git-commit-turn-on-auto-fill)
+    (save-hook . magit-after-save-refresh-status))
 
 ;;
 ;; Completion with pop-ups
@@ -100,10 +98,8 @@
               ("S-TAB" . corfu-previous)
               ("S-<return>" . corfu-insert))
   :init
-
   :commands
-  (global-corfu-mode)
-  :defer t)
+  (global-corfu-mode))
 
 (use-package yasnippet
   :config
@@ -123,8 +119,6 @@
         org-hide-leading-stars t
         org-startup-indented t
         org-hide-emphasis-markers t))
-:commands
-(org-mode)
 
 (font-lock-add-keywords 'org-mode
                         '(("^ *\\([-]\\) "
@@ -225,37 +219,37 @@
 )
 
 ;;; Various hooks
-  ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
+;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((python . t)))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
 
-  (global-flycheck-mode)
-  (global-company-mode)
+(global-flycheck-mode)
+(global-company-mode)
 
 
-   (eval-after-load "auto-complete"
-     '(progn
-        (ac-ispell-setup)))
+ (eval-after-load "auto-complete"
+   '(progn
+      (ac-ispell-setup)))
 
-   (add-hook 'org-mode-hook 'visual-line-mode)
-   (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
-   (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
-   (add-hook 'python-mode-hook
-             (lambda () (setq indent-tabs-mode t)))
-  
-;;   (with-eval-after-load 'magit-mode
-;;     (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+ (add-hook 'org-mode-hook 'visual-line-mode)
+ (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
+ (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
+ (add-hook 'python-mode-hook
+           (lambda () (setq indent-tabs-mode t)))
 
-  ;;; Python specific stuff
-   (add-hook 'python-mode-hook
-             (lambda ()
-               (setq indent-tabs-mode t)
-               (setq tab-width 2)
-               (setq python-indent-offset 2)))
-  ;;(setq python-shell-interpreter "python3")
-  (setenv "PYTHONPATH" "/the/python/path")
+ ;;(with-eval-after-load 'magit-mode
+ ;;  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+
+;;; Python specific stuff
+ (add-hook 'python-mode-hook
+           (lambda ()
+             (setq indent-tabs-mode t)
+             (setq tab-width 2)
+             (setq python-indent-offset 2)))
+;;(setq python-shell-interpreter "python3")
+(setenv "PYTHONPATH" "/the/python/path")
 
 ;;
 ;; General look and feel
