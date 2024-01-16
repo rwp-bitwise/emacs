@@ -33,7 +33,8 @@
   ;; Iterate on packages and install missing ones
   (dolist (pkg my-packages)
     (unless (package-installed-p pkg)
-      (package-install pkg)))
+      (when (require pkgload nil 'noerror)
+        (package-install pkg)))
 
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -41,7 +42,7 @@
 #+end_src
 ** Configure the packages
 
-#+begin_src emacs-lisp :tangle "init-org.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
 (use-package dracula-theme
 	:ensure t
 	:init
@@ -106,7 +107,7 @@
 
 ** Custom variables
 
-#+begin_src emacs-lisp :tangle "init-org.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   ;;(use-package org-bullets
   ;;    :config
   ;;    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
@@ -161,7 +162,8 @@
 #+end_src
 
 ** Org-mode bits to allow for variable pitch fonts
-#+begin_src emacs-lisp :tangle "init-org.el" :mkdirp yes
+Using variable pitch fonts generally only works properly when there is a windowing system involved. We check that here and if there is we set all of our customizations. This section is where we set all of the font preferences
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   ;;; Org values for variable pitch fonts, only works when a window-system is enabled
   ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
@@ -175,40 +177,42 @@
                   (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
            (base-font-color     (face-foreground 'default nil 'default))
            (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
-
-      (custom-theme-set-faces
-       'user
-       `(org-level-8 ((t (,@headline ,@variable-tuple))))
-       `(org-level-7 ((t (,@headline ,@variable-tuple))))
-       `(org-level-6 ((t (,@headline ,@variable-tuple))))
-       `(org-level-5 ((t (,@headline ,@variable-tuple))))
-       `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-       `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
-       `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "royal blue"))))
-       `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "red"))))
-       `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
-
+#+end_src
+Here we set the customizations for the various headline levels in org-mode. We also set the areas where we still want fixed width fonts like tables and code blocks.
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
     (custom-theme-set-faces
      'user
-     '(org-block ((t (:inherit fixed-pitch))))
-     '(org-code ((t (:inherit (shadow fixed-pitch)))))
-     '(org-document-info ((t (:foreground "dark orange"))))
-     '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-     '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
-     '(org-link ((t (:foreground "royal blue" :underline t))))
-     '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-     '(org-property-value ((t (:inherit fixed-pitch))) t)
-     '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-     '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
-     '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-     '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-    )
+     `(org-level-8 ((t (,@headline ,@variable-tuple))))
+     `(org-level-7 ((t (,@headline ,@variable-tuple))))
+     `(org-level-6 ((t (,@headline ,@variable-tuple))))
+     `(org-level-5 ((t (,@headline ,@variable-tuple))))
+     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+     `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "royal blue"))))
+     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "red"))))
+     `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+
+  (custom-theme-set-faces
+   'user
+   '(org-block ((t (:inherit fixed-pitch))))
+   '(org-code ((t (:inherit (shadow fixed-pitch)))))
+   '(org-document-info ((t (:foreground "dark orange"))))
+   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+   '(org-link ((t (:foreground "royal blue" :underline t))))
+   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-property-value ((t (:inherit fixed-pitch))) t)
+   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+   '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+  )
 
 #+end_src
 
 ** org-babel and language configuration
-
-#+begin_src emacs-lisp :tangle "init-org.el" :mkdirp yes
+This is where we gather up all of the various hooks used for various modes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   ;;; Various hooks
   ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
@@ -244,7 +248,7 @@
 #+end_src
 
 ** Interface configuration
-#+begin_src emacs-lisp :tangle "init-org.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   ;;
   ;; General look and feel
   ;;
@@ -254,7 +258,6 @@
 
   ;;(adaptive-wrap-prefix-mode)
   (global-visual-line-mode +1)
-
 
 
   (defun set-frame-size-according-to-resolution ()
@@ -288,8 +291,12 @@
   (server-start)
   (desktop-save-mode 1)
 #+end_src
+
+#+RESULTS:
+: t
+
 ** System specific configurations
-#+begin_src emacs-lisp :tangle "init-org.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (cond
    ((eq system-type 'darwin)
     (setq osx-clipboard-mode +1)))
