@@ -26,6 +26,7 @@
     corfu
     elpy
     org-bullets
+    flycheck
     flycheck-pycheckers
     flycheck-pyre
     flycheck-irony
@@ -49,15 +50,15 @@
         ("melpa" . "http://melpa.org/packages/")))
 
 (use-package dracula-theme
-	:ensure t
-	:init
-	(load-theme 'dracula t))
+  :ensure t
+  :init
+  (load-theme 'dracula t))
 
 (use-package use-package-ensure-system-package
   :ensure t)
 
 (use-package org-bullets
-	:hook (org-mode . org-bullets-mode))
+  :hook (org-mode . org-bullets-mode))
 
 (use-package elpy
   :ensure t
@@ -83,12 +84,12 @@
               ("S-TAB" . corfu-previous)
               ("S-<return>" . corfu-insert))
   :init
-	(global-corfu-mode))
+  (global-corfu-mode))
 
 (use-package yasnippet
   :config
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
-	:init
+  :init
   (yas-global-mode 1))
 
 ;;
@@ -100,10 +101,11 @@
   :config
   (setq
    org-log-done 'time
-	 org-hide-leading-stars t
+   org-hide-leading-stars t
    org-startup-indented t
-	 org-hide-emphasis-markers t)
-	:init)
+   org-hide-emphasis-markers t
+   yas-global-mode 1)
+  :init)
 
 (font-lock-add-keywords 'org-mode
                         '(("^ *\\([-]\\) "
@@ -223,6 +225,7 @@
  (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
  (add-hook 'python-mode-hook
            (lambda () (setq indent-tabs-mode t)))
+
  (with-eval-after-load 'magit-mode
    (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 
