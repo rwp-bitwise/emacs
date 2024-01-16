@@ -26,6 +26,11 @@
     corfu
     elpy
     org-bullets
+    flycheck-pycheckers
+    flycheck-pyre
+    flycheck-irony
+    irony
+    ac-ispell
     json-mode))
 
 ;; Make sure package list is up to date
