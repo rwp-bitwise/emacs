@@ -28,6 +28,7 @@
       dracula-theme
       corfu
       elpy
+      org-bullets
       json-mode))
 
   ;; Make sure package list is up to date
@@ -39,7 +40,7 @@
     (unless (package-installed-p pkg)
       (when (require pkg nil 'noerror)
         (package-install pkg))))
-  
+
 
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")

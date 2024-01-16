@@ -25,6 +25,7 @@
     dracula-theme
     corfu
     elpy
+    org-bullets
     json-mode))
 
 ;; Make sure package list is up to date
