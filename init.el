@@ -84,13 +84,13 @@
               ("S-TAB" . corfu-previous)
               ("S-<return>" . corfu-insert))
   :init
-  (global-corfu-mode))
+  (setq global-corfu-mode t))
 
 (use-package yasnippet
   :config
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
   :init
-  (yas-global-mode 1))
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode")
+        yas-global-mode 1))
 
 ;;
 ;; Org mode settings
@@ -98,14 +98,11 @@
 (use-package org
   :mode (("\\.org$" . org-mode))
   :ensure org
-  :config
-  (setq
-   org-log-done 'time
-   org-hide-leading-stars t
-   org-startup-indented t
-   org-hide-emphasis-markers t
-   yas-global-mode 1)
-  :init)
+  :init
+  (setq org-log-done 'time
+        org-hide-leading-stars t
+        org-startup-indented t
+        org-hide-emphasis-markers t))
 
 (font-lock-add-keywords 'org-mode
                         '(("^ *\\([-]\\) "
