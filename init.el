@@ -49,6 +49,11 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
 
+(use-package osx-clipboard
+  :ensure t
+  :defer t
+  :if (eq system-type 'darwin))
+
 (use-package dracula-theme
   :ensure t
   :init
@@ -63,7 +68,9 @@
 (use-package elpy
   :ensure t
   :init
-  (elpy-enable))
+  :commands
+  (elpy-enable)
+  :defer t)
 
 ;;
 ;; Completion with pop-ups
@@ -84,13 +91,17 @@
               ("S-TAB" . corfu-previous)
               ("S-<return>" . corfu-insert))
   :init
-  (setq global-corfu-mode t))
+
+  :commands
+  (global-corfu-mode)
+  :defer t)
 
 (use-package yasnippet
   :config
   :init
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode")
-        yas-global-mode 1))
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+  :commands
+  (yas-global-mode))
 
 ;;
 ;; Org mode settings
@@ -103,6 +114,8 @@
         org-hide-leading-stars t
         org-startup-indented t
         org-hide-emphasis-markers t))
+:commands
+(org-mode)
 
 (font-lock-add-keywords 'org-mode
                         '(("^ *\\([-]\\) "
