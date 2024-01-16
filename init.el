@@ -63,7 +63,16 @@
   :ensure t)
 
 (use-package org-bullets
-  :hook (org-mode . org-bullets-mode))
+  :hook
+  (org-mode . org-bullets-mode))
+
+(use-package magit
+  :hook
+
+  (git-commit-turn-on-flyspell)
+  (git-commit-turn-on-auto-fill)
+  :after
+  (after-save-hook magit-after-save-refresh-status))
 
 (use-package elpy
   :ensure t
@@ -125,7 +134,7 @@
 ;;    :config
 ;;    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-
+
 ;;; Custum-set-variables
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -216,37 +225,37 @@
 )
 
 ;;; Various hooks
-;;(add-hook 'org-mode-hook 'variable-pitch-mode)
+  ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)))
 
-(global-flycheck-mode)
-(global-company-mode)
+  (global-flycheck-mode)
+  (global-company-mode)
 
 
- (eval-after-load "auto-complete"
-   '(progn
-      (ac-ispell-setup)))
+   (eval-after-load "auto-complete"
+     '(progn
+        (ac-ispell-setup)))
 
- (add-hook 'org-mode-hook 'visual-line-mode)
- (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
- (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
- (add-hook 'python-mode-hook
-           (lambda () (setq indent-tabs-mode t)))
+   (add-hook 'org-mode-hook 'visual-line-mode)
+   (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
+   (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
+   (add-hook 'python-mode-hook
+             (lambda () (setq indent-tabs-mode t)))
+  
+;;   (with-eval-after-load 'magit-mode
+;;     (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 
- (with-eval-after-load 'magit-mode
-   (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
-
-;;; Python specific stuff
- (add-hook 'python-mode-hook
-           (lambda ()
-             (setq indent-tabs-mode t)
-             (setq tab-width 2)
-             (setq python-indent-offset 2)))
-;;(setq python-shell-interpreter "python3")
-(setenv "PYTHONPATH" "/the/python/path")
+  ;;; Python specific stuff
+   (add-hook 'python-mode-hook
+             (lambda ()
+               (setq indent-tabs-mode t)
+               (setq tab-width 2)
+               (setq python-indent-offset 2)))
+  ;;(setq python-shell-interpreter "python3")
+  (setenv "PYTHONPATH" "/the/python/path")
 
 ;;
 ;; General look and feel

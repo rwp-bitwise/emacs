@@ -71,7 +71,16 @@ This is useful when using multiple hosts that you want to load your emacs init.e
     :ensure t)
 
   (use-package org-bullets
-    :hook (org-mode . org-bullets-mode))
+    :hook
+    (org-mode . org-bullets-mode))
+
+  (use-package magit
+    :hook
+
+    (git-commit-turn-on-flyspell)
+    (git-commit-turn-on-auto-fill)
+    :after
+    (after-save-hook magit-after-save-refresh-status))
 
   (use-package elpy
     :ensure t
@@ -139,7 +148,7 @@ This is useful when using multiple hosts that you want to load your emacs init.e
   ;;    :config
   ;;    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-  
+
   ;;; Custum-set-variables
   (custom-set-variables
    ;; custom-set-variables was added by Custom.
@@ -261,8 +270,8 @@ This is where we gather up all of the various hooks used for various modes
    (add-hook 'python-mode-hook
              (lambda () (setq indent-tabs-mode t)))
   
-   (with-eval-after-load 'magit-mode
-     (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+;;   (with-eval-after-load 'magit-mode
+;;     (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 
   ;;; Python specific stuff
    (add-hook 'python-mode-hook
@@ -321,7 +330,6 @@ This is where we gather up all of the various hooks used for various modes
 #+end_src
 
 #+RESULTS:
-: t
 
 ** System specific configurations
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
