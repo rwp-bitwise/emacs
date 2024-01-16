@@ -6,7 +6,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   ;;; Code:
-  
+
   (require 'package)
 
   ;;; Package deffinitions
@@ -33,7 +33,10 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       corfu
       elpy
       org-bullets
+      ivy
       flycheck
+      flyspell
+      flyspell-correct-ivy
       flycheck-pycheckers
       flycheck-pyre
       flycheck-irony
@@ -61,6 +64,23 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
   (use-package flycheck
     :commands
     (global-flycheck-mode))
+
+  (use-package flyspell
+    :ensure t
+    :hook
+    (text-mode . flyspell-mode)
+    :config
+    (setq ispell-extra-args '(":--sug-mode=ultra"))
+    :bind
+    (:map flyspell-mode-map
+          ("C-;" . flyspell-correct-wrapper)))
+
+  (use-package flyspell-correct-ivy
+    :ensure t
+    :after flyspell
+    :bind
+    (:map flyspell-mode-map
+          ("C-;" . flyspell-correct-wrapper)))
 
     (use-package elpy
       :ensure t
@@ -131,7 +151,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       (setq org-log-done 'time
             org-hide-leading-stars t
             org-startup-indented t
-            org-hide-emphasis-markers t))
+            org-hide-emphasis-markers t)
+      :hook
+      (org-mode . flyspell-mode))
 
     (font-lock-add-keywords 'org-mode
                             '(("^ *\\([-]\\) "
@@ -330,7 +352,7 @@ This is where we gather up all of the various hooks used for various modes
 
 #+RESULTS:
 
-** System specific configurations
+** System specific configurations 
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (cond
    ((eq system-type 'darwin)

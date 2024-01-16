@@ -2,66 +2,66 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Tue Jan 16 15:55:21 2024
+;; Created Tue Jan 16 16:11:10 2024
 ;; Desktop file format version 208
 ;; Emacs version 29.1
 
 ;; Global section:
-(setq desktop-saved-frameset [frameset 1 (26022 60729 279338 0) (desktop . "208") "rplace@salami.local" nil nil ((((minibuffer . t) (fontsize . 0) (font . "-*-Menlo-regular-normal-normal-*-12-*-*-*-m-0-iso10646-1") (border-width . 0) (internal-border-width . 2) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . right) (horizontal-scroll-bars) (foreground-color . "#f8f8f2") (background-color . "#282a36") (line-spacing) (left-fringe . 8) (right-fringe . 8) (no-special-glyphs) (undecorated) (ns-appearance) (ns-transparent-titlebar) (z-group) (no-focus-on-map) (no-accept-focus) (menu-bar-lines . 1) (tab-bar-lines . 0) (tool-bar-lines . 0) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 15) (scroll-bar-height . 15) (alpha) (alpha-background) (fullscreen) (scroll-bar-foreground) (scroll-bar-background) (display-type . color) (background-mode . dark) (cursor-color . "#ccccc7") (font-parameter) (environment) (last-focus-update . t) (frameset--id . "4150-5296-48FA-C440") (frameset--mini t . t) (height . 69) (width . 220) (modeline . t) (unsplittable) (left . 150) (top . 72) (icon-name) (visibility . t) (display . "salami.local") (explicit-name) (tool-bar-position . top)) ((min-height . 4) (min-width . 20) (min-height-ignore . 3) (min-width-ignore . 14) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 56) (min-pixel-width . 140) (min-pixel-height-ignore . 42) (min-pixel-width-ignore . 98) (min-pixel-height-safe . 14) (min-pixel-width-safe . 28)) hc (pixel-width . 1571) (pixel-height . 952) (total-width . 224) (total-height . 68) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 787) (pixel-height . 952) (total-width . 112) (total-height . 68) (normal-height . 1.0) (normal-width . 0.5) (buffer "init.org" (selected) (hscroll . 0) (fringes 8 8 nil nil) (margins nil) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 599) (start . 1)) (prev-buffers (".emacs.d" 1 1366) ("*GNU Emacs*" 1 71) ("*scratch*" 1 146))) (leaf (last . t) (pixel-width . 784) (pixel-height . 952) (total-width . 112) (total-height . 68) (normal-height . 1.0) (normal-width . 0.5) (buffer "magit: .emacs.d" (selected . t) (hscroll . 0) (fringes 8 8 nil nil) (margins nil) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 14702) (start . 1)) (prev-buffers ("*info*" 1745801 1745801) ("*Customize Option: Display Battery Mode*" 1 42) ("*Help*" 1 377)))))])
+(setq desktop-saved-frameset [frameset 1 (26022 61678 438604 0) (desktop . "208") "rplace@salami.local" nil nil ((((minibuffer . t) (fontsize . 0) (font . "-*-Menlo-regular-normal-normal-*-12-*-*-*-m-0-iso10646-1") (border-width . 0) (internal-border-width . 2) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . right) (horizontal-scroll-bars) (foreground-color . "#f8f8f2") (background-color . "#282a36") (line-spacing) (left-fringe . 8) (right-fringe . 8) (no-special-glyphs) (undecorated) (ns-appearance) (ns-transparent-titlebar) (z-group) (no-focus-on-map) (no-accept-focus) (menu-bar-lines . 1) (tab-bar-lines . 0) (tool-bar-lines . 0) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 15) (scroll-bar-height . 15) (alpha) (alpha-background) (fullscreen) (scroll-bar-foreground) (scroll-bar-background) (display-type . color) (background-mode . dark) (cursor-color . "#ccccc7") (font-parameter) (environment) (last-focus-update) (frameset--id . "4150-5296-48FA-C440") (frameset--mini t . t) (modeline . t) (unsplittable) (icon-name) (visibility . t) (display . "salami.local") (explicit-name) (tool-bar-position . top) (height . 69) (width . 220) (left . 150) (top . 72)) ((min-height . 4) (min-width . 10) (min-height-ignore . 3) (min-width-ignore . 7) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 56) (min-pixel-width . 70) (min-pixel-height-ignore . 42) (min-pixel-width-ignore . 49) (min-pixel-height-safe . 14) (min-pixel-width-safe . 14)) leaf (pixel-width . 1571) (pixel-height . 952) (total-width . 224) (total-height . 68) (normal-height . 1.0) (normal-width . 1.0) (buffer "init.org" (selected . t) (hscroll . 0) (fringes 8 8 nil nil) (margins nil) (scroll-bars nil 3 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 7342) (start . 6186)) (prev-buffers ("init.org" 1 597) (".emacs.d" 1 1366) ("*scratch*" 1 1))))])
 (setq desktop-missing-file-warning nil)
 (setq tags-file-name nil)
 (setq tags-table-list nil)
-(setq search-ring '(#("desk" 0 4 (isearch-case-fold-search t isearch-regexp-function nil))))
+(setq search-ring '(#("org-mode" 0 8 (isearch-case-fold-search t isearch-regexp-function nil)) #("flyspe" 0 6 (isearch-case-fold-search t isearch-regexp-function nil)) #("org-mo" 0 6 (isearch-case-fold-search t isearch-regexp-function nil)) #("fly" 0 3 (isearch-case-fold-search t isearch-regexp-function nil)) #("desk" 0 4 (isearch-case-fold-search t isearch-regexp-function nil))))
 (setq regexp-search-ring nil)
 (setq register-alist nil)
-(setq file-name-history '("~/.emacs.d/" "~/.emacs.d/init.el" "~/.emacs.d/"))
+(setq file-name-history '("~/.emacs.d/init.el" "~/.emacs.d/init.el.bak" "~/.emacs.d/init.el" "~/.emacs.d/.git/COMMIT_EDITMSG" "~/.emacs.d/" "~/.emacs.d/init.el" "~/.emacs.d/"))
 
 ;; Buffer section -- buffers listed in same order as in buffer list:
 (desktop-create-buffer 208
   "/Users/rplace/.emacs.d/init.org"
   "init.org"
   'org-mode
-  '(visual-line-mode company-mode auto-revert-mode font-lock-mode org-bullets-mode org-indent-mode)
-  599
-  '(12639 nil)
+  '(flyspell-mode font-lock-mode org-indent-mode org-bullets-mode auto-revert-mode company-mode visual-line-mode)
+  7342
+  '(7338 t)
   nil
   nil
-  '((indent-tabs-mode) (buffer-display-time 26022 60727 895604 0) (buffer-file-coding-system . utf-8-unix) (truncate-lines))
-  '((mark-ring (12560 12586 12487 1718 12822))))
+  '((indent-tabs-mode) (buffer-display-time 26022 61613 627178 0) (buffer-file-coding-system . utf-8-unix) (truncate-lines))
+  '((mark-ring (1920 3597 2465 774 5846 12765 12686 12712 12613 1731 12948 7340))))
 
 (desktop-create-buffer 208
   nil
   "*info*"
   'Info-mode
-  '(visual-line-mode company-mode font-lock-mode isearch-fold-quotes-mode)
+  '(isearch-fold-quotes-mode font-lock-mode company-mode visual-line-mode)
   1745801
   '(1728734 nil)
   t
   '("/Applications/Emacs.app/Contents/Resources/info/emacs" "Specific Customization" ((history ("/Applications/Emacs.app/Contents/Resources/info/emacs" "Easy Customization" 1728553))))
-  '((tab-width . 8) (buffer-display-time 26022 60257 623698 0) (buffer-file-coding-system . utf-8-unix) (case-fold-search . t) (truncate-lines))
+  '((tab-width . 8) (buffer-display-time 26022 60283 244577 62000) (buffer-file-coding-system . utf-8-unix) (case-fold-search . t) (truncate-lines))
   '((mark-ring (1728553))))
 
 (desktop-create-buffer 208
   nil
   ".emacs.d"
   'dired-mode
-  '(visual-line-mode company-mode font-lock-mode)
+  '(font-lock-mode company-mode visual-line-mode)
   1366
   '(nil nil)
   t
   '("/Users/rplace/.emacs.d/")
-  '((buffer-display-time 26022 59968 290757 0) (truncate-lines))
+  '((buffer-display-time 26022 59993 971883 62000) (truncate-lines))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
   "/Applications/Emacs.app/Contents/Resources/lisp/loaddefs.el.gz"
   "loaddefs.el.gz"
   'emacs-lisp-mode
-  '(visual-line-mode company-mode font-lock-mode eldoc-mode)
+  '(eldoc-mode font-lock-mode company-mode visual-line-mode)
   73280
   '(nil nil)
   t
   nil
-  '((buffer-display-time) (buffer-file-coding-system . utf-8-emacs-unix) (truncate-lines))
+  '((buffer-display-time 26022 61583 621564 0) (buffer-file-coding-system . utf-8-emacs-unix) (truncate-lines))
   '((mark-ring nil)))
 

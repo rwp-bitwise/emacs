@@ -2,8 +2,6 @@
 
 (require 'package)
 
-
-
 ;;; Package deffinitions
 ;; first, declare repositories
 ;; Makesure libtool, libtool-bin, and cmake are installed
@@ -29,6 +27,7 @@
     elpy
     org-bullets
     flycheck
+    flyspell
     flycheck-pycheckers
     flycheck-pyre
     flycheck-irony
@@ -53,6 +52,10 @@
 (use-package flycheck
   :commands
   (global-flycheck-mode))
+
+(use-package flyspell
+  :hook
+  (text-mode . flyspell-mode))
 
   (use-package elpy
     :ensure t
@@ -123,7 +126,9 @@
     (setq org-log-done 'time
           org-hide-leading-stars t
           org-startup-indented t
-          org-hide-emphasis-markers t))
+          org-hide-emphasis-markers t)
+    :hook
+    (org-mode . flyspell-mode))
 
   (font-lock-add-keywords 'org-mode
                           '(("^ *\\([-]\\) "
@@ -143,14 +148,14 @@
  '(ac-ispell-fuzzy-limit 4)
  '(ac-ispell-requires 4)
  '(custom-safe-themes
-   '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
+	 '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
  '(org-agenda-files
-   '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
+	 '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
  '(package-archives
-   '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa" . "https://melpa.org/packages/")))
+	 '(("gnu" . "https://elpa.gnu.org/packages/")
+		 ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+	 '(flyspell-correct-ivy cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
                                         ;(package-initialize)
 (custom-set-faces
