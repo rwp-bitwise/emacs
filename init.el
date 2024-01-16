@@ -1,6 +1,8 @@
+;;; Code:
+
 (require 'package)
 
-;;; Code:
+
 
 ;;; Package deffinitions
 ;; first, declare repositories
@@ -48,11 +50,15 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
 
-(use-package elpy
-   :ensure t
-   :init
-   :commands
-   (elpy-enable))
+(use-package flycheck
+  :commands
+  (global-flycheck-mode))
+
+  (use-package elpy
+    :ensure t
+    :init
+    :commands
+    (elpy-enable))
 
   (use-package osx-clipboard
     :ensure t
@@ -71,7 +77,6 @@
     :hook
     (org-mode . org-bullets-mode))
 
-
   (use-package magit
     :ensure t
     :hook
@@ -79,50 +84,50 @@
     (git-commit-turn-on-auto-fill)
     (after-save . magit-after-save-refresh-status))
 
-;;
-;; Completion with pop-ups
-;;
-(use-package corfu
-  :custom
-  (corfu-xdauto t)
-  (corfu-auto-delay 0.0)
-  (corfu-quit-at-boundary 'seperator)
-  (corfu-echo-documentation 0.25)
-  (corfu-preview-current 'insert)
-  (corfu-preselect-first nil)
+  ;;
+  ;; Completion with pop-ups
+  ;;
+  (use-package corfu
+    :custom
+    (corfu-xdauto t)
+    (corfu-auto-delay 0.0)
+    (corfu-quit-at-boundary 'seperator)
+    (corfu-echo-documentation 0.25)
+    (corfu-preview-current 'insert)
+    (corfu-preselect-first nil)
 
-  :bind (:map corfu-map
-              ("M-SPC" . corfu-insert-seperator)
-              ("RET"   . nil)
-              ("TAB"   . corfu-next)
-              ("S-TAB" . corfu-previous)
-              ("S-<return>" . corfu-insert))
-  :init
-  :commands
-  (global-corfu-mode))
+    :bind (:map corfu-map
+                ("M-SPC" . corfu-insert-seperator)
+                ("RET"   . nil)
+                ("TAB"   . corfu-next)
+                ("S-TAB" . corfu-previous)
+                ("S-<return>" . corfu-insert))
+    :init
+    :commands
+    (global-corfu-mode))
 
-(use-package yasnippet
-  :config
-  :init
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
-  :commands
-  (yas-global-mode))
+  (use-package yasnippet
+    :config
+    :init
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+    :commands
+    (yas-global-mode))
 
-;;
-;; Org mode settings
-;;
-(use-package org
-  :mode (("\\.org$" . org-mode))
-  :ensure org
-  :init
-  (setq org-log-done 'time
-        org-hide-leading-stars t
-        org-startup-indented t
-        org-hide-emphasis-markers t))
+  ;;
+  ;; Org mode settings
+  ;;
+  (use-package org
+    :mode (("\\.org$" . org-mode))
+    :ensure org
+    :init
+    (setq org-log-done 'time
+          org-hide-leading-stars t
+          org-startup-indented t
+          org-hide-emphasis-markers t))
 
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 ;;(use-package org-bullets
 ;;    :config
@@ -225,7 +230,7 @@
  'org-babel-load-languages
  '((python . t)))
 
-(global-flycheck-mode)
+;;(global-flycheck-mode)
 (global-company-mode)
 
 
@@ -239,60 +244,61 @@
  (add-hook 'python-mode-hook
            (lambda () (setq indent-tabs-mode t)))
 
- ;;(with-eval-after-load 'magit-mode
- ;;  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
-
 ;;; Python specific stuff
  (add-hook 'python-mode-hook
            (lambda ()
              (setq indent-tabs-mode t)
              (setq tab-width 2)
              (setq python-indent-offset 2)))
-;;(setq python-shell-interpreter "python3")
+
 (setenv "PYTHONPATH" "/the/python/path")
 
 ;;
-;; General look and feel
-;;
-(visual-line-mode t)
-;;(load-theme 'alect-dark t)
-(tool-bar-mode -1)
+  ;; General look and feel
+  ;;
+  (visual-line-mode t)
+  ;;(load-theme 'alect-dark t)
+  (tool-bar-mode -1)
 
-;;(adaptive-wrap-prefix-mode)
-(global-visual-line-mode +1)
-
-
-(defun set-frame-size-according-to-resolution ()
-  "Set the default frame size based on display resolution.
-Shamelessly bottowed from Bryan Oakley."
-  (interactive)
-  (if window-system
-      (progn
-        ;; use 120 char wide window for largeish displays
-        ;; and smaller 80 column windows for smaller displays
-        ;; pick whatever numbers make sense for you
-        (if (> (x-display-pixel-width) 1280)
-            (add-to-list 'default-frame-alist (cons 'width 220))
-          (add-to-list 'default-frame-alist (cons 'width 80)))
-        ;; for the height, subtract a couple hundred pixels
-        ;; from the screen height (for panels, menubars and
-        ;; whatnot), then divide by the height of a char to
-        ;; get the height we want
-        (add-to-list 'default-frame-alist
-                     (cons 'height (/ (- (x-display-pixel-height) 200)
-                                      (frame-char-height)))))))
-
-(set-frame-size-according-to-resolution)
-
-;;;(setq-default indent-tabs-mode nil)
-(setq-default tab-width 2)
-(setq indent-line-function 'insert-tab)
+  ;;(adaptive-wrap-prefix-mode)
+  (global-visual-line-mode +1)
 
 
-(global-hl-line-mode)
-(server-start)
-(desktop-save-mode 1)
+  (defun set-frame-size-according-to-resolution ()
+    "Set the default frame size based on display resolution.
+  Shamelessly bottowed from Bryan Oakley."
+    (interactive)
+    (if window-system
+        (progn
+          ;; use 120 char wide window for largeish displays
+          ;; and smaller 80 column windows for smaller displays
+          ;; pick whatever numbers make sense for you
+          (if (> (x-display-pixel-width) 1280)
+              (add-to-list 'default-frame-alist (cons 'width 220))
+            (add-to-list 'default-frame-alist (cons 'width 80)))
+          ;; for the height, subtract a couple hundred pixels
+          ;; from the screen height (for panels, menubars and
+          ;; whatnot), then divide by the height of a char to
+          ;; get the height we want
+          (add-to-list 'default-frame-alist
+                       (cons 'height (/ (- (x-display-pixel-height) 200)
+                                        (frame-char-height)))))))
+
+  (set-frame-size-according-to-resolution)
+
+  ;;;(setq-default indent-tabs-mode nil)
+  (setq-default tab-width 2)
+;;  (setq indent-line-function 'insert-tab)
+
+  (setq column-number-mode t
+        indent-line-function 'insert-tab)
+  (display-battery-mode)
+  (desktop-save-mode)
+  (global-hl-line-mode)
+  (server-start)
 
 (cond
  ((eq system-type 'darwin)
   (setq osx-clipboard-mode +1)))
+
+;;; init.el ends here
