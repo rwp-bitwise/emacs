@@ -77,7 +77,7 @@
     :hook
     (git-commit-turn-on-flyspell)
     (git-commit-turn-on-auto-fill)
-    (save-hook . magit-after-save-refresh-status))
+    (after-save . magit-after-save-refresh-status))
 
 ;;
 ;; Completion with pop-ups
