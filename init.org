@@ -69,6 +69,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :ensure t
     :hook
     (text-mode . flyspell-mode)
+    (prog-mode . flyspell-prog-mode)
     :config
     (setq ispell-extra-args '(":--sug-mode=ultra"))
     :bind

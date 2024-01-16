@@ -26,8 +26,10 @@
     corfu
     elpy
     org-bullets
+    ivy
     flycheck
     flyspell
+    flyspell-correct-ivy
     flycheck-pycheckers
     flycheck-pyre
     flycheck-irony
@@ -54,8 +56,22 @@
   (global-flycheck-mode))
 
 (use-package flyspell
+  :ensure t
   :hook
-  (text-mode . flyspell-mode))
+  (text-mode . flyspell-mode)
+  (prog-mode . flyspell-prog-mode)
+  :config
+  (setq ispell-extra-args '(":--sug-mode=ultra"))
+  :bind
+  (:map flyspell-mode-map
+        ("C-;" . flyspell-correct-wrapper)))
+
+(use-package flyspell-correct-ivy
+  :ensure t
+  :after flyspell
+  :bind
+  (:map flyspell-mode-map
+        ("C-;" . flyspell-correct-wrapper)))
 
   (use-package elpy
     :ensure t
@@ -148,14 +164,14 @@
  '(ac-ispell-fuzzy-limit 4)
  '(ac-ispell-requires 4)
  '(custom-safe-themes
-	 '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
+   '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
  '(org-agenda-files
-	 '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
+   '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
  '(package-archives
-	 '(("gnu" . "https://elpa.gnu.org/packages/")
-		 ("melpa" . "https://melpa.org/packages/")))
+   '(("gnu" . "https://elpa.gnu.org/packages/")
+     ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-	 '(flyspell-correct-ivy cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
                                         ;(package-initialize)
 (custom-set-faces
