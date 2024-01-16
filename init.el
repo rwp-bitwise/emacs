@@ -1,3 +1,46 @@
+(require 'package)
+
+;;; Code:
+
+;;; Package deffinitions
+;; first, declare repositories
+;; Makesure libtool, libtool-bin, and cmake are installed
+;; pip install virtualenv if it doesn't already exist
+;; ;; Declare packages
+(defvar my-packages
+  '(adaptive-wrap
+    osx-clipboard
+    alect-themes
+    expand-region
+    helm
+    jinja2-mode
+    magit
+    markdown-mode
+    paredit
+    wrap-region
+    yaml-mode
+    yasnippet
+    vterm
+    adaptive-wrap
+    dracula-theme
+    corfu
+    elpy
+    json-mode))
+
+;; Make sure package list is up to date
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+;; Iterate on packages and install missing ones
+(dolist (pkg my-packages)
+  (unless (package-installed-p pkg)
+    (when (require pkgload nil 'noerror)
+      (package-install pkg)))
+
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")))
+
 (use-package dracula-theme
 	:ensure t
 	:init

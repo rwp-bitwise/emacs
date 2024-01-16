@@ -1,6 +1,6 @@
 * Package installation and management
 ** List the package set we relay on and loop over and pull them all down, this is useful when using multiple hosts that you want to load your emacs init.el onto.
-#+begin_src emacs-lisp :tangle "init-org.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (require 'package)
 
   ;;; Code:
