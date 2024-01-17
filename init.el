@@ -9,6 +9,7 @@
 ;; ;; Declare packages
 (defvar my-packages
   '(adaptive-wrap
+    org
     osx-clipboard
     alect-themes
     expand-region
@@ -92,16 +93,15 @@
   (use-package use-package-ensure-system-package
     :ensure t)
 
-  (use-package org-bullets
-    :hook
-    (org-mode . org-bullets-mode))
 
   (use-package magit
     :ensure t
     :hook
     (git-commit-turn-on-flyspell)
     (git-commit-turn-on-auto-fill)
+    (git-commit-mode . ac-ispell-ac-setup)
     (after-save . magit-after-save-refresh-status))
+
 
   ;;
   ;; Completion with pop-ups
@@ -135,27 +135,27 @@
   ;;
   ;; Org mode settings
   ;;
-  (use-package org
-    :mode (("\\.org$" . org-mode))
-    :ensure org
-    :init
-    (setq org-log-done 'time
-          org-hide-leading-stars t
-          org-startup-indented t
-          org-hide-emphasis-markers t)
+ (use-package org
+   :mode (("\\.org$" . org-mode))
+   :ensure org
+   :init
+   (setq org-log-done 'time
+         org-hide-leading-stars t
+         org-startup-indented t
+         org-hide-emphasis-markers t)
     :hook
     (org-mode . flyspell-mode))
 
-  (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+ (use-package org-bullets
+   :hook
+   (org-mode . org-bullets-mode)
+   (org-mode . visual-line-mode)
+   :after org)
 
-;;(use-package org-bullets
-;;    :config
-;;    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+ (font-lock-add-keywords 'org-mode
+                         '(("^ *\\([-]\\) "
+                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-
-;;; Custum-set-variables
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -173,7 +173,7 @@
  '(package-selected-packages
    '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
-                                        ;(package-initialize)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -259,7 +259,7 @@
    '(progn
       (ac-ispell-setup)))
 
- (add-hook 'org-mode-hook 'visual-line-mode)
+
  (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
  (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
  (add-hook 'python-mode-hook
