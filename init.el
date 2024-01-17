@@ -136,8 +136,8 @@
   ;; Org mode settings
   ;;
  (use-package org
+   :ensure t
    :mode (("\\.org$" . org-mode))
-   :ensure org
    :init
    (setq org-log-done 'time
          org-hide-leading-stars t
