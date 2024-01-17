@@ -363,10 +363,12 @@ This is where we gather up all of the various hooks used for various modes
     (setq osx-clipboard-mode +1)))
 
   (cond
-    ((eq system-type 'linux)
-      (setq x-alt-keysym 'meta)))
+   ((eq system-type 'linux)
+    (setq x-alt-keysym 'meta)))
 
-(server-start)
+  (if (featurep 'server)
+      (message "Emacs server is running")
+    (server-start))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp :tangle init.el
