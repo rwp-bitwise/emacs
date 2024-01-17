@@ -244,9 +244,6 @@
  '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 )
 
-;;; Various hooks
-;;(add-hook 'org-mode-hook 'variable-pitch-mode)
-
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)))
@@ -254,13 +251,10 @@
 ;;(global-flycheck-mode)
 (global-company-mode)
 
-
  (eval-after-load "auto-complete"
    '(progn
       (ac-ispell-setup)))
 
-
- (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
  (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
  (add-hook 'python-mode-hook
            (lambda () (setq indent-tabs-mode t)))
@@ -272,7 +266,7 @@
              (setq tab-width 2)
              (setq python-indent-offset 2)))
 
-(setenv "PYTHONPATH" "/the/python/path")
+;;(setenv "PYTHONPATH" "/the/python/path")
 
 (defun set-frame-size-according-to-resolution ()
   "Set the default frame size based on display resolution.

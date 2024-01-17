@@ -274,8 +274,6 @@ Here we set the customizations for the various headline levels in org-mode. We a
 ** org-babel and language configuration
 This is where we gather up all of the various hooks used for various modes
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  ;;; Various hooks
-  ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -284,13 +282,10 @@ This is where we gather up all of the various hooks used for various modes
   ;;(global-flycheck-mode)
   (global-company-mode)
 
-
    (eval-after-load "auto-complete"
      '(progn
         (ac-ispell-setup)))
 
-
-   (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
    (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
    (add-hook 'python-mode-hook
              (lambda () (setq indent-tabs-mode t)))
@@ -302,13 +297,14 @@ This is where we gather up all of the various hooks used for various modes
                (setq tab-width 2)
                (setq python-indent-offset 2)))
 
-  (setenv "PYTHONPATH" "/the/python/path")
+  ;;(setenv "PYTHONPATH" "/the/python/path")
 
 #+end_src
 
 ** Interface configuration
 *** Display configuration
   Have the window sized according to the resolution of the display
+  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
     (defun set-frame-size-according-to-resolution ()
       "Set the default frame size based on display resolution.
@@ -335,6 +331,7 @@ This is where we gather up all of the various hooks used for various modes
   
 *** Line wrap handling
   Line wrap, default tab width, highlighting, etc
+  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
     (visual-line-mode t)
     (global-visual-line-mode +1)
@@ -350,14 +347,15 @@ This is where we gather up all of the various hooks used for various modes
   (display-battery-mode)
   (desktop-save-mode)
   #+end_src
+  
 *** Keyboard bindings
+  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
 #+end_src
 
-#+RESULTS:
-
-** System specific configurations 
+** System specific configurations
+  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (cond
    ((eq system-type 'darwin)
