@@ -351,7 +351,7 @@ This is where we gather up all of the various hooks used for various modes
   
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
-  (setq mac-option-modifier 'meta)
+
 #+end_src
 
 ** System specific configurations
@@ -359,7 +359,12 @@ This is where we gather up all of the various hooks used for various modes
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (cond
    ((eq system-type 'darwin)
+    (setq mac-option-modifier 'meta)
     (setq osx-clipboard-mode +1)))
+
+  (cond
+    ((eq system-type 'linux)
+      (setq x-alt-keysym 'meta)))
 
 (server-start)
 #+end_src

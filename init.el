@@ -301,11 +301,15 @@ Shamelessly bottowed from Bryan Oakley."
 (desktop-save-mode)
 
 (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
-(setq mac-option-modifier 'meta)
 
 (cond
    ((eq system-type 'darwin)
+    (setq mac-option-modifier 'meta)
     (setq osx-clipboard-mode +1)))
+
+  (cond
+    ((eq system-type 'linux)
+      (setq x-alt-keysym 'meta)))
 
 (server-start)
 
