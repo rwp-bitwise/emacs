@@ -274,52 +274,45 @@
 
 (setenv "PYTHONPATH" "/the/python/path")
 
-;;
-  ;; General look and feel
-  ;;
-  (visual-line-mode t)
-  ;;(load-theme 'alect-dark t)
-  (tool-bar-mode -1)
+(defun set-frame-size-according-to-resolution ()
+  "Set the default frame size based on display resolution.
+Shamelessly bottowed from Bryan Oakley."
+  (interactive)
+  (if window-system
+      (progn
+        ;; use 120 char wide window for largeish displays
+        ;; and smaller 80 column windows for smaller displays
+        ;; pick whatever numbers make sense for you
+        (if (> (x-display-pixel-width) 1280)
+            (add-to-list 'default-frame-alist (cons 'width 220))
+          (add-to-list 'default-frame-alist (cons 'width 80)))
+        ;; for the height, subtract a couple hundred pixels
+        ;; from the screen height (for panels, menubars and
+        ;; whatnot), then divide by the height of a char to
+        ;; get the height we want
+        (add-to-list 'default-frame-alist
+                     (cons 'height (/ (- (x-display-pixel-height) 200)
+                                      (frame-char-height)))))))
 
-  ;;(adaptive-wrap-prefix-mode)
-  (global-visual-line-mode +1)
+(set-frame-size-according-to-resolution)
 
+(visual-line-mode t)
+(global-visual-line-mode +1)
+(global-hl-line-mode)
+(setq-default tab-width 2)
 
-  (defun set-frame-size-according-to-resolution ()
-    "Set the default frame size based on display resolution.
-  Shamelessly bottowed from Bryan Oakley."
-    (interactive)
-    (if window-system
-        (progn
-          ;; use 120 char wide window for largeish displays
-          ;; and smaller 80 column windows for smaller displays
-          ;; pick whatever numbers make sense for you
-          (if (> (x-display-pixel-width) 1280)
-              (add-to-list 'default-frame-alist (cons 'width 220))
-            (add-to-list 'default-frame-alist (cons 'width 80)))
-          ;; for the height, subtract a couple hundred pixels
-          ;; from the screen height (for panels, menubars and
-          ;; whatnot), then divide by the height of a char to
-          ;; get the height we want
-          (add-to-list 'default-frame-alist
-                       (cons 'height (/ (- (x-display-pixel-height) 200)
-                                        (frame-char-height)))))))
+(setq column-number-mode t
+  indent-line-function 'insert-tab)
+(tool-bar-mode -1)
+(display-battery-mode)
+(desktop-save-mode)
 
-  (set-frame-size-according-to-resolution)
-
-  ;;;(setq-default indent-tabs-mode nil)
-  (setq-default tab-width 2)
-;;  (setq indent-line-function 'insert-tab)
-
-  (setq column-number-mode t
-        indent-line-function 'insert-tab)
-  (display-battery-mode)
-  (desktop-save-mode)
-  (global-hl-line-mode)
-  (server-start)
+(global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
 
 (cond
- ((eq system-type 'darwin)
-  (setq osx-clipboard-mode +1)))
+   ((eq system-type 'darwin)
+    (setq osx-clipboard-mode +1)))
+
+(server-start)
 
 ;;; init.el ends here

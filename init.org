@@ -304,18 +304,9 @@ This is where we gather up all of the various hooks used for various modes
 #+end_src
 
 ** Interface configuration
+*** Display configuration
+  Have the window sized according to the resolution of the display
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-    ;;
-    ;; General look and feel
-    ;;
-    (visual-line-mode t)
-    ;;(load-theme 'alect-dark t)
-    (tool-bar-mode -1)
-
-    ;;(adaptive-wrap-prefix-mode)
-    (global-visual-line-mode +1)
-
-
     (defun set-frame-size-according-to-resolution ()
       "Set the default frame size based on display resolution.
     Shamelessly bottowed from Bryan Oakley."
@@ -337,18 +328,28 @@ This is where we gather up all of the various hooks used for various modes
                                           (frame-char-height)))))))
 
     (set-frame-size-according-to-resolution)
-
-    ;;;(setq-default indent-tabs-mode nil)
-    (setq-default tab-width 2)
-  ;;  (setq indent-line-function 'insert-tab)
-
-    (setq column-number-mode t
-          indent-line-function 'insert-tab)
-    (display-battery-mode)
-    (desktop-save-mode)
+#+end_src
+  
+*** Line wrap handling
+  Line wrap, default tab width, highlighting, etc
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+    (visual-line-mode t)
+    (global-visual-line-mode +1)
     (global-hl-line-mode)
-    (server-start)
-
+    (setq-default tab-width 2)
+#+end_src
+  
+*** Mode line customizations
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+  (setq column-number-mode t
+    indent-line-function 'insert-tab)
+  (tool-bar-mode -1)
+  (display-battery-mode)
+  (desktop-save-mode)
+  #+end_src
+*** Keyboard bindings
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+  (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
 #+end_src
 
 #+RESULTS:
@@ -359,7 +360,7 @@ This is where we gather up all of the various hooks used for various modes
    ((eq system-type 'darwin)
     (setq osx-clipboard-mode +1)))
 
-
+(server-start)
 #+end_src
 
 #+BEGIN_SRC emacs-lisp :tangle init.el
