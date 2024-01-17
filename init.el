@@ -254,7 +254,7 @@
    '(progn
       (ac-ispell-setup)))
 
- (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
+ ;; (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
  (add-hook 'python-mode-hook
            (lambda () (setq indent-tabs-mode t)))
 
