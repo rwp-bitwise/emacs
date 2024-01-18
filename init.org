@@ -156,7 +156,6 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       (org-mode . flyspell-mode)
       (org-mode . visual-line-mode)  
       (yas-minor-mode))
-  
 
    (use-package org-bullets
      :hook

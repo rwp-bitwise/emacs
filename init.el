@@ -147,7 +147,6 @@
     (org-mode . visual-line-mode)  
     (yas-minor-mode))
 
-
  (use-package org-bullets
    :hook
    (org-mode . org-bullets-mode)
