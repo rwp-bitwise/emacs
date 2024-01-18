@@ -144,12 +144,13 @@
          org-hide-emphasis-markers t)
     :hook
     (org-mode . flyspell-mode)
+    (org-mode . visual-line-mode)  
     (yas-minor-mode))
+
 
  (use-package org-bullets
    :hook
    (org-mode . org-bullets-mode)
-   (org-mode . visual-line-mode)
    :after org)
 
  (font-lock-add-keywords 'org-mode

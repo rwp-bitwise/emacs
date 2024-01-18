@@ -2,12 +2,12 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Wed Jan 17 15:55:12 2024
+;; Created Wed Jan 17 19:26:37 2024
 ;; Desktop file format version 208
 ;; Emacs version 29.1
 
 ;; Global section:
-(setq desktop-saved-frameset [frameset 1 (26024 16048 221681 0) (desktop . "208") "rplace@salami.local" nil nil ((((minibuffer . t) (tty-type . "xterm-256color") (tty . "/dev/tty") (display-type . color) (background-mode . light) (scroll-bar-foreground) (scroll-bar-background) (cursor-color . "#c6c6c6") (foreground-color . "#ffffff") (tool-bar-lines . 0) (fontsize . 0) (GUI:font . "-*-Menlo-regular-normal-normal-*-12-*-*-*-m-0-iso10646-1") (internal-border-width . 2) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . right) (horizontal-scroll-bars) (background-color . "unspecified-bg") (line-spacing) (left-fringe . 8) (right-fringe . 8) (no-special-glyphs) (undecorated) (ns-appearance) (ns-transparent-titlebar) (z-group) (no-focus-on-map) (no-accept-focus) (menu-bar-lines . 1) (tab-bar-lines . 0) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 15) (scroll-bar-height . 15) (alpha) (alpha-background) (GUI:fullscreen . fullboth) (font-parameter) (environment) (last-focus-update) (frameset--id . "4150-5296-48FA-C440") (frameset--mini t . t) (modeline . t) (unsplittable) (icon-name) (display) (explicit-name) (tool-bar-position . top) (GUI:height . 154) (GUI:width . 543) (GUI:left . 2) (GUI:top . 25) (visibility . t) (fullscreen . fullboth) (font . "tty") (height . 72) (width . 145)) ((min-height . 4) (min-width . 20) (min-height-ignore . 2) (min-width-ignore . 4) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 4) (min-pixel-width . 20) (min-pixel-height-ignore . 2) (min-pixel-width-ignore . 4) (min-pixel-height-safe . 1) (min-pixel-width-safe . 4)) hc (pixel-width . 145) (pixel-height . 71) (total-width . 145) (total-height . 71) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 72) (pixel-height . 71) (total-width . 72) (total-height . 71) (normal-height . 1.0) (normal-width . 0.496551724137931) (buffer "*scratch*" (selected . t) (hscroll . 0) (fringes 0 0 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 146) (start . 1))) (leaf (last . t) (pixel-width . 73) (pixel-height . 71) (total-width . 73) (total-height . 71) (normal-height . 1.0) (normal-width . 0.503448275862069) (buffer "*Warnings*" (selected) (hscroll . 0) (fringes 0 0 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 352) (start . 1)) (prev-buffers ("fiserv.db.project.org" 4749 6140)))))])
+(setq desktop-saved-frameset [frameset 1 (26024 28733 97410 0) (desktop . "208") "rplace@salami.local" nil nil ((((minibuffer . t) (tty-type . "xterm-256color") (tty . "/dev/tty") (display-type . color) (background-mode . light) (scroll-bar-foreground) (scroll-bar-background) (cursor-color . "#c6c6c6") (foreground-color . "#ffffff") (tool-bar-lines . 0) (fontsize . 0) (GUI:font . "-*-Menlo-regular-normal-normal-*-12-*-*-*-m-0-iso10646-1") (internal-border-width . 2) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars . right) (horizontal-scroll-bars) (background-color . "unspecified-bg") (line-spacing) (left-fringe . 8) (right-fringe . 8) (no-special-glyphs) (undecorated) (ns-appearance) (ns-transparent-titlebar) (z-group) (no-focus-on-map) (no-accept-focus) (menu-bar-lines . 1) (tab-bar-lines . 0) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 15) (scroll-bar-height . 15) (alpha) (alpha-background) (GUI:fullscreen . fullboth) (font-parameter) (environment) (last-focus-update) (frameset--id . "4150-5296-48FA-C440") (frameset--mini t . t) (modeline . t) (unsplittable) (icon-name) (display) (explicit-name) (tool-bar-position . top) (GUI:height . 154) (GUI:width . 543) (GUI:left . 2) (GUI:top . 25) (visibility . t) (fullscreen . fullboth) (font . "tty") (height . 72) (width . 143)) ((min-height . 4) (min-width . 10) (min-height-ignore . 2) (min-width-ignore . 2) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 4) (min-pixel-width . 10) (min-pixel-height-ignore . 2) (min-pixel-width-ignore . 2) (min-pixel-height-safe . 1) (min-pixel-width-safe . 2)) leaf (pixel-width . 143) (pixel-height . 71) (total-width . 143) (total-height . 71) (normal-height . 1.0) (normal-width . 1.0) (buffer "*Messages*" (selected . t) (hscroll . 0) (fringes 0 0 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 668) (start . 1)) (prev-buffers ("*scratch*" 1 146))))])
 (setq desktop-missing-file-warning nil)
 (setq tags-file-name nil)
 (setq tags-table-list nil)
@@ -26,7 +26,7 @@
   '(5534 nil)
   nil
   nil
-  '((indent-tabs-mode) (buffer-display-time 26024 16036 486637 0) (buffer-file-coding-system . undecided-unix) (truncate-lines))
+  '((indent-tabs-mode) (buffer-display-time 26024 24823 922281 39000) (buffer-file-coding-system . undecided-unix) (truncate-lines))
   '((mark-ring (5254 5534))))
 
 (desktop-create-buffer 208
@@ -38,7 +38,7 @@
   '(101 nil)
   nil
   nil
-  '((indent-tabs-mode) (buffer-display-time 26023 55774 477218 985000) (buffer-file-coding-system . undecided-unix) (truncate-lines))
+  '((indent-tabs-mode) (buffer-display-time 26023 64562 358204 24000) (buffer-file-coding-system . undecided-unix) (truncate-lines))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -50,7 +50,7 @@
   '(1728734 nil)
   t
   '("/Applications/Emacs.app/Contents/Resources/info/emacs" "Specific Customization" ((history ("/Applications/Emacs.app/Contents/Resources/info/emacs" "Easy Customization" 1728553))))
-  '((tab-width . 8) (buffer-display-time 26022 62429 640371 473000) (buffer-file-coding-system . utf-8-unix) (case-fold-search . t) (truncate-lines))
+  '((tab-width . 8) (buffer-display-time 26023 5682 767839 512000) (buffer-file-coding-system . utf-8-unix) (case-fold-search . t) (truncate-lines))
   '((mark-ring (1728553))))
 
 (desktop-create-buffer 208
@@ -62,7 +62,7 @@
   '(nil nil)
   t
   '("/Users/rplace/.emacs.d/")
-  '((buffer-display-time 26022 62140 555792 473000) (truncate-lines))
+  '((buffer-display-time 26023 5393 760433 512000) (truncate-lines))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -74,6 +74,6 @@
   '(nil nil)
   t
   nil
-  '((buffer-display-time 26024 16010 315694 984000) (buffer-file-coding-system . utf-8-emacs-unix) (truncate-lines))
+  '((buffer-display-time 26024 28712 583586 148000) (buffer-file-coding-system . utf-8-emacs-unix) (truncate-lines))
   '((mark-ring nil)))
 
