@@ -21,7 +21,6 @@
     wrap-region
     yaml-mode
     company
-    company-jedi
     yasnippet
     yasnippet-snippets
     vterm
@@ -58,6 +57,9 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
 
+(use-package use-package-ensure-system-package
+  :ensure t)
+
 (use-package flycheck
   :commands
   (global-flycheck-mode))
@@ -82,15 +84,17 @@
 
 (use-package python-mode
   :ensure t
+  :mode (("\\.py" . python-mode))
+  :hook
+  (elpy-company-backend)
+  (elpy-enable)
   :init
-  (setq python-python-command "/Library/Frameworks/Python.framework/Versions/Current/bin/python3")
-  (python-mode))
+  (setq python-python-command "/Library/Frameworks/Python.framework/Versions/Current/bin/python3"))
 
 (use-package elpy
   :ensure t
   :init
-  (setq elpy-rpc-backends "jedi")
-  :commands
+  (setq elpy-eldoc-show-current-function nil)
   (elpy-enable))
 
 (use-package osx-clipboard
@@ -103,18 +107,13 @@
   :init
   (load-theme 'dracula t))
 
-(use-package use-package-ensure-system-package
-  :ensure t)
-
-
 (use-package magit
   :ensure t
   :hook
-  (git-commit-turn-on-flyspell)
+  (git-commit-turn-on-fylspell)
   (git-commit-turn-on-auto-fill)
   (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
-
 
 ;;
 ;; Completion with pop-ups
@@ -176,17 +175,11 @@
 (use-package company
   :ensure t
   :hook
-  (after-init . global-company-mode))
-
-(use-package company-jedi
-  :ensure t
+  (after-init . global-company-mode)
   :config
-  (add-to-list 'company-backends 'company-jedi)
-  :hook
-  (python-mode jedi:setup))
-
-
-
+  (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
+  (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
 
 (font-lock-add-keywords 'org-mode
                         '(("^ *\\([-]\\) "
@@ -352,7 +345,5 @@ Shamelessly bottowed from Bryan Oakley."
     (message "Emacs server is running")
   (message "Starting server")
   (server-start))
-
-(elpy-enable)
 
 ;;; init.el ends here
