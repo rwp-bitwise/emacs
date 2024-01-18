@@ -139,6 +139,10 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       :config
       :init
       (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+      :hook
+      (org-mode . yas-minor-mode)
+      :config
+      (yas-reload-all)
       :commands
       (yas-global-mode))
 
@@ -152,10 +156,13 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
            org-hide-leading-stars t
            org-startup-indented t
            org-hide-emphasis-markers t)
+
       :hook
       (org-mode . flyspell-mode)
-      (org-mode . visual-line-mode)  
-      (yas-minor-mode))
+      (org-mode . yas-minor-mode)
+      (org-mode . visual-line-mode))
+
+
 
    (use-package org-bullets
      :hook
@@ -170,7 +177,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 #+RESULTS:
 
 ** Custom variables
-
+src-lisp
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (custom-set-variables
    ;; custom-set-variables was added by Custom.

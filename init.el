@@ -129,6 +129,10 @@
     :config
     :init
     (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+    :hook
+    (org-mode . yas-minor-mode)
+    :config
+    (yas-reload-all)
     :commands
     (yas-global-mode))
 
@@ -142,10 +146,13 @@
          org-hide-leading-stars t
          org-startup-indented t
          org-hide-emphasis-markers t)
+
     :hook
     (org-mode . flyspell-mode)
-    (org-mode . visual-line-mode)  
-    (yas-minor-mode))
+    (org-mode . yas-minor-mode)
+    (org-mode . visual-line-mode))
+
+
 
  (use-package org-bullets
    :hook
