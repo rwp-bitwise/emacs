@@ -11,13 +11,10 @@
   '(adaptive-wrap
     org
     osx-clipboard
-    alect-themes
     expand-region
     helm
-    jinja2-mode
     magit
     markdown-mode
-    paredit
     wrap-region
     yaml-mode
     company
@@ -88,6 +85,9 @@
   :hook
   (elpy-company-backend)
   (elpy-enable)
+  :config
+  (setq indent-tabsmode t
+        python-indent-offset 2)
   :init
   (setq python-python-command "/Library/Frameworks/Python.framework/Versions/Current/bin/python3"))
 
@@ -161,10 +161,11 @@
         org-hide-leading-stars t
         org-startup-indented t
         org-hide-emphasis-markers t)
-
+  (setq-local company-backends '(company-dabbrev))
   :hook
   (org-mode . flyspell-mode)
   (org-mode . yas-minor-mode)
+  (org-mode . company-mode)
   (org-mode . visual-line-mode))
 
 (use-package org-bullets
@@ -271,7 +272,7 @@
  '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
  '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
  '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-)
+) ;; close out window system check
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -284,16 +285,6 @@
    '(progn
       (ac-ispell-setup)))
 
- ;; (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)
- (add-hook 'python-mode-hook
-           (lambda () (setq indent-tabs-mode t)))
-
-;;; Python specific stuff
- (add-hook 'python-mode-hook
-           (lambda ()
-             (setq indent-tabs-mode t)
-             (setq tab-width 2)
-             (setq python-indent-offset 2)))
 
 ;;(setenv "PYTHONPATH" "/the/python/path")
 
