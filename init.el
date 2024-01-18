@@ -20,7 +20,10 @@
     paredit
     wrap-region
     yaml-mode
+    company
+    company-jedi
     yasnippet
+    yasnippet-snippets
     vterm
     adaptive-wrap
     dracula-theme
@@ -36,6 +39,9 @@
     flycheck-irony
     irony
     ac-ispell
+    auto-virtualenv
+    py-snippets
+    python-mode
     json-mode))
 
 ;; Make sure package list is up to date
@@ -74,94 +80,117 @@
   (:map flyspell-mode-map
         ("C-;" . flyspell-correct-wrapper)))
 
-  (use-package elpy
-    :ensure t
-    :init
-    :commands
-    (elpy-enable))
+(use-package python-mode
+  :ensure t
+  :init
+  (setq python-python-command "/Library/Frameworks/Python.framework/Versions/Current/bin/python3")
+  (python-mode))
 
-  (use-package osx-clipboard
-    :ensure t
-    :defer t
-    :if (eq system-type 'darwin))
+(use-package elpy
+  :ensure t
+  :init
+  (setq elpy-rpc-backends "jedi")
+  :commands
+  (elpy-enable))
 
-  (use-package dracula-theme
-    :ensure t
-    :init
-    (load-theme 'dracula t))
+(use-package osx-clipboard
+  :ensure t
+  :defer t
+  :if (eq system-type 'darwin))
 
-  (use-package use-package-ensure-system-package
-    :ensure t)
+(use-package dracula-theme
+  :ensure t
+  :init
+  (load-theme 'dracula t))
 
-
-  (use-package magit
-    :ensure t
-    :hook
-    (git-commit-turn-on-flyspell)
-    (git-commit-turn-on-auto-fill)
-    (git-commit-mode . ac-ispell-ac-setup)
-    (after-save . magit-after-save-refresh-status))
+(use-package use-package-ensure-system-package
+  :ensure t)
 
 
-  ;;
-  ;; Completion with pop-ups
-  ;;
-  (use-package corfu
-    :custom
-    (corfu-xdauto t)
-    (corfu-auto-delay 0.0)
-    (corfu-quit-at-boundary 'seperator)
-    (corfu-echo-documentation 0.25)
-    (corfu-preview-current 'insert)
-    (corfu-preselect-first nil)
-
-    :bind (:map corfu-map
-                ("M-SPC" . corfu-insert-seperator)
-                ("RET"   . nil)
-                ("TAB"   . corfu-next)
-                ("S-TAB" . corfu-previous)
-                ("S-<return>" . corfu-insert))
-    :init
-    :commands
-    (global-corfu-mode))
-
-  (use-package yasnippet
-    :config
-    :init
-    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
-    :hook
-    (org-mode . yas-minor-mode)
-    :config
-    (yas-reload-all)
-    :commands
-    (yas-global-mode))
-
-  ;;
-  ;; Org mode settings
-  ;;
- (use-package org
-   :mode (("\\.org$" . org-mode))
-   :init
-   (setq org-log-done 'time
-         org-hide-leading-stars t
-         org-startup-indented t
-         org-hide-emphasis-markers t)
-
-    :hook
-    (org-mode . flyspell-mode)
-    (org-mode . yas-minor-mode)
-    (org-mode . visual-line-mode))
+(use-package magit
+  :ensure t
+  :hook
+  (git-commit-turn-on-flyspell)
+  (git-commit-turn-on-auto-fill)
+  (git-commit-mode . ac-ispell-ac-setup)
+  (after-save . magit-after-save-refresh-status))
 
 
+;;
+;; Completion with pop-ups
+;;
+(use-package corfu
+  :custom
+  (corfu-xdauto t)
+  (corfu-auto-delay 0.0)
+  (corfu-quit-at-boundary 'seperator)
+  (corfu-echo-documentation 0.25)
+  (corfu-preview-current 'insert)
+  (corfu-preselect-first nil)
 
- (use-package org-bullets
-   :hook
-   (org-mode . org-bullets-mode)
-   :after org)
+  :bind (:map corfu-map
+              ("M-SPC" . corfu-insert-seperator)
+              ("RET"   . nil)
+              ("TAB"   . corfu-next)
+              ("S-TAB" . corfu-previous)
+              ("S-<return>" . corfu-insert))
+  :init
+  :config
+  (global-corfu-mode))
 
- (font-lock-add-keywords 'org-mode
-                         '(("^ *\\([-]\\) "
-                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+(use-package yasnippet
+  :config
+  :init
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+  :hook
+  (org-mode . yas-minor-mode)
+  :config
+  (yas-reload-all)
+  :commands
+  (yas-global-mode))
+
+(use-package yasnippet-snippets
+  :ensure t)
+
+;;
+;; Org mode settings
+;;
+(use-package org
+  :mode (("\\.org$" . org-mode))
+  :init
+  (setq org-log-done 'time
+        org-hide-leading-stars t
+        org-startup-indented t
+        org-hide-emphasis-markers t)
+
+  :hook
+  (org-mode . flyspell-mode)
+  (org-mode . yas-minor-mode)
+  (org-mode . visual-line-mode))
+
+(use-package org-bullets
+  :hook
+  (org-mode . org-bullets-mode)
+  :after org)
+
+(use-package company
+  :ensure t
+  :hook
+  (after-init . global-company-mode))
+
+(use-package company-jedi
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-jedi)
+  :hook
+  (python-mode jedi:setup))
+
+
+
+
+(font-lock-add-keywords 'org-mode
+                        '(("^ *\\([-]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -323,5 +352,7 @@ Shamelessly bottowed from Bryan Oakley."
     (message "Emacs server is running")
   (message "Starting server")
   (server-start))
+
+(elpy-enable)
 
 ;;; init.el ends here
