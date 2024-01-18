@@ -143,7 +143,8 @@
          org-startup-indented t
          org-hide-emphasis-markers t)
     :hook
-    (org-mode . flyspell-mode))
+    (org-mode . flyspell-mode)
+    (yas-minor-mode))
 
  (use-package org-bullets
    :hook
@@ -311,8 +312,9 @@ Shamelessly bottowed from Bryan Oakley."
  ((eq system-type 'linux)
   (setq x-alt-keysym 'meta)))
 
-(if (featurep 'server)
+(if (boundp 'server)
     (message "Emacs server is running")
+  (message "Starting server")
   (server-start))
 
 ;;; init.el ends here
