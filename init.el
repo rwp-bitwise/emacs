@@ -26,6 +26,7 @@
     corfu
     elpy
     org-bullets
+    org-ai
     ivy
     flycheck
     flyspell
@@ -105,7 +106,18 @@
 (use-package dracula-theme
   :ensure t
   :init
-  (load-theme 'dracula t))
+  (load-theme 'dracula t)
+  ;; Mode lines from the dracula theme are a bit tough for me to read
+  (set-face-attribute 'mode-line nil
+                      :background "#8b3626"
+                      :foreground "#90ee90"
+                      :box "#8b0000")
+
+  (set-face-attribute 'mode-line-inactive nil
+                      :background "#ff1493"
+                      :foreground "#2e8b57"
+                      :box "#ff34b3"))
+
 
 (use-package magit
   :ensure t
@@ -115,76 +127,77 @@
   (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
 
-;;
-;; Completion with pop-ups
-;;
-(use-package corfu
-  :custom
-  (corfu-xdauto t)
-  (corfu-auto-delay 0.0)
-  (corfu-quit-at-boundary 'seperator)
-  (corfu-echo-documentation 0.25)
-  (corfu-preview-current 'insert)
-  (corfu-preselect-first nil)
+  ;;
+  ;; Completion with pop-ups
+  ;;
+  (use-package corfu
+    :custom
+    (corfu-xdauto t)
+    (corfu-auto-delay 0.0)
+    (corfu-quit-at-boundary 'seperator)
+    (corfu-echo-documentation 0.25)
+    (corfu-preview-current 'insert)
+    (corfu-preselect-first nil)
 
-  :bind (:map corfu-map
-              ("M-SPC" . corfu-insert-seperator)
-              ("RET"   . nil)
-              ("TAB"   . corfu-next)
-              ("S-TAB" . corfu-previous)
-              ("S-<return>" . corfu-insert))
-  :init
-  :config
-  (global-corfu-mode))
+    :bind (:map corfu-map
+                ("M-SPC" . corfu-insert-seperator)
+                ("RET"   . nil)
+                ("TAB"   . corfu-next)
+                ("S-TAB" . corfu-previous)
+                ("S-<return>" . corfu-insert))
+    :init
+    :config
+    (global-corfu-mode))
 
-(use-package yasnippet
-  :config
-  :init
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
-  :hook
-  (org-mode . yas-minor-mode)
-  :config
-  (yas-reload-all)
-  :commands
-  (yas-global-mode))
+  (use-package yasnippet
+    :config
+    :init
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+    :hook
+    (org-mode . yas-minor-mode)
+    :config
+    (yas-reload-all)
+    :commands
+    (yas-global-mode))
 
-(use-package yasnippet-snippets
-  :ensure t)
+  (use-package yasnippet-snippets
+    :ensure t)
 
-;;
-;; Org mode settings
-;;
-(use-package org
-  :mode (("\\.org$" . org-mode))
-  :init
-  (setq org-log-done 'time
-        org-hide-leading-stars t
-        org-startup-indented t
-        org-hide-emphasis-markers t)
-  (setq-local company-backends '(company-dabbrev))
-  :hook
-  (org-mode . flyspell-mode)
-  (org-mode . yas-minor-mode)
-  (org-mode . company-mode)
-  (org-mode . visual-line-mode))
+  ;;
+  ;; Org mode settings
+  ;;
+  (use-package org
+    :mode (("\\.org$" . org-mode))
+    :init
+    (setq org-log-done 'time
+          org-hide-leading-stars t
+          org-startup-indented t
+          org-hide-emphasis-markers t)
+    (setq-local company-backends '(company-dabbrev))
+    :hook
+    (org-mode . flyspell-mode)
+    (org-mode . yas-minor-mode)
+    (org-mode . company-mode)
+    ;;(org-mode . org-ai-mode)
+    (org-mode . visual-line-mode))
 
-(use-package org-bullets
-  :hook
-  (org-mode . org-bullets-mode)
-  :after org)
+  (use-package org-bullets
+    :hook
+    (org-mode . org-bullets-mode)
+    :after org)
 
-(use-package company
-  :ensure t
-  :hook
-  (after-init . global-company-mode)
-  :config
-  (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
-  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-  (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
+  (use-package company
+    :ensure t
+    :hook
+    (after-init . global-company-mode)
+    :config
+    (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+    (setq company-tooltip-align-annotations t)  ; Align annotations to the right
+    (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
 
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -247,16 +260,16 @@
          (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
 
 (custom-theme-set-faces
-   'user
-   `(org-level-8 ((t (,@headline ,@variable-tuple))))
-   `(org-level-7 ((t (,@headline ,@variable-tuple))))
-   `(org-level-6 ((t (,@headline ,@variable-tuple))))
-   `(org-level-5 ((t (,@headline ,@variable-tuple))))
-   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
-   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "royal blue"))))
-   `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "red"))))
-   `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+ 'user
+ `(org-level-8 ((t (,@headline ,@variable-tuple))))
+ `(org-level-7 ((t (,@headline ,@variable-tuple))))
+ `(org-level-6 ((t (,@headline ,@variable-tuple))))
+ `(org-level-5 ((t (,@headline ,@variable-tuple))))
+ `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+ `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+ `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "royal blue"))))
+ `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "red"))))
+ `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
 
 (custom-theme-set-faces
  'user
@@ -281,9 +294,9 @@
 ;;(global-flycheck-mode)
 (global-company-mode)
 
- (eval-after-load "auto-complete"
-   '(progn
-      (ac-ispell-setup)))
+(eval-after-load "auto-complete"
+  '(progn
+     (ac-ispell-setup)))
 
 
 ;;(setenv "PYTHONPATH" "/the/python/path")
