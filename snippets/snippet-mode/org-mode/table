@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+  # name: Org Table Block
+  # key: table
+# --
+
+#+begin_table
+	$0
+#+end_table
