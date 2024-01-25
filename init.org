@@ -6,6 +6,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   ;;; Code:
+  (setq max-lisp-eval-depth 2048)
 
   (require 'package)
 
@@ -41,11 +42,13 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       flycheck-pycheckers
       flycheck-pyre
       flycheck-irony
+      smart-mode-line
       irony
       ac-ispell
       auto-virtualenv
       py-snippets
       python-mode
+      pylint
       json-mode))
 
   ;; Make sure package list is up to date
@@ -69,8 +72,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :ensure t)
 
   (use-package flycheck
-    :commands
-    (global-flycheck-mode))
+    :hook
+    (flycheck-mode . flycheck-pycheckers-setup))
+    ;;(flycheck-mode . global-flycheck-mode))
 
   (use-package flyspell
     :ensure t
@@ -90,22 +94,34 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (:map flyspell-mode-map
           ("C-;" . flyspell-correct-wrapper)))
 
+  (use-package pylint
+    :init
+    (setq flycheck-python-pylint-executable "/opt/homebrew/bin/pylint"))
+  
   (use-package python-mode
     :ensure t
     :mode (("\\.py" . python-mode))
-    :hook
-    (elpy-company-backend)
-    (elpy-enable)
     :config
     (setq indent-tabsmode t
-          python-indent-offset 2)
+          python-indent 8
+          tab-width 4)
     :init
-    (setq python-python-command "/Library/Frameworks/Python.framework/Versions/Current/bin/python3"))
+    (setq python-python-command "/Library/Frameworks/Python.framework/Versions/Current/bin/python3")
+    :hook
+    (python-mode . display-line-numbers-mode)
+    (python-mode . elpy-company-backend)
+    (python-mode . elpy-enable)
+    (python-mode . flycheck-mode))
+
+  ;;(use-package flycheck-pycheckers)
+  ;;  :init
+  ;;  (setq flycheck-pycheckers-ignore-codes '(E111)))
 
   (use-package elpy
     :ensure t
     :init
     (setq elpy-eldoc-show-current-function nil)
+    :commands
     (elpy-enable))
 
   (use-package osx-clipboard
@@ -137,77 +153,77 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (git-commit-mode . ac-ispell-ac-setup)
     (after-save . magit-after-save-refresh-status))
 
-    ;;
-    ;; Completion with pop-ups
-    ;;
-    (use-package corfu
-      :custom
-      (corfu-xdauto t)
-      (corfu-auto-delay 0.0)
-      (corfu-quit-at-boundary 'seperator)
-      (corfu-echo-documentation 0.25)
-      (corfu-preview-current 'insert)
-      (corfu-preselect-first nil)
+  ;;
+  ;; Completion with pop-ups
+  ;;
+  (use-package corfu
+    :custom
+    (corfu-xdauto t)
+    (corfu-auto-delay 0.0)
+    (corfu-quit-at-boundary 'seperator)
+    (corfu-echo-documentation 0.25)
+    (corfu-preview-current 'insert)
+    (corfu-preselect-first nil)
 
-      :bind (:map corfu-map
-                  ("M-SPC" . corfu-insert-seperator)
-                  ("RET"   . nil)
-                  ("TAB"   . corfu-next)
-                  ("S-TAB" . corfu-previous)
-                  ("S-<return>" . corfu-insert))
-      :init
-      :config
-      (global-corfu-mode))
+    :bind (:map corfu-map
+                ("M-SPC" . corfu-insert-seperator)
+                ("RET"   . nil)
+                ("TAB"   . corfu-next)
+                ("S-TAB" . corfu-previous)
+                ("S-<return>" . corfu-insert))
+    :init
+    :config
+    (global-corfu-mode))
 
-    (use-package yasnippet
-      :config
-      :init
-      (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
-      :hook
-      (org-mode . yas-minor-mode)
-      :config
-      (yas-reload-all)
-      :commands
-      (yas-global-mode))
+  (use-package yasnippet
+    :config
+    :init
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+    :hook
+    (org-mode . yas-minor-mode)
+    :config
+    (yas-reload-all)
+    :commands
+    (yas-global-mode))
 
-    (use-package yasnippet-snippets
-      :ensure t)
+  (use-package yasnippet-snippets
+    :ensure t)
 
-    ;;
-    ;; Org mode settings
-    ;;
-    (use-package org
-      :mode (("\\.org$" . org-mode))
-      :init
-      (setq org-log-done 'time
-            org-hide-leading-stars t
-            org-startup-indented t
-            org-hide-emphasis-markers t)
-      (setq-local company-backends '(company-dabbrev))
-      :hook
-      (org-mode . flyspell-mode)
-      (org-mode . yas-minor-mode)
-      (org-mode . company-mode)
-      ;;(org-mode . org-ai-mode)
-      (org-mode . visual-line-mode))
+  ;;
+  ;; Org mode settings
+  ;;
+  (use-package org
+    :mode (("\\.org$" . org-mode))
+    :init
+    (setq org-log-done 'time
+          org-hide-leading-stars t
+          org-startup-indented t
+          org-hide-emphasis-markers t)
+    (setq-local company-backends '(company-dabbrev))
+    :hook
+    (org-mode . flyspell-mode)
+    (org-mode . yas-minor-mode)
+    (org-mode . company-mode)
+    ;;(org-mode . org-ai-mode)
+    (org-mode . visual-line-mode))
 
-    (use-package org-bullets
-      :hook
-      (org-mode . org-bullets-mode)
-      :after org)
+  (use-package org-bullets
+    :hook
+    (org-mode . org-bullets-mode)
+    :after org)
 
-    (use-package company
-      :ensure t
-      :hook
-      (after-init . global-company-mode)
-      :config
-      (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
-      (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-      (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
+  (use-package company
+    :ensure t
+    :hook
+    (after-init . global-company-mode)
+    :config
+    (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+    (setq company-tooltip-align-annotations t)  ; Align annotations to the right
+    (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
 
-    (font-lock-add-keywords 'org-mode
-                            '(("^ *\\([-]\\) "
-                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 #+end_src
 
 #+RESULTS:
@@ -228,7 +244,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
      '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
    '(package-archives
      '(("gnu" . "https://elpa.gnu.org/packages/")
-       ("melpa" . "https://melpa.org/packages/")))
+       ("melpa-stable" . "https://stable.melpa.org/packages/")))
    '(package-selected-packages
      '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
    '(show-trailing-whitespace t))
@@ -318,16 +334,16 @@ Here we set the customizations for the various headline levels in org-mode. We a
 
 #+begin_src emacs-lisp
 
-	(custom-set-faces '(mode-line
-											((t
-												:background "#8b3626" 
-												:foreground "#90ee90" 
-												:box "#8b0000"))))
-	(custom-set-faces '(mode-line-inactive
-											((t
-												:background "#ff1493"
-												:foreground "#2e8b57"
-												:box "#ff34b3"))))
+  (custom-set-faces '(mode-line
+                      ((t
+                        :background "#8b3626" 
+                        :foreground "#90ee90" 
+                        :box "#8b0000"))))
+  (custom-set-faces '(mode-line-inactive
+                      ((t
+                        :background " ##008b8b"
+                        :foreground "#969696"
+                        :box "#ff34b3"))))
 
 #+end_src
 
@@ -341,7 +357,7 @@ This is where we gather up all of the various hooks used for various modes
    'org-babel-load-languages
    '((python . t)))
 
-  ;;(global-flycheck-mode)
+  (global-flycheck-mode)
   (global-company-mode)
 
   (eval-after-load "auto-complete"
@@ -388,7 +404,7 @@ This is where we gather up all of the various hooks used for various modes
   (visual-line-mode t)
   (global-visual-line-mode +1)
   (global-hl-line-mode)
-  (setq-default tab-width 2)
+  ;;(setq-default tab-width 2)
 #+end_src
   
 *** Mode line customizations
