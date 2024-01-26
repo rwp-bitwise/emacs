@@ -64,7 +64,7 @@
 (use-package flycheck
   :hook
   (flycheck-mode . flycheck-pycheckers-setup))
-  ;;(flycheck-mode . global-flycheck-mode))
+;;(flycheck-mode . global-flycheck-mode))
 
 (use-package flyspell
   :ensure t
@@ -85,18 +85,17 @@
         ("C-;" . flyspell-correct-wrapper)))
 
 (use-package pylint
-  :config
+  :init
   (setq flycheck-python-pylint-executable "/opt/homebrew/bin/pylint"))
 
 (use-package python-mode
   :ensure t
   :mode (("\\.py" . python-mode))
-  :config
-  (setq indent-tabsmode t
-        python-indent 8
-        tab-width 4)
   :init
-  (setq python-python-command "/Library/Frameworks/Python.framework/Versions/Current/bin/python3")
+  (setq python-python-command "/opt/homebrew/bin/python3.12"
+        indent-tabs-mode nil
+        python-indent-offset 2
+        tab-width 2)
   :hook
   (python-mode . display-line-numbers-mode)
   (python-mode . elpy-company-backend)
@@ -138,7 +137,7 @@
 (use-package magit
   :ensure t
   :hook
-  (git-commit-turn-on-fylspell)
+  ;;(git-commit-turn-on-fylspell)
   (git-commit-turn-on-auto-fill)
   (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
@@ -342,7 +341,7 @@ Shamelessly bottowed from Bryan Oakley."
 (visual-line-mode t)
 (global-visual-line-mode +1)
 (global-hl-line-mode)
-;;(setq-default tab-width 2)
+(setq-default tab-width 2)
 
 (setq column-number-mode t
   indent-line-function 'insert-tab)
