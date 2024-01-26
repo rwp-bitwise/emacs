@@ -32,8 +32,6 @@
     flycheck
     flyspell
     flyspell-correct-ivy
-    flycheck-pycheckers
-    flycheck-pyre
     flycheck-irony
     smart-mode-line
     irony
@@ -85,8 +83,9 @@
         ("C-;" . flyspell-correct-wrapper)))
 
 (use-package pylint
-  :config
-  (setq flycheck-python-pylint-executable "/opt/homebrew/bin/pylint"))
+  :init
+  (setq flycheck-python-pylint-executable "/opt/homebrew/bin/pylint"
+        flycheck-pylintrc "~/.pylintrc"))
 
 (use-package python-mode
   :ensure t
@@ -96,7 +95,7 @@
         python-indent 8
         tab-width 4)
   :init
-  (setq python-python-command "/Library/Frameworks/Python.framework/Versions/Current/bin/python3")
+  (setq python-python-command "/opt/homebrew/bin/python")
   :hook
   (python-mode . display-line-numbers-mode)
   (python-mode . elpy-company-backend)

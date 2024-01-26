@@ -39,8 +39,6 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       flycheck
       flyspell
       flyspell-correct-ivy
-      flycheck-pycheckers
-      flycheck-pyre
       flycheck-irony
       smart-mode-line
       irony
@@ -96,7 +94,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
   (use-package pylint
     :init
-    (setq flycheck-python-pylint-executable "/opt/homebrew/bin/pylint"))
+    (setq flycheck-python-pylint-executable "/opt/homebrew/bin/pylint"
+          flycheck-pylintrc "~/.pylintrc"))
   
   (use-package python-mode
     :ensure t
@@ -106,7 +105,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
           python-indent 8
           tab-width 4)
     :init
-    (setq python-python-command "/Library/Frameworks/Python.framework/Versions/Current/bin/python3")
+    (setq python-python-command "/opt/homebrew/bin/python")
     :hook
     (python-mode . display-line-numbers-mode)
     (python-mode . elpy-company-backend)
