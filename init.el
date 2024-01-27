@@ -110,6 +110,7 @@
         flycheck-pylintrc "/Users/rplace/.pylintrc"))
 >>>>>>> dev
 
+;; foo bar bazz buzz
 (use-package python-mode
   :ensure t
   :mode (("\\.py" . python-mode))
