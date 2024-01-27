@@ -32,11 +32,8 @@
     flycheck
     flyspell
     flyspell-correct-ivy
-<<<<<<< HEAD
-=======
     flycheck
     flycheck-pyre
->>>>>>> dev
     flycheck-irony
     smart-mode-line
     irony
@@ -102,29 +99,20 @@
 
 (use-package pylint
   :init
-<<<<<<< HEAD
-  (setq flycheck-python-pylint-executable "/opt/homebrew/bin/pylint"
-        flycheck-pylintrc "~/.pylintrc"))
-=======
   (setq flycheck-python-pylint-executable "/Users/rplace/python_venv/bin/pylint"
         flycheck-pylintrc "/Users/rplace/.pylintrc"))
->>>>>>> dev
 
 ;; foo bar bazz buzz
 (use-package python-mode
   :ensure t
   :mode (("\\.py" . python-mode))
   :init
-<<<<<<< HEAD
-  (setq python-python-command "/opt/homebrew/bin/python")
-=======
   (setq python-python-command "/Users/rplace/python_venv/bin/python3"
         indent-tabs-mode nil
         python-indent-offset 2
         elpy-enable t
         tab-width 2)
   (pyvenv-activate "/Users/rplace/python_venv")
->>>>>>> dev
   :hook
   (python-mode . display-line-numbers-mode))
 
