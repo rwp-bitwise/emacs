@@ -62,10 +62,6 @@
 (use-package use-package-ensure-system-package
   :ensure t)
 
-(use-package flycheck
-  :init
-  (setq flycheck-flake8rc "/Users/rplace/.flake8"))
-
 (use-package flyspell
   :ensure t
   :hook
@@ -83,6 +79,11 @@
   :bind
   (:map flyspell-mode-map
         ("C-;" . flyspell-correct-wrapper)))
+
+(use-package cc-mode
+  :ensure t
+  :hook
+  (c-mode . display-line-numbers-mode))
 
 (use-package pyvenv
   :ensure t
@@ -102,7 +103,6 @@
   (setq flycheck-python-pylint-executable "/Users/rplace/python_venv/bin/pylint"
         flycheck-pylintrc "/Users/rplace/.pylintrc"))
 
-;; foo bar bazz buzz
 (use-package python-mode
   :ensure t
   :mode (("\\.py" . python-mode))
@@ -121,6 +121,18 @@
   :ensure t
   :init
   (setq elpy-eldoc-show-current-function nil))
+
+(use-package flycheck
+  :init
+  (setq flycheck-flake8rc "/Users/rplace/.flake8"))
+
+(use-package magit
+  :ensure t
+  :hook
+  ;;(git-commit-turn-on-fylspell)
+  (git-commit-turn-on-auto-fill)
+  (git-commit-mode . ac-ispell-ac-setup)
+  (after-save . magit-after-save-refresh-status))
 
 (use-package osx-clipboard
   :ensure t
@@ -141,13 +153,6 @@
                       :foreground "#2e8b57"
                       :box "#ff34b3"))
 
-(use-package magit
-  :ensure t
-  :hook
-  ;;(git-commit-turn-on-fylspell)
-  (git-commit-turn-on-auto-fill)
-  (git-commit-mode . ac-ispell-ac-setup)
-  (after-save . magit-after-save-refresh-status))
 
 ;;
 ;; Completion with pop-ups
@@ -319,7 +324,6 @@
 (eval-after-load "auto-complete"
   '(progn
      (ac-ispell-setup)))
-
 
 ;;(setenv "PYTHONPATH" "/the/python/path")
 
