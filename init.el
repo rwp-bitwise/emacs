@@ -89,31 +89,31 @@
   :ensure t
   :init
   (pyvenv-mode t)
-  (setq pyvenv-env-name "/Users/rplace/python_venv"
-        python-shell-interpreter "/Users/rplace/python_venv/bin/python3")
+  (setq pyvenv-env-name "~/python_venv"
+        python-shell-interpreter "~/python_venv/bin/python3")
   (setq pyvenv-post-activate-hooks
         (list (lambda ()
-                (setq python-shell-interpreter "/Users/rplace/python_venv/bin/python3"))))
+                (setq python-shell-interpreter "~/python_venv/bin/python3"))))
   (setq pyvenv-post-deactivate-hooks
         (list (lambda ()
                 (setq python-shell-interpreter "python3")))))
 
 (use-package pylint
   :init
-  (setq flycheck-python-pylint-executable "/Users/rplace/python_venv/bin/pylint"
-        flycheck-pylintrc "/Users/rplace/.pylintrc"))
+  (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
+        flycheck-pylintrc "~/.pylintrc"))
 
 (use-package python-mode
   :ensure t
   :mode (("\\.py" . python-mode))
   :defer t
   :init
-  (setq python-python-command "/Users/rplace/python_venv/bin/python3"
+  (setq python-python-command "~/python_venv/bin/python3"
         indent-tabs-mode nil
         python-indent-offset 2
         elpy-enable t
         tab-width 2)
-  (pyvenv-activate "/Users/rplace/python_venv")
+  (pyvenv-activate "~/python_venv")
   :hook
   (python-mode . display-line-numbers-mode))
 
@@ -124,7 +124,7 @@
 
 (use-package flycheck
   :init
-  (setq flycheck-flake8rc "/Users/rplace/.flake8"))
+  (setq flycheck-flake8rc "~/.flake8"))
 
 (use-package magit
   :ensure t
