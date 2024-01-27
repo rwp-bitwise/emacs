@@ -106,6 +106,7 @@
 (use-package python-mode
   :ensure t
   :mode (("\\.py" . python-mode))
+  :defer t
   :init
   (setq python-python-command "/Users/rplace/python_venv/bin/python3"
         indent-tabs-mode nil
