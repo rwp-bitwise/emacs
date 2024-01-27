@@ -32,6 +32,7 @@
     flycheck
     flyspell
     flyspell-correct-ivy
+    flycheck
     flycheck-pycheckers
     flycheck-pyre
     flycheck-irony
@@ -42,6 +43,7 @@
     py-snippets
     python-mode
     pylint
+    pyvenv
     json-mode))
 
 ;; Make sure package list is up to date
@@ -62,9 +64,8 @@
   :ensure t)
 
 (use-package flycheck
-  :hook
-  (flycheck-mode . flycheck-pycheckers-setup))
-;;(flycheck-mode . global-flycheck-mode))
+  :init
+  (setq flycheck-flake8rc "/Users/rplace/.flake8"))
 
 (use-package flyspell
   :ensure t
@@ -84,34 +85,41 @@
   (:map flyspell-mode-map
         ("C-;" . flyspell-correct-wrapper)))
 
+(use-package pyvenv
+  :ensure t
+  :init
+  (pyvenv-mode t)
+  (setq pyvenv-env-name "/Users/rplace/python_venv"
+        python-shell-interpreter "/Users/rplace/python_venv/bin/python3")
+  (setq pyvenv-post-activate-hooks
+        (list (lambda ()
+                (setq python-shell-interpreter "/Users/rplace/python_venv/bin/python3"))))
+  (setq pyvenv-post-deactivate-hooks
+        (list (lambda ()
+                (setq python-shell-interpreter "python3")))))
+
 (use-package pylint
   :init
-  (setq flycheck-python-pylint-executable "/opt/homebrew/bin/pylint"))
+  (setq flycheck-python-pylint-executable "/Users/rplace/python_venv/bin/pylint"
+        flycheck-pylintrc "/Users/rplace/.pylintrc"))
 
 (use-package python-mode
   :ensure t
   :mode (("\\.py" . python-mode))
   :init
-  (setq python-python-command "/opt/homebrew/bin/python3.12"
+  (setq python-python-command "/Users/rplace/python_venv/bin/python3"
         indent-tabs-mode nil
         python-indent-offset 2
+        elpy-enable t
         tab-width 2)
+  (pyvenv-activate "/Users/rplace/python_venv")
   :hook
-  (python-mode . display-line-numbers-mode)
-  (python-mode . elpy-company-backend)
-  (python-mode . elpy-enable)
-  (python-mode . flycheck-mode))
-
-;;(use-package flycheck-pycheckers)
-;;  :init
-;;  (setq flycheck-pycheckers-ignore-codes '(E111)))
+  (python-mode . display-line-numbers-mode))
 
 (use-package elpy
   :ensure t
   :init
-  (setq elpy-eldoc-show-current-function nil)
-  :commands
-  (elpy-enable))
+  (setq elpy-eldoc-show-current-function nil))
 
 (use-package osx-clipboard
   :ensure t
@@ -127,12 +135,10 @@
                       :background "#8b3626"
                       :foreground "#90ee90"
                       :box "#8b0000")
-
   (set-face-attribute 'mode-line-inactive nil
                       :background "#ff1493"
                       :foreground "#2e8b57"
                       :box "#ff34b3"))
-
 
 (use-package magit
   :ensure t
@@ -229,7 +235,7 @@
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa-stable" . "https://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
 
 (custom-set-faces
@@ -341,7 +347,7 @@ Shamelessly bottowed from Bryan Oakley."
 (visual-line-mode t)
 (global-visual-line-mode +1)
 (global-hl-line-mode)
-(setq-default tab-width 2)
+;;(setq-default tab-width )
 
 (setq column-number-mode t
   indent-line-function 'insert-tab)
