@@ -102,6 +102,7 @@
   (setq flycheck-python-pylint-executable "/Users/rplace/python_venv/bin/pylint"
         flycheck-pylintrc "/Users/rplace/.pylintrc"))
 
+;; foo bar bazz buzz
 (use-package python-mode
   :ensure t
   :mode (("\\.py" . python-mode))
