@@ -105,7 +105,7 @@
 
 (use-package python-mode
   :ensure t
-  :mode (("\\.py" . python-mode))
+  :mode (("\\.py$" . python-mode))
   :defer t
   :init
   (setq python-python-command "~/python_venv/bin/python3"

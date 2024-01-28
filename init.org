@@ -69,26 +69,26 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 ** Configure the packages
 
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (use-package use-package-ensure-system-package
-    :ensure t)
+    (use-package use-package-ensure-system-package
+      :ensure t)
 
-  (use-package flyspell
-    :ensure t
-    :hook
-    (text-mode . flyspell-mode)
-    (prog-mode . flyspell-prog-mode)
-    :config
-    (setq ispell-extra-args '(":--sug-mode=ultra"))
-    :bind
-    (:map flyspell-mode-map
-          ("C-;" . flyspell-correct-wrapper)))
+    (use-package flyspell
+      :ensure t
+      :hook
+      (text-mode . flyspell-mode)
+      (prog-mode . flyspell-prog-mode)
+      :config
+      (setq ispell-extra-args '(":--sug-mode=ultra"))
+      :bind
+      (:map flyspell-mode-map
+            ("C-;" . flyspell-correct-wrapper)))
 
-  (use-package flyspell-correct-ivy
-    :ensure t
-    :after flyspell
-    :bind
-    (:map flyspell-mode-map
-          ("C-;" . flyspell-correct-wrapper)))
+    (use-package flyspell-correct-ivy
+      :ensure t
+      :after flyspell
+      :bind
+      (:map flyspell-mode-map
+            ("C-;" . flyspell-correct-wrapper)))
 #+end_src
 
 *** Packages for programming language support  
@@ -118,7 +118,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
   (use-package python-mode
     :ensure t
-    :mode (("\\.py" . python-mode))
+    :mode (("\\.py$" . python-mode))
     :defer t
     :init
     (setq python-python-command "~/python_venv/bin/python3"
