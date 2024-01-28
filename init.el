@@ -43,6 +43,7 @@
     python-mode
     pylint
     pyvenv
+    jedi
     json-mode))
 
 ;; Make sure package list is up to date
@@ -80,6 +81,22 @@
   (:map flyspell-mode-map
         ("C-;" . flyspell-correct-wrapper)))
 
+(use-package jedi
+  :ensure t
+  :config
+  (setq jedi:complete-on-dot t)
+  (add-hook 'python-mode-hook 'jedi:setup))
+
+(use-package company
+  :ensure t
+  :hook
+  (after-init . global-company-mode))
+
+(use-package company-jedi
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-jedi))
+
 (use-package cc-mode
   :ensure t
   :hook
@@ -115,7 +132,9 @@
         tab-width 2)
   (pyvenv-activate "~/python_venv")
   :hook
-  (python-mode . display-line-numbers-mode))
+  (python-mode . display-line-numbers-mode)
+  (python-mode . jedi-mode)
+  (python-mode . yas-minor-mode))
 
 (use-package elpy
   :ensure t
@@ -179,9 +198,8 @@
 (use-package yasnippet
   :config
   :init
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
-  :hook
-  (org-mode . yas-minor-mode)
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
+                           "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/python-mode"))
   :config
   (yas-reload-all)
   :commands
