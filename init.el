@@ -6,7 +6,7 @@
 ;;; Package deffinitions
 ;; first, declare repositories
 ;; Makesure libtool, libtool-bin, and cmake are installed
-;; pip install virtualenv if it doesn't already exist
+;; pip install virtualenv pylint if they doesn't already exist
 ;; ;; Declare packages
 (defvar my-packages
   '(adaptive-wrap
@@ -134,7 +134,7 @@
   :hook
   (python-mode . display-line-numbers-mode)
   (python-mode . jedi-mode)
-  (python-mode . yas-minor-mode))
+  (python-mode . yas-minor-mode)) 
 
 (use-package elpy
   :ensure t
@@ -171,7 +171,6 @@
                       :background "#ff1493"
                       :foreground "#2e8b57"
                       :box "#ff34b3"))
-
 
 ;;
 ;; Completion with pop-ups

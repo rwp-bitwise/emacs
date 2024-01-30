@@ -13,7 +13,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
   ;;; Package deffinitions
   ;; first, declare repositories
   ;; Makesure libtool, libtool-bin, and cmake are installed
-  ;; pip install virtualenv if it doesn't already exist
+  ;; pip install virtualenv pylint if they doesn't already exist
   ;; ;; Declare packages
   (defvar my-packages
     '(adaptive-wrap
@@ -147,7 +147,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       :hook
       (python-mode . display-line-numbers-mode)
       (python-mode . jedi-mode)
-      (python-mode . yas-minor-mode))
+      (python-mode . yas-minor-mode)) 
 
     (use-package elpy
       :ensure t
@@ -189,7 +189,6 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
                           :background "#ff1493"
                           :foreground "#2e8b57"
                           :box "#ff34b3"))
-
 
     ;;
     ;; Completion with pop-ups
@@ -440,7 +439,7 @@ This is where we gather up all of the various hooks used for various modes
   (set-frame-size-according-to-resolution)
 #+end_src
   
-*** Line wrap handling
+*** Line handling
   Line wrap, default tab width, highlighting, etc
   
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
