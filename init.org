@@ -9,7 +9,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
   (setq max-lisp-eval-depth 2048)
 
   (require 'package)
-
+  (setq custom-safe-themes t)
+  
   ;;; Package deffinitions
   ;; first, declare repositories
   ;; Makesure libtool, libtool-bin, and cmake are installed
@@ -42,8 +43,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       flycheck
       flycheck-pyre
       flycheck-irony
-      smart-mode-line
       irony
+      modus-themes
       ac-ispell
       auto-virtualenv
       py-snippets
@@ -73,6 +74,11 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (use-package use-package-ensure-system-package
       :ensure t)
 
+    (use-package modus-themes
+      :init
+      (setq modus-themes-mode-line '(moody accented borderless))
+      (load-theme 'modus-vivendi-deuteranopia))
+  
     (use-package flyspell
       :ensure t
       :hook
@@ -176,19 +182,19 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       :defer t
       :if (eq system-type 'darwin))
 
-    (use-package dracula-theme
-      :ensure t
-      :init
-      (load-theme 'dracula t)
+    ;;(use-package dracula-theme
+     ;; :ensure t
+     ;; :init
+      ;;(load-theme 'dracula t)
       ;; Mode lines from the dracula theme are a bit tough for me to read
-      (set-face-attribute 'mode-line nil
-                          :background "#8b3626"
-                          :foreground "#90ee90"
-                          :box "#8b0000")
-      (set-face-attribute 'mode-line-inactive nil
-                          :background "#ff1493"
-                          :foreground "#2e8b57"
-                          :box "#ff34b3"))
+      ;;(set-face-attribute 'mode-line nil
+      ;;                    :background "#8b3626"
+      ;;                    :foreground "#90ee90"
+      ;;                    :box "#8b0000")
+      ;;(set-face-attribute 'mode-line-inactive nil
+      ;;                    :background "#ff1493"
+      ;;                    :foreground "#2e8b57"
+      ;;                    :box "#ff34b3"))
 
     ;;
     ;; Completion with pop-ups
@@ -243,8 +249,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (org-mode . flyspell-mode)
     (org-mode . yas-minor-mode)
     (org-mode . company-mode)
-    ;;(org-mode . org-ai-mode)
-    (org-mode . visual-line-mode))
+    (org-mode . visual-line-mode)
+    :bind (:map org-mode-map
+                ("C-c i" . org-id-get-create)))
 
   (use-package org-bullets
     :hook
@@ -265,7 +272,35 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 #+end_src
 
-#+RESULTS:
+*** Email config and customization
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+  (add-to-list 'load-path "/opt/homebrew/share/emacs/site-lisp/mu4e")
+  ;;(require 'mu4e)
+  (use-package mu4e
+    :init
+    (setq mu4e-mu-binary "/opt/homebrew/bin/mu"
+          user-mail-address "rwplace@gmail.com"
+          send-mail-function 'smtpmail-send-it  ; should not be modified
+          smtpmail-smtp-server "smtp.gmail.com"
+          smtpmail-smtp-service 587
+          smtpmail-stream-type 'starttls
+          mu4e-view-use-gnus t
+          mu43-use-fancy-chars t
+          mu4e-maildir       "~/Maildir"   ;; top-level Maildir
+          mu4e-refile-folder "/Archive"
+          mu4e-sent-folder   "/Sent"
+          mu4e-drafts-folder "/Drafts"
+          mu4e-trash-folder  "/Trash"
+          
+          mu4e-update-interval (* 10 60)))
+  ;; Show emails as plain text, if possible
+  (with-eval-after-load "mm-decode"
+    (add-to-list 'mm-discouraged-alternatives "text/html")
+    (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+
+
+#+End_src
+
 
 ** Custom variables
 
