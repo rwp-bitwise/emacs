@@ -1,10 +1,10 @@
 ;;; Code:
 (setq max-lisp-eval-depth 2048)
-
 (require 'package)
 (setq custom-safe-themes t)
+(setq epa-pinentry-mode 'loopback)
 
-;;; Package deffinitions
+  ;;; Package deffinitions
 ;; first, declare repositories
 ;; Makesure libtool, libtool-bin, and cmake are installed
 ;; pip install virtualenv pylint if they doesn't already exist
@@ -251,28 +251,58 @@
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 (add-to-list 'load-path "/opt/homebrew/share/emacs/site-lisp/mu4e")
-;;(require 'mu4e)
+(require 'mu4e)
 (use-package mu4e
-  :init
-  (setq mu4e-mu-binary "/opt/homebrew/bin/mu"
-        user-mail-address "rwplace@gmail.com"
-        send-mail-function 'smtpmail-send-it  ; should not be modified
-        smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 587
+  :ensure nil
+  :config
+  (setq user-mail-address "rwplace@gmail.com"
+        message-send-mail-function 'message-send-mail-with-sendmail
+        smtpmail-auth-credentials "~/.authinfo.gpg"
         smtpmail-stream-type 'starttls
-        mu4e-view-use-gnus t
-        mu43-use-fancy-chars t
-        mu4e-maildir       "~/Maildir"   ;; top-level Maildir
-        mu4e-refile-folder "/Archive"
-        mu4e-sent-folder   "/Sent"
-        mu4e-drafts-folder "/Drafts"
-        mu4e-trash-folder  "/Trash"
-
-        mu4e-update-interval (* 10 60)))
+        mu4e-maildir "~/Mail"
+        mu4e-mu-binary "/opt/homebrew/bin/mu"
+        mu4e-compose-dont=reply-to-self t
+        mu4e-use-fancy-chars t
+        mu4e-change-filenames-when-moving t
+        mu4e-get-mail-command "mbsync --all"
+        ))
 ;; Show emails as plain text, if possible
 (with-eval-after-load "mm-decode"
   (add-to-list 'mm-discouraged-alternatives "text/html")
   (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+
+(setq mu4e-contexts
+      (list
+       (make-mu4e-context
+        :name "gmail-rwplace"
+        :match-func
+        (lambda (msg)
+          (when msg
+            (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
+        :vars '((user-mail-address . "rwplace@gmail.com")
+                (user-full-name . "Rob Place")
+                (mu4e-sent-folder . "/Gmail/Sent")
+                (mu4e-drafts-folder . "/Gmail/Drafts")
+                (mu4e-refile-folder . "/Gmail/All Mail")))
+       (make-mu4e-context
+        :name "alldyn"
+        :match-func
+        (lambda (msg)
+          (when msg
+            (string-prefix-p "/alldyn" (mu4e-message-field msg :maildir))))
+        :vars '((user-mail-address . "robert.place@alldyn.com")
+                (user-full-name . "Rob Place")
+                (mu4e-sent-folder . "/Alldyn/Sent")
+                (mu4e-drafts-folder . "/Alldyn/Drafts")
+                (mu4e-refile-folder . "/Alldyn/All Mail")))
+       (make-mu4e-context
+        :name "icloud"
+        :match-func
+        (lambda (msg)
+          (when msg
+            (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
+        :vars '((user-mail-address . "rwplace@mac.com")
+                (user-full-name . "Rob Place")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
