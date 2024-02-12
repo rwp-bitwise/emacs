@@ -256,7 +256,10 @@
   :ensure nil
   :config
   (setq user-mail-address "rwplace@gmail.com"
+        send-mail-function 'smtpmail-send-it
+        sendmail-program "/opt/homebrew/bin/msmtp"
         message-send-mail-function 'message-send-mail-with-sendmail
+        message-sendmail-f-is-evil t
         smtpmail-auth-credentials "~/.authinfo.gpg"
         smtpmail-stream-type 'starttls
         mu4e-maildir "~/Mail"
@@ -278,7 +281,7 @@
         :match-func
         (lambda (msg)
           (when msg
-            (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
+            (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
         :vars '((user-mail-address . "rwplace@gmail.com")
                 (user-full-name . "Rob Place")
                 (mu4e-sent-folder . "/Gmail/Sent")
@@ -289,7 +292,7 @@
         :match-func
         (lambda (msg)
           (when msg
-            (string-prefix-p "/alldyn" (mu4e-message-field msg :maildir))))
+            (string-prefix-p "/Alldyn" (mu4e-message-field msg :maildir))))
         :vars '((user-mail-address . "robert.place@alldyn.com")
                 (user-full-name . "Rob Place")
                 (mu4e-sent-folder . "/Alldyn/Sent")
@@ -362,7 +365,8 @@
                 ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
                 (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
          (base-font-color     (face-foreground 'default nil 'default))
-         (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+         (headline
+         `(:inherit default :weight bold :foreground ,base-font-color))) ;
 
 (custom-theme-set-faces
  'user
@@ -372,8 +376,8 @@
  `(org-level-5 ((t (,@headline ,@variable-tuple))))
  `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
  `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
- `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "royal blue"))))
- `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "red"))))
+ `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5 :foreground "SeaGreen3"))))
+ `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75 :foreground "chartreuse3"))))
  `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
 
 (custom-theme-set-faces
