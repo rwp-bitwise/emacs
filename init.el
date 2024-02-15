@@ -237,6 +237,9 @@
   (org-mode . org-bullets-mode)
   :after org)
 
+(use-package org-mime
+  :ensure t)
+
 (use-package company
   :ensure t
   :hook
@@ -270,9 +273,9 @@
         mu4e-get-mail-command "mbsync --all"
         ))
 ;; Show emails as plain text, if possible
-(with-eval-after-load "mm-decode"
-  (add-to-list 'mm-discouraged-alternatives "text/html")
-  (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+;; (with-eval-after-load "mm-decode"
+;;   (add-to-list 'mm-discouraged-alternatives "text/html")
+;;   (add-to-list 'mm-discouraged-alternatives "text/richtext"))
 
 (setq mu4e-contexts
       (list
@@ -443,6 +446,18 @@ Shamelessly bottowed from Bryan Oakley."
 (desktop-save-mode)
 
 (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
+
+(setq display-buffer-alist nil)
+(setq buffer-alist '(
+                     ("\\*Occur\\*"
+                      (dedicated . t)
+                      (display-buffer-reuse-mode-window display-buffer-below-selected)
+                      (window-height . fit-window-to-buffer))
+                    ))
+(setq switch-to-buffer-in-dedicated-window 'pop)
+(setq switch-to-buffer-obey-display-actions t)
+(setq split-height-threshold 80
+      split-width-thresold 120)
 
 (cond
  ((eq system-type 'darwin)

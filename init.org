@@ -258,6 +258,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (org-mode . org-bullets-mode)
     :after org)
 
+  (use-package org-mime
+    :ensure t)
+
   (use-package company
     :ensure t
     :hook
@@ -294,9 +297,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
           mu4e-get-mail-command "mbsync --all"
           ))
   ;; Show emails as plain text, if possible
-  (with-eval-after-load "mm-decode"
-    (add-to-list 'mm-discouraged-alternatives "text/html")
-    (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+  ;; (with-eval-after-load "mm-decode"
+  ;;   (add-to-list 'mm-discouraged-alternatives "text/html")
+  ;;   (add-to-list 'mm-discouraged-alternatives "text/richtext"))
 
   (setq mu4e-contexts
         (list
@@ -531,8 +534,27 @@ This is where we gather up all of the various hooks used for various modes
   
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
+#+end_src
+
+*** Buffer customizations
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+  (setq display-buffer-alist nil)
+  (setq buffer-alist '(
+                       ("\\*Occur\\*"
+                        (dedicated . t)
+                        (display-buffer-reuse-mode-window display-buffer-below-selected)
+                        (window-height . fit-window-to-buffer))
+                      ))
+  (setq switch-to-buffer-in-dedicated-window 'pop)
+  (setq switch-to-buffer-obey-display-actions t)
+  (setq split-height-threshold 80
+        split-width-thresold 120)
+
 
 #+end_src
+
+#+RESULTS:
+: 120
 
 ** System specific configurations
   
@@ -553,12 +575,12 @@ This is where we gather up all of the various hooks used for various modes
 
 #+end_src
 #+begin_src emacs-lisp
-  (eval-and-compile
-    (defun efs/lookup-password (&rest keys)
-      (let ((result (apply #'auth-source-search keys)))
-        (if result
-            (funcall (plist-get (car result) :secret))
-          nil))))
+  ;; (eval-and-compile
+  ;;   (defun efs/lookup-password (&rest keys)
+  ;;     (let ((result (apply #'auth-source-search keys)))
+  ;;       (if result
+  ;;           (funcall (plist-get (car result) :secret))
+  ;;         nil))))
 #+end_src
 
 #+RESULTS:
