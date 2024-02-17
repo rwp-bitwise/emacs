@@ -7,7 +7,7 @@
 (setq custom-safe-themes t)
 (setq epa-pinentry-mode 'loopback)
 
-        ;;; Package deffinitions
+;; Package deffinitions
 ;; first, declare repositories
 ;; Makesure libtool, libtool-bin, and cmake are installed
 ;; pip install virtualenv pylint if they doesn't already exist
@@ -116,6 +116,7 @@
   :init
   (pyvenv-mode t)
   (setq pyvenv-env-name "~/python_venv"
+        python-shell-completion-native-enable nil
         python-shell-native-complete nil)
   (setq pyvenv-post-activate-hooks
         (list (lambda ()
@@ -159,15 +160,17 @@
 (use-package magit
   :ensure t
   :hook
-  ;;(git-commit-turn-on-fylspell)
+  (git-commit-turn-on-fylspell)
   (git-commit-turn-on-auto-fill)
   (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
+  ;; init
+  ;; (magit-mode))
 
 (use-package lsp-mode
   :ensure t
   :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
-                            ("M-b" . elpy-nav-backward-block)))
+              ("M-b" . elpy-nav-backward-block)))
 
 (use-package osx-clipboard
   :ensure t
@@ -175,18 +178,18 @@
   :if (eq system-type 'darwin))
 
 ;;(use-package dracula-theme
- ;; :ensure t
- ;; :init
-  ;;(load-theme 'dracula t)
-  ;; Mode lines from the dracula theme are a bit tough for me to read
-  ;;(set-face-attribute 'mode-line nil
-  ;;                    :background "#8b3626"
-  ;;                    :foreground "#90ee90"
-  ;;                    :box "#8b0000")
-  ;;(set-face-attribute 'mode-line-inactive nil
-  ;;                    :background "#ff1493"
-  ;;                    :foreground "#2e8b57"
-  ;;                    :box "#ff34b3"))
+;; :ensure t
+;; :init
+;;(load-theme 'dracula t)
+;; Mode lines from the dracula theme are a bit tough for me to read
+;;(set-face-attribute 'mode-line nil
+;;                    :background "#8b3626"
+;;                    :foreground "#90ee90"
+;;                    :box "#8b0000")
+;;(set-face-attribute 'mode-line-inactive nil
+;;                    :background "#ff1493"
+;;                    :foreground "#2e8b57"
+;;                    :box "#ff34b3"))
 
 ;;
 ;; Completion with pop-ups
@@ -257,9 +260,9 @@
   (after-init . global-company-mode)
   (lsp-mode . company-mode)
   :bind (:map company-active-map
-          ("<tab>" . company-completion-selection))
-        (:map lsp-mode-map
-          ("<tab>" . company-indent-or-complete-common))
+              ("<tab>" . company-completion-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
   :config
   (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
   (setq company-tooltip-align-annotations t)  ; Align annotations to the right
@@ -385,7 +388,7 @@
                 (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
          (base-font-color     (face-foreground 'default nil 'default))
          (headline
-         `(:inherit default :weight bold :foreground ,base-font-color))) ;
+          `(:inherit default :weight bold :foreground ,base-font-color))) ;
 
 (custom-theme-set-faces
  'user
@@ -450,13 +453,11 @@ Shamelessly bottowed from Bryan Oakley."
 
 (set-frame-size-according-to-resolution)
 
-(visual-line-mode t)
-(global-visual-line-mode +1)
+(global-visual-line-mode t)
 (global-hl-line-mode)
-;;(setq-default tab-width )
 
 (setq column-number-mode t
-  indent-line-function 'insert-tab)
+      indent-line-function 'insert-tab)
 (tool-bar-mode -1)
 (display-battery-mode)
 (desktop-save-mode)
@@ -464,17 +465,30 @@ Shamelessly bottowed from Bryan Oakley."
 (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
 
 (setq display-buffer-alist nil)
+;; (setq split-height-threshold 80
+;;       split-width-thresold 120)
+
+;; 
+
 (setq display-buffer-alist '(
-                     ("\\*Occur\\*"
-                      (display-buffer-reuse-mode-window
-                       display-buffer-below-selected)
-                      (window-height . fit-window-to-buffer)
-                      (dedicated . t))
-                    ))
+                             ("\\*Occur\\*"
+                              (display-buffer-in-side-window)
+                              (display-buffer-reuse-mode-window
+                               display-buffer-below-selected)
+                              (window-height . fit-window-to-buffer)
+                              (dedicated . t)
+                              (side . right))
+
+                             ("\\*Python\\*"
+                              (display-buffer-in-side-window)
+                              (display-buffer-reuse-mode-window
+                               display-buffer-below-selected)
+                              (window-height . fit-window-to-buffer)
+                              (dedicated . t)
+                              (side . right))
+                             ))
 (setq switch-to-buffer-in-dedicated-window 'pop)
 (setq switch-to-buffer-obey-display-actions t)
-(setq split-height-threshold 80
-      split-width-thresold 120)
 
 (cond
  ((eq system-type 'darwin)

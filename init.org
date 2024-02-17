@@ -129,6 +129,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :init
     (pyvenv-mode t)
     (setq pyvenv-env-name "~/python_venv"
+          python-shell-completion-native-enable nil
           python-shell-native-complete nil)
     (setq pyvenv-post-activate-hooks
           (list (lambda ()
@@ -172,10 +173,12 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
   (use-package magit
     :ensure t
     :hook
-    ;;(git-commit-turn-on-fylspell)
+    (git-commit-turn-on-fylspell)
     (git-commit-turn-on-auto-fill)
     (git-commit-mode . ac-ispell-ac-setup)
     (after-save . magit-after-save-refresh-status))
+    ;; init
+    ;; (magit-mode))
 
   (use-package lsp-mode
     :ensure t
@@ -533,10 +536,8 @@ Have the window sized according to the resolution of the display
 Line wrap, default tab width, highlighting, etc
   
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (visual-line-mode t)
-  (global-visual-line-mode +1)
+  (global-visual-line-mode t)
   (global-hl-line-mode)
-  ;;(setq-default tab-width )
 #+end_src
   
 *** Mode line customizations
@@ -556,24 +557,37 @@ Line wrap, default tab width, highlighting, etc
 
 *** Buffer customizations
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (setq display-buffer-alist nil)
-  (setq display-buffer-alist '(
-                               ("\\*Occur\\*"
-                                (display-buffer-reuse-mode-window
-                                 display-buffer-below-selected)
-                                (window-height . fit-window-to-buffer)
-                                (dedicated . t))
-                               ))
-  (setq switch-to-buffer-in-dedicated-window 'pop)
-  (setq switch-to-buffer-obey-display-actions t)
-  (setq split-height-threshold 80
-        split-width-thresold 120)
+    (setq display-buffer-alist nil)
+    ;; (setq split-height-threshold 80
+    ;;       split-width-thresold 120)
+
+    ;; 
+
+    (setq display-buffer-alist '(
+                                 ("\\*Occur\\*"
+                                  (display-buffer-in-side-window)
+                                  (display-buffer-reuse-mode-window
+                                   display-buffer-below-selected)
+                                  (window-height . fit-window-to-buffer)
+                                  (dedicated . t)
+                                  (side . right))
+
+                                 ("\\*Python\\*"
+                                  (display-buffer-in-side-window)
+                                  (display-buffer-reuse-mode-window
+                                   display-buffer-below-selected)
+                                  (window-height . fit-window-to-buffer)
+                                  (dedicated . t)
+                                  (side . right))
+                                 ))
+    (setq switch-to-buffer-in-dedicated-window 'pop)
+    (setq switch-to-buffer-obey-display-actions t)
 
 
 #+end_src
 
 #+RESULTS:
-: 120
+: t
 
 ** System specific configurations
   
@@ -597,8 +611,8 @@ Line wrap, default tab width, highlighting, etc
   ;; (eval-and-compile
   ;;   (defun efs/lookup-password (&rest keys)
   ;;     (let ((result (apply #'auth-source-search keys)))
-  ;;       (if result
-  ;;           (funcall (plist-get (car result) :secret))
+  ;;       (if result 
+ ;;           (funcall (plist-get (car result) :secret))
   ;;         nil))))
 #+end_src
 
