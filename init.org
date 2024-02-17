@@ -5,13 +5,16 @@ This is useful when using multiple hosts that you want to load your emacs init.e
 python, virtualenv, libtool, libtool-bin, and cmake all need to be present on your system for this to work wih all of the packages listed here. 
 
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-    ;;; Code:
+  ;;; package init.el --- emacs init and config
+
+  ;;; Code:
+
   (setq max-lisp-eval-depth 2048)
   (require 'package)
   (setq custom-safe-themes t)
   (setq epa-pinentry-mode 'loopback)
 
-    ;;; Package deffinitions
+  ;; Package deffinitions
   ;; first, declare repositories
   ;; Makesure libtool, libtool-bin, and cmake are installed
   ;; pip install virtualenv pylint if they doesn't already exist
@@ -71,165 +74,174 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 ** Configure the packages
 
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-    (use-package use-package-ensure-system-package
-      :ensure t)
+  (use-package use-package-ensure-system-package
+    :ensure t)
 
-    (use-package modus-themes
-      :init
-      (setq modus-themes-mode-line '(moody accented borderless))
-      (load-theme 'modus-vivendi-deuteranopia))
-  
-    (use-package flyspell
-      :ensure t
-      :hook
-      (text-mode . flyspell-mode)
-      (prog-mode . flyspell-prog-mode)
-      :config
-      (setq ispell-extra-args '(":--sug-mode=ultra"))
-      :bind
-      (:map flyspell-mode-map
-            ("C-;" . flyspell-correct-wrapper)))
+  (use-package modus-themes
+    :init
+    (setq modus-themes-mode-line '(moody accented borderless))
+    (load-theme 'modus-vivendi-deuteranopia))
 
-    (use-package flyspell-correct-ivy
-      :ensure t
-      :after flyspell
-      :bind
-      (:map flyspell-mode-map
-            ("C-;" . flyspell-correct-wrapper)))
+  (use-package flyspell
+    :ensure t
+    :hook
+    (text-mode . flyspell-mode)
+    (prog-mode . flyspell-prog-mode)
+    :config
+    (setq ispell-extra-args '(":--sug-mode=ultra"))
+    :bind
+    (:map flyspell-mode-map
+          ("C-;" . flyspell-correct-wrapper)))
+
+  (use-package flyspell-correct-ivy
+    :ensure t
+    :after flyspell
+    :bind
+    (:map flyspell-mode-map
+          ("C-;" . flyspell-correct-wrapper)))
 #+end_src
 
 *** Packages for programming language support  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-    (use-package jedi
-      :ensure t
-      :config
-      (setq jedi:complete-on-dot t)
-      (add-hook 'python-mode-hook 'jedi:setup))
+  (use-package jedi
+    :ensure t
+    :config
+    (setq jedi:complete-on-dot t)
+    (add-hook 'python-mode-hook 'jedi:setup))
 
-    (use-package company
-      :ensure t
-      :hook
-      (after-init . global-company-mode))
+  (use-package company
+    :ensure t
+    :hook
+    (after-init . global-company-mode))
 
-    (use-package company-jedi
-      :ensure t
-      :config
-      (add-to-list 'company-backends 'company-jedi))
+  (use-package company-jedi
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-jedi))
 
-    (use-package cc-mode
-      :ensure t
-      :hook
-      (c-mode . display-line-numbers-mode))
+  (use-package cc-mode
+    :ensure t
+    :hook
+    (c-mode . display-line-numbers-mode))
 
-    (use-package pyvenv
-      :ensure t
-      :init
-      (pyvenv-mode t)
-      (setq pyvenv-env-name "~/python_venv"
-            python-shell-interpreter "~/python_venv/bin/python3")
-      (setq pyvenv-post-activate-hooks
-            (list (lambda ()
-                    (setq python-shell-interpreter "~/python_venv/bin/python3"))))
-      (setq pyvenv-post-deactivate-hooks
-            (list (lambda ()
-                    (setq python-shell-interpreter "python3")))))
+  (use-package pyvenv
+    :ensure t
+    :init
+    (pyvenv-mode t)
+    (setq pyvenv-env-name "~/python_venv"
+          python-shell-native-complete nil)
+    (setq pyvenv-post-activate-hooks
+          (list (lambda ()
+                  (setq python-shell-interpreter "~/python_venv/bin/python3"))))
+    (setq pyvenv-post-deactivate-hooks
+          (list (lambda ()
+                  (setq python-shell-interpreter "python3")))))
 
-    (use-package pylint
-      :init
-      (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
-            flycheck-pylintrc "~/.pylintrc"))
+  (use-package pylint
+    :init
+    (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
+          flycheck-pylintrc "~/.pylintrc"))
 
-    (use-package python-mode
-      :ensure t
-      :mode (("\\.py$" . python-mode))
-      :defer t
-      :init
-      (setq python-python-command "~/python_venv/bin/python3"
-            indent-tabs-mode nil
-            python-indent-offset 2
-            elpy-enable t
-            tab-width 2)
-      (pyvenv-activate "~/python_venv")
-      :hook
-      (python-mode . display-line-numbers-mode)
-      (python-mode . jedi-mode)
-      (python-mode . yas-minor-mode)) 
+  (use-package python-mode
+    :ensure nil
+    :mode (("\\.py$" . python-mode))
+    :defer t
+    :init
+    (setq python-shell-interpreter "~/python_venv/bin/python3"
+          python-python-command "~/python_venv/bin/python3"
+          indent-tabs-mode nil
+          python-indent-offset 2
+          elpy-enable t
+          tab-width 2)
+    (pyvenv-activate "~/python_venv")
+    :hook
+    (python-mode . display-line-numbers-mode)
+    (python-mode . jedi-mode)
+    (python-mode . lsp-deferred)
+    (python-mode . yas-minor-mode)) 
 
-    (use-package elpy
-      :ensure t
-      :init
-      (setq elpy-eldoc-show-current-function nil))
+  (use-package elpy
+    :ensure t
+    :init
+    (setq elpy-eldoc-show-current-function nil))
 
-    (use-package flycheck
-      :init
-      (setq flycheck-flake8rc "~/.flake8"))
+  (use-package flycheck
+    :init
+    (setq flycheck-flake8rc "~/.flake8"))
 
-    (use-package magit
-      :ensure t
-      :hook
-      ;;(git-commit-turn-on-fylspell)
-      (git-commit-turn-on-auto-fill)
-      (git-commit-mode . ac-ispell-ac-setup)
-      (after-save . magit-after-save-refresh-status))
+  (use-package magit
+    :ensure t
+    :hook
+    ;;(git-commit-turn-on-fylspell)
+    (git-commit-turn-on-auto-fill)
+    (git-commit-mode . ac-ispell-ac-setup)
+    (after-save . magit-after-save-refresh-status))
 
-  #+end_src
+  (use-package lsp-mode
+    :ensure t
+    :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
+                ("M-b" . elpy-nav-backward-block)))
+
+#+end_src
+
+#+RESULTS:
 
 *** General support for themes and user interface modifications
-  #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
 
-    (use-package osx-clipboard
-      :ensure t
-      :defer t
-      :if (eq system-type 'darwin))
+  (use-package osx-clipboard
+    :ensure t
+    :defer t
+    :if (eq system-type 'darwin))
 
-    ;;(use-package dracula-theme
-     ;; :ensure t
-     ;; :init
-      ;;(load-theme 'dracula t)
-      ;; Mode lines from the dracula theme are a bit tough for me to read
-      ;;(set-face-attribute 'mode-line nil
-      ;;                    :background "#8b3626"
-      ;;                    :foreground "#90ee90"
-      ;;                    :box "#8b0000")
-      ;;(set-face-attribute 'mode-line-inactive nil
-      ;;                    :background "#ff1493"
-      ;;                    :foreground "#2e8b57"
-      ;;                    :box "#ff34b3"))
+  ;;(use-package dracula-theme
+  ;; :ensure t
+  ;; :init
+  ;;(load-theme 'dracula t)
+  ;; Mode lines from the dracula theme are a bit tough for me to read
+  ;;(set-face-attribute 'mode-line nil
+  ;;                    :background "#8b3626"
+  ;;                    :foreground "#90ee90"
+  ;;                    :box "#8b0000")
+  ;;(set-face-attribute 'mode-line-inactive nil
+  ;;                    :background "#ff1493"
+  ;;                    :foreground "#2e8b57"
+  ;;                    :box "#ff34b3"))
 
-    ;;
-    ;; Completion with pop-ups
-    ;;
-    (use-package corfu
-      :custom
-      (corfu-xdauto t)
-      (corfu-auto-delay 0.0)
-      (corfu-quit-at-boundary 'seperator)
-      (corfu-echo-documentation 0.25)
-      (corfu-preview-current 'insert)
-      (corfu-preselect-first nil)
+  ;;
+  ;; Completion with pop-ups
+  ;;
+  (use-package corfu
+    :custom
+    (corfu-xdauto t)
+    (corfu-auto-delay 0.0)
+    (corfu-quit-at-boundary 'seperator)
+    (corfu-echo-documentation 0.25)
+    (corfu-preview-current 'insert)
+    (corfu-preselect-first nil)
 
-      :bind (:map corfu-map
-                  ("M-SPC" . corfu-insert-seperator)
-                  ("RET"   . nil)
-                  ("TAB"   . corfu-next)
-                  ("S-TAB" . corfu-previous)
-                  ("S-<return>" . corfu-insert))
-      :init
-      :config
-      (global-corfu-mode))
+    :bind (:map corfu-map
+                ("M-SPC" . corfu-insert-seperator)
+                ("RET"   . nil)
+                ("TAB"   . corfu-next)
+                ("S-TAB" . corfu-previous)
+                ("S-<return>" . corfu-insert))
+    :init
+    :config
+    (global-corfu-mode))
 
-    (use-package yasnippet
-      :config
-      :init
-      (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                               "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/python-mode"))
-      :config
-      (yas-reload-all)
-      :commands
-      (yas-global-mode))
+  (use-package yasnippet
+    :config
+    :init
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
+                             "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/python-mode"))
+    :config
+    (yas-reload-all)
+    :commands
+    (yas-global-mode))
 
-    (use-package yasnippet-snippets
-      :ensure t)
+  (use-package yasnippet-snippets
+    :ensure t)
 #+end_src
 
 *** Org mode customizations 
@@ -263,8 +275,14 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
   (use-package company
     :ensure t
+    :after lsp-mode
     :hook
     (after-init . global-company-mode)
+    (lsp-mode . company-mode)
+    :bind (:map company-active-map
+                ("<tab>" . company-completion-selection))
+    (:map lsp-mode-map
+          ("<tab>" . company-indent-or-complete-common))
     :config
     (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
     (setq company-tooltip-align-annotations t)  ; Align annotations to the right
@@ -405,7 +423,7 @@ Using variable pitch fonts generally only works properly when there is a windowi
                   (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
            (base-font-color     (face-foreground 'default nil 'default))
            (headline
-           `(:inherit default :weight bold :foreground ,base-font-color))) ;
+            `(:inherit default :weight bold :foreground ,base-font-color))) ;
 #+end_src
 
 Here we set the customizations for the various headline levels in org-mode. We also set the areas where we still want fixed width fonts like tables and code blocks.
@@ -485,7 +503,7 @@ This is where we gather up all of the various hooks used for various modes
 
 ** Interface configuration
 *** Display configuration
-  Have the window sized according to the resolution of the display
+Have the window sized according to the resolution of the display
   
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (defun set-frame-size-according-to-resolution ()
@@ -512,7 +530,7 @@ This is where we gather up all of the various hooks used for various modes
 #+end_src
   
 *** Line handling
-  Line wrap, default tab width, highlighting, etc
+Line wrap, default tab width, highlighting, etc
   
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (visual-line-mode t)
@@ -524,11 +542,11 @@ This is where we gather up all of the various hooks used for various modes
 *** Mode line customizations
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (setq column-number-mode t
-    indent-line-function 'insert-tab)
+        indent-line-function 'insert-tab)
   (tool-bar-mode -1)
   (display-battery-mode)
   (desktop-save-mode)
-  #+end_src
+#+end_src
   
 *** Keyboard bindings
   
@@ -539,12 +557,13 @@ This is where we gather up all of the various hooks used for various modes
 *** Buffer customizations
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (setq display-buffer-alist nil)
-  (setq buffer-alist '(
-                       ("\\*Occur\\*"
-                        (dedicated . t)
-                        (display-buffer-reuse-mode-window display-buffer-below-selected)
-                        (window-height . fit-window-to-buffer))
-                      ))
+  (setq display-buffer-alist '(
+                               ("\\*Occur\\*"
+                                (display-buffer-reuse-mode-window
+                                 display-buffer-below-selected)
+                                (window-height . fit-window-to-buffer)
+                                (dedicated . t))
+                               ))
   (setq switch-to-buffer-in-dedicated-window 'pop)
   (setq switch-to-buffer-obey-display-actions t)
   (setq split-height-threshold 80

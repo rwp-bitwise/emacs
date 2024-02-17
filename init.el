@@ -1,10 +1,13 @@
+;;; package init.el --- emacs init and config
+
 ;;; Code:
+
 (setq max-lisp-eval-depth 2048)
 (require 'package)
 (setq custom-safe-themes t)
 (setq epa-pinentry-mode 'loopback)
 
-  ;;; Package deffinitions
+        ;;; Package deffinitions
 ;; first, declare repositories
 ;; Makesure libtool, libtool-bin, and cmake are installed
 ;; pip install virtualenv pylint if they doesn't already exist
@@ -113,7 +116,7 @@
   :init
   (pyvenv-mode t)
   (setq pyvenv-env-name "~/python_venv"
-        python-shell-interpreter "~/python_venv/bin/python3")
+        python-shell-native-complete nil)
   (setq pyvenv-post-activate-hooks
         (list (lambda ()
                 (setq python-shell-interpreter "~/python_venv/bin/python3"))))
@@ -127,11 +130,12 @@
         flycheck-pylintrc "~/.pylintrc"))
 
 (use-package python-mode
-  :ensure t
+  :ensure nil
   :mode (("\\.py$" . python-mode))
   :defer t
   :init
-  (setq python-python-command "~/python_venv/bin/python3"
+  (setq python-shell-interpreter "~/python_venv/bin/python3"
+        python-python-command "~/python_venv/bin/python3"
         indent-tabs-mode nil
         python-indent-offset 2
         elpy-enable t
@@ -140,6 +144,7 @@
   :hook
   (python-mode . display-line-numbers-mode)
   (python-mode . jedi-mode)
+  (python-mode . lsp-deferred)
   (python-mode . yas-minor-mode)) 
 
 (use-package elpy
@@ -158,6 +163,11 @@
   (git-commit-turn-on-auto-fill)
   (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
+
+(use-package lsp-mode
+  :ensure t
+  :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
+                            ("M-b" . elpy-nav-backward-block)))
 
 (use-package osx-clipboard
   :ensure t
@@ -242,8 +252,14 @@
 
 (use-package company
   :ensure t
+  :after lsp-mode
   :hook
   (after-init . global-company-mode)
+  (lsp-mode . company-mode)
+  :bind (:map company-active-map
+          ("<tab>" . company-completion-selection))
+        (:map lsp-mode-map
+          ("<tab>" . company-indent-or-complete-common))
   :config
   (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
   (setq company-tooltip-align-annotations t)  ; Align annotations to the right
@@ -448,11 +464,12 @@ Shamelessly bottowed from Bryan Oakley."
 (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
 
 (setq display-buffer-alist nil)
-(setq buffer-alist '(
+(setq display-buffer-alist '(
                      ("\\*Occur\\*"
-                      (dedicated . t)
-                      (display-buffer-reuse-mode-window display-buffer-below-selected)
-                      (window-height . fit-window-to-buffer))
+                      (display-buffer-reuse-mode-window
+                       display-buffer-below-selected)
+                      (window-height . fit-window-to-buffer)
+                      (dedicated . t))
                     ))
 (setq switch-to-buffer-in-dedicated-window 'pop)
 (setq switch-to-buffer-obey-display-actions t)
