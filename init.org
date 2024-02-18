@@ -52,7 +52,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       auto-virtualenv
       py-snippets
       python-mode
-      pylint
+;;      pylint
       pyvenv
       jedi
       json-mode))

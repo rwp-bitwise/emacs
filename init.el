@@ -1,68 +1,68 @@
 ;;; package init.el --- emacs init and config
 
-;;; Code:
+  ;;; Code:
 
-(setq max-lisp-eval-depth 2048)
-(require 'package)
-(setq custom-safe-themes t)
-(setq epa-pinentry-mode 'loopback)
+  (setq max-lisp-eval-depth 2048)
+  (require 'package)
+  (setq custom-safe-themes t)
+  (setq epa-pinentry-mode 'loopback)
 
-;; Package deffinitions
-;; first, declare repositories
-;; Makesure libtool, libtool-bin, and cmake are installed
-;; pip install virtualenv pylint if they doesn't already exist
-;; ;; Declare packages
-(defvar my-packages
-  '(adaptive-wrap
-    org
-    osx-clipboard
-    expand-region
-    helm
-    magit
-    markdown-mode
-    wrap-region
-    yaml-mode
-    company
-    yasnippet
-    yasnippet-snippets
-    vterm
-    adaptive-wrap
-    dracula-theme
-    corfu
-    elpy
-    org-bullets
-    org-ai
-    ivy
-    flycheck
-    flyspell
-    flyspell-correct-ivy
-    flycheck
-    flycheck-pyre
-    flycheck-irony
-    irony
-    modus-themes
-    ac-ispell
-    auto-virtualenv
-    py-snippets
-    python-mode
-    pylint
-    pyvenv
-    jedi
-    json-mode))
+  ;; Package deffinitions
+  ;; first, declare repositories
+  ;; Makesure libtool, libtool-bin, and cmake are installed
+  ;; pip install virtualenv pylint if they doesn't already exist
+  ;; ;; Declare packages
+  (defvar my-packages
+    '(adaptive-wrap
+      org
+      osx-clipboard
+      expand-region
+      helm
+      magit
+      markdown-mode
+      wrap-region
+      yaml-mode
+      company
+      yasnippet
+      yasnippet-snippets
+      vterm
+      adaptive-wrap
+      dracula-theme
+      corfu
+      elpy
+      org-bullets
+      org-ai
+      ivy
+      flycheck
+      flyspell
+      flyspell-correct-ivy
+      flycheck
+      flycheck-pyre
+      flycheck-irony
+      irony
+      modus-themes
+      ac-ispell
+      auto-virtualenv
+      py-snippets
+      python-mode
+;;      pylint
+      pyvenv
+      jedi
+      json-mode))
 
-;; Make sure package list is up to date
-(when (not package-archive-contents)
-  (package-refresh-contents))
+  ;; Make sure package list is up to date
+  (when (not package-archive-contents)
+    (package-refresh-contents))
 
-;; Iterate on packages and install missing ones
-(dolist (pkg my-packages)
-  (unless (package-installed-p pkg)
-    (when (require pkg nil 'noerror)
-      (package-install pkg))))
+  ;; Iterate on packages and install missing ones
+  (dolist (pkg my-packages)
+    (unless (package-installed-p pkg)
+      (when (require pkg nil 'noerror)
+        (package-install pkg))))
 
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")))
+  (setq package-archives
+        '(("gnu" . "http://elpa.gnu.org/packages/")
+          ("melpa" . "http://melpa.org/packages/")))
 
 (use-package use-package-ensure-system-package
   :ensure t)
