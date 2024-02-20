@@ -11,7 +11,6 @@
   ;; first, declare repositories
   ;; Makesure libtool, libtool-bin, and cmake are installed
   ;; pip install virtualenv pylint if they doesn't already exist
-  ;; ;; Declare packages
   (defvar my-packages
     '(adaptive-wrap
       org
@@ -27,8 +26,8 @@
       yasnippet-snippets
       vterm
       adaptive-wrap
-      dracula-theme
-      corfu
+      ;;dracula-theme
+      ;;corfu
       elpy
       org-bullets
       org-ai
@@ -194,24 +193,24 @@
 ;;
 ;; Completion with pop-ups
 ;;
-(use-package corfu
-  :custom
-  (corfu-xdauto t)
-  (corfu-auto-delay 0.0)
-  (corfu-quit-at-boundary 'seperator)
-  (corfu-echo-documentation 0.25)
-  (corfu-preview-current 'insert)
-  (corfu-preselect-first nil)
+;; (use-package corfu
+;;   :custom
+;;   (corfu-xdauto t)
+;;   (corfu-auto-delay 0.0)
+;;   (corfu-quit-at-boundary 'seperator)
+;;   (corfu-echo-documentation 0.25)
+;;   (corfu-preview-current 'insert)
+;;   (corfu-preselect-first nil)
 
-  :bind (:map corfu-map
-              ("M-SPC" . corfu-insert-seperator)
-              ("RET"   . nil)
-              ("TAB"   . corfu-next)
-              ("S-TAB" . corfu-previous)
-              ("S-<return>" . corfu-insert))
-  :init
-  :config
-  (global-corfu-mode))
+;;   :bind (:map corfu-map
+;;               ("M-SPC" . corfu-insert-seperator)
+;;               ("RET"   . nil)
+;;               ("TAB"   . corfu-next)
+;;               ("S-TAB" . corfu-previous)
+;;               ("S-<return>" . corfu-insert))
+;;   :init
+;;   :config
+;;   (global-corfu-mode))
 
 (use-package yasnippet
   :config
@@ -460,6 +459,7 @@ Shamelessly bottowed from Bryan Oakley."
       indent-line-function 'insert-tab)
 (tool-bar-mode -1)
 (display-battery-mode)
+(display-time-mode)
 (desktop-save-mode)
 
 (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
