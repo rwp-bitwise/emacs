@@ -1,75 +1,73 @@
 ;;; package init.el --- emacs init and config
 
-  ;;; Code:
+;;; Code:
 
-  (setq max-lisp-eval-depth 2048)
-  (require 'package)
-  (setq custom-safe-themes t)
-  (setq epa-pinentry-mode 'loopback)
+(setq max-lisp-eval-depth 2048)
+(require 'package)
+(setq custom-safe-themes t)
+(setq epa-pinentry-mode 'loopback)
 
-  ;; Package deffinitions
-  ;; first, declare repositories
-  ;; Makesure libtool, libtool-bin, and cmake are installed
-  ;; pip install virtualenv pylint if they doesn't already exist
-  (defvar my-packages
-    '(adaptive-wrap
-      org
-      osx-clipboard
-      expand-region
-      helm
-      magit
-      markdown-mode
-      wrap-region
-      yaml-mode
-      company
-      yasnippet
-      yasnippet-snippets
-      vterm
-      adaptive-wrap
-      ;;dracula-theme
-      ;;corfu
-      elpy
-      org-bullets
-      org-ai
-      ivy
-      flycheck
-      flyspell
-      flyspell-correct-ivy
-      flycheck
-      flycheck-pyre
-      flycheck-irony
-      irony
-      modus-themes
-      ac-ispell
-      auto-virtualenv
-      py-snippets
-      python-mode
-;;      pylint
-      pyvenv
-      jedi
-      json-mode))
+;; Package deffinitions
+;; first, declare repositories
+;; Makesure libtool, libtool-bin, and cmake are installed
+;; pip install virtualenv pylint if they doesn't already exist
+;; (defvar my-packages
+;;   '(adaptive-wrap
+;;     vertico
+;;     marginalia
+;;     org
+;;     osx-clipboard
+;;     expand-region
+;;     helm
+;;     magit
+;;     markdown-mode
+;;     wrap-region
+;;     yaml-mode
+;;     company
+;;     yasnippet
+;;     yasnippet-snippets
+;;     vterm
+;;     adaptive-wrap
+;;     elpy
+;;     org-bullets
+;;     ivy
+;;     flycheck
+;;     flyspell
+;;     flyspell-correct-ivy
+;;     flycheck
+;;     flycheck-pyre
+;;     flycheck-irony
+;;     irony
+;;     modus-themes
+;;     ac-ispell
+;;     auto-virtualenv
+;;     py-snippets
+;;     python-mode
+;;     pyvenv
+;;     jedi
+;;     json-mode))
 
-  ;; Make sure package list is up to date
-  (when (not package-archive-contents)
-    (package-refresh-contents))
+;; ;; Make sure package list is up to date
+;; (when (not package-archive-contents)
+;;   (package-refresh-contents))
 
-  ;; Iterate on packages and install missing ones
-  (dolist (pkg my-packages)
-    (unless (package-installed-p pkg)
-      (when (require pkg nil 'noerror)
-        (package-install pkg))))
+;; ;; Iterate on packages and install missing ones
+;; (dolist (pkg my-packages)
+;;   (unless (package-installed-p pkg)
+;;     (when (require pkg nil 'noerror)
+;;       (package-install pkg))))
 
-  (setq package-archives
-        '(("gnu" . "http://elpa.gnu.org/packages/")
-          ("melpa" . "http://melpa.org/packages/")))
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")))
+
+(use-package gptel
+  :ensure t)
+
 
 (use-package use-package-ensure-system-package
   :ensure t)
 
-(use-package modus-themes
-  :init
-  (setq modus-themes-mode-line '(moody accented borderless))
-  (load-theme 'modus-vivendi-deuteranopia))
 
 (use-package flyspell
   :ensure t
@@ -95,15 +93,6 @@
   (setq jedi:complete-on-dot t)
   (add-hook 'python-mode-hook 'jedi:setup))
 
-(use-package company
-  :ensure t
-  :hook
-  (after-init . global-company-mode))
-
-(use-package company-jedi
-  :ensure t
-  :config
-  (add-to-list 'company-backends 'company-jedi))
 
 (use-package cc-mode
   :ensure t
@@ -163,67 +152,61 @@
   (git-commit-turn-on-auto-fill)
   (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
-  ;; init
-  ;; (magit-mode))
 
 (use-package lsp-mode
   :ensure t
   :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
               ("M-b" . elpy-nav-backward-block)))
 
+(use-package company
+  :ensure t
+  :after lsp-mode
+  :hook
+  (after-init . global-company-mode)
+  (lsp-mode . company-mode)
+  :bind (:map company-active-map
+              ("<tab>" . company-completion-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
+  :config
+  (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
+  (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
+
+(use-package company-jedi
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-jedi))
+
 (use-package osx-clipboard
   :ensure t
   :defer t
   :if (eq system-type 'darwin))
 
-;;(use-package dracula-theme
-;; :ensure t
-;; :init
-;;(load-theme 'dracula t)
-;; Mode lines from the dracula theme are a bit tough for me to read
-;;(set-face-attribute 'mode-line nil
-;;                    :background "#8b3626"
-;;                    :foreground "#90ee90"
-;;                    :box "#8b0000")
-;;(set-face-attribute 'mode-line-inactive nil
-;;                    :background "#ff1493"
-;;                    :foreground "#2e8b57"
-;;                    :box "#ff34b3"))
-
-;;
-;; Completion with pop-ups
-;;
-;; (use-package corfu
-;;   :custom
-;;   (corfu-xdauto t)
-;;   (corfu-auto-delay 0.0)
-;;   (corfu-quit-at-boundary 'seperator)
-;;   (corfu-echo-documentation 0.25)
-;;   (corfu-preview-current 'insert)
-;;   (corfu-preselect-first nil)
-
-;;   :bind (:map corfu-map
-;;               ("M-SPC" . corfu-insert-seperator)
-;;               ("RET"   . nil)
-;;               ("TAB"   . corfu-next)
-;;               ("S-TAB" . corfu-previous)
-;;               ("S-<return>" . corfu-insert))
-;;   :init
-;;   :config
-;;   (global-corfu-mode))
-
 (use-package yasnippet
-  :config
   :init
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
                            "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/python-mode"))
   :config
   (yas-reload-all)
-  :commands
   (yas-global-mode))
 
 (use-package yasnippet-snippets
   :ensure t)
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode))
+
+(use-package marginalia
+  :ensure t
+  :init
+  (marginalia-mode))
+
+(use-package modus-themes
+  :init
+  (setq modus-themes-mode-line '(moody accented borderless))
+  (load-theme 'modus-vivendi-deuteranopia))
 
 ;;
 ;; Org mode settings
@@ -252,20 +235,6 @@
 (use-package org-mime
   :ensure t)
 
-(use-package company
-  :ensure t
-  :after lsp-mode
-  :hook
-  (after-init . global-company-mode)
-  (lsp-mode . company-mode)
-  :bind (:map company-active-map
-              ("<tab>" . company-completion-selection))
-  (:map lsp-mode-map
-        ("<tab>" . company-indent-or-complete-common))
-  :config
-  (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
-  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-  (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
 
 (font-lock-add-keywords 'org-mode
                         '(("^ *\\([-]\\) "
@@ -419,7 +388,9 @@
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((python . t)))
+ '((python . t)
+   (shell . t)
+   (C . t)))
 
 (global-flycheck-mode)
 (global-company-mode)

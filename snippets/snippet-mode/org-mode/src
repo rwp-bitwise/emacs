@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
   # name: Source Block
-  # key: src
+  # key: <s
 # --
 
  #+BEGIN_SRC ${1: language}
