@@ -64,10 +64,8 @@
 (use-package gptel
   :ensure t)
 
-
 (use-package use-package-ensure-system-package
   :ensure t)
-
 
 (use-package flyspell
   :ensure t
@@ -324,17 +322,17 @@
  '(org-code ((t (:inherit (shadow fixed-pitch)))))
  '(org-document-info ((t (:foreground "dark orange"))))
  '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
- '(org-document-title ((t (:inherit default :weight bold :foreground "yellow" :font "Lucida Grande" :height 2.0 :underline nil))))
+ '(org-document-title ((t (:inherit default :weight bold :foreground "yellow" :font "Sans Serif" :height 2.0 :underline nil))))
  '(org-done ((t (:foreground "#00ff00" :weight bold))))
  '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
- '(org-level-1 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande" :height 1.75))))
- '(org-level-2 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande" :height 1.5))))
- '(org-level-3 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande" :height 1.25))))
- '(org-level-4 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande" :height 1.1))))
- '(org-level-5 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande"))))
- '(org-level-6 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande"))))
- '(org-level-7 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande"))))
- '(org-level-8 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Lucida Grande"))))
+ '(org-level-1 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.75))))
+ '(org-level-2 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.5))))
+ '(org-level-3 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.25))))
+ '(org-level-4 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.1))))
+ '(org-level-5 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
+ '(org-level-6 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
+ '(org-level-7 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
+ '(org-level-8 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
  '(org-link ((t (:foreground "royal blue" :underline t))))
  '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
  '(org-property-value ((t (:inherit fixed-pitch))))
@@ -348,9 +346,9 @@
 
 (when window-system
   (let* ((variable-tuple
-          (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+          (cond ;;((x-list-fonts "ETBembo")         '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
-                ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+                ;;((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
                 ((x-list-fonts "Verdana")         '(:font "Verdana"))
                 ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
                 (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
