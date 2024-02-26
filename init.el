@@ -139,9 +139,9 @@
   :init
   (setq elpy-eldoc-show-current-function nil))
 
-(use-package flycheck
-  :init
-  (setq flycheck-flake8rc "~/.flake8"))
+;; (use-package flycheck
+;;   :init
+;;   (setq flycheck-flake8rc "~/.flake8"))
 
 (use-package magit
   :ensure t
@@ -424,8 +424,7 @@ Shamelessly bottowed from Bryan Oakley."
 (global-visual-line-mode t)
 (global-hl-line-mode)
 
-(setq column-number-mode t
-      indent-line-function 'insert-tab)
+(setq column-number-mode t)
 (tool-bar-mode -1)
 (display-battery-mode)
 (display-time-mode)

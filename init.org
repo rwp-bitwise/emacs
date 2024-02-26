@@ -155,9 +155,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :init
     (setq elpy-eldoc-show-current-function nil))
 
-  (use-package flycheck
-    :init
-    (setq flycheck-flake8rc "~/.flake8"))
+  ;; (use-package flycheck
+  ;;   :init
+  ;;   (setq flycheck-flake8rc "~/.flake8"))
 #+end_src
 
 **** git and lsp configuration
@@ -522,8 +522,7 @@ Line wrap, default tab width, highlighting, etc
   
 *** Mode line customizations
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (setq column-number-mode t
-        indent-line-function 'insert-tab)
+  (setq column-number-mode t)
   (tool-bar-mode -1)
   (display-battery-mode)
   (display-time-mode)
