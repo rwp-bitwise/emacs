@@ -67,6 +67,9 @@
 (use-package use-package-ensure-system-package
   :ensure t)
 
+(use-package ac-ispell
+  :ensure t)
+
 (use-package flyspell
   :ensure t
   :hook
@@ -390,7 +393,7 @@
    (shell . t)
    (C . t)))
 
-(global-flycheck-mode)
+;;(global-flycheck-mode)
 (global-company-mode)
 
 (eval-after-load "auto-complete"
