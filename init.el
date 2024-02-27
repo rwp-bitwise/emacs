@@ -7,56 +7,6 @@
 (setq custom-safe-themes t)
 (setq epa-pinentry-mode 'loopback)
 
-;; Package deffinitions
-;; first, declare repositories
-;; Makesure libtool, libtool-bin, and cmake are installed
-;; pip install virtualenv pylint if they doesn't already exist
-;; (defvar my-packages
-;;   '(adaptive-wrap
-;;     vertico
-;;     marginalia
-;;     org
-;;     osx-clipboard
-;;     expand-region
-;;     helm
-;;     magit
-;;     markdown-mode
-;;     wrap-region
-;;     yaml-mode
-;;     company
-;;     yasnippet
-;;     yasnippet-snippets
-;;     vterm
-;;     adaptive-wrap
-;;     elpy
-;;     org-bullets
-;;     ivy
-;;     flycheck
-;;     flyspell
-;;     flyspell-correct-ivy
-;;     flycheck
-;;     flycheck-pyre
-;;     flycheck-irony
-;;     irony
-;;     modus-themes
-;;     ac-ispell
-;;     auto-virtualenv
-;;     py-snippets
-;;     python-mode
-;;     pyvenv
-;;     jedi
-;;     json-mode))
-
-;; ;; Make sure package list is up to date
-;; (when (not package-archive-contents)
-;;   (package-refresh-contents))
-
-;; ;; Iterate on packages and install missing ones
-;; (dolist (pkg my-packages)
-;;   (unless (package-installed-p pkg)
-;;     (when (require pkg nil 'noerror)
-;;       (package-install pkg))))
-
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
@@ -87,6 +37,31 @@
   :bind
   (:map flyspell-mode-map
         ("C-;" . flyspell-correct-wrapper)))
+
+(setq treesit-language-source-alist
+'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+  (c "https://github.com/tree-sitter/tree-sitter-c")
+  (cmake "https://github.com/uyha/tree-sitter-cmake")
+  (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+  (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+  (css "https://github.com/tree-sitter/tree-sitter-css")
+  (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+  (go "https://github.com/tree-sitter/tree-sitter-go")
+  (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+  (html "https://github.com/tree-sitter/tree-sitter-html")
+  (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+  (json "https://github.com/tree-sitter/tree-sitter-json")
+  (lua "https://github.com/Azganoth/tree-sitter-lua")
+  (make "https://github.com/alemuller/tree-sitter-make")
+  (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+  (python "https://github.com/tree-sitter/tree-sitter-python")
+  (r "https://github.com/r-lib/tree-sitter-r")
+  (rust "https://github.com/tree-sitter/tree-sitter-rust")
+  (toml "https://github.com/tree-sitter/tree-sitter-toml")
+  (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+  (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+  (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 (use-package jedi
   :ensure t
@@ -187,13 +162,17 @@
 (use-package yasnippet
   :init
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                           "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/python-mode"))
+                           "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
   :config
   (yas-reload-all)
-  (yas-global-mode))
+  (yas-global-mode)
+  :bind
+  (:map yas-minor-mode-map
+        ("C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
 (use-package yasnippet-snippets
   :ensure t)
+
 (use-package vertico
   :ensure t
   :init
