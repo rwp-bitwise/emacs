@@ -1,4 +1,4 @@
- * Package installation and management
+* Package installation and management
 ** List the package set we relay on and loop over and pull them all down
 python, virtualenv, libtool, libtool-bin, and cmake all need to be present on your system for this to work wih all of the packages listed here. 
 
@@ -98,6 +98,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
           python-shell-native-complete nil)
     (setq pyvenv-post-activate-hooks
           (list (lambda ()
+
                   (setq python-shell-interpreter "~/python_venv/bin/python3"))))
     (setq pyvenv-post-deactivate-hooks
           (list (lambda ()
@@ -318,8 +319,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 
 ** Custom variables
-
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+x#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (custom-set-variables
    ;; custom-set-variables was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
@@ -347,12 +347,12 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
    '(org-code ((t (:inherit (shadow fixed-pitch)))))
    '(org-document-info ((t (:foreground "dark orange"))))
    '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-   '(org-document-title ((t (:inherit default :weight bold :foreground "yellow" :font "Sans Serif" :height 2.0 :underline nil))))
+   '(org-document-title ((t (:inherit default :weight bold :foreground "yellow" :font "Sans Serif" :height 1.75 :underline nil))))
    '(org-done ((t (:foreground "#00ff00" :weight bold))))
    '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
-   '(org-level-1 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.75))))
-   '(org-level-2 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.5))))
-   '(org-level-3 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.25))))
+   '(org-level-1 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.5))))
+   '(org-level-2 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.25))))
+   '(org-level-3 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.1))))
    '(org-level-4 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.1))))
    '(org-level-5 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
    '(org-level-6 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
@@ -469,6 +469,8 @@ This is where we gather up all of the various hooks used for various modes
 Have the window sized according to the resolution of the display
   
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+  (set-face-attribute 'default nil :height 160) ;; Default to 16 point font for this old guy
+  
   (defun set-frame-size-according-to-resolution ()
     "Set the default frame size based on display resolution.
   Shamelessly bottowed from Bryan Oakley."
