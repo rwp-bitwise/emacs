@@ -16,8 +16,13 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
 #+end_src
-** Configure the packages
 
+** Custom functions
+#+begin_src emacs-lisp
+
+#+end_src
+
+** Configure the packages
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (use-package gptel
     :ensure t)
@@ -27,7 +32,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
   (use-package ac-ispell
     :ensure t)
-  
+
   (use-package flyspell
     :ensure t
     :hook
@@ -80,7 +85,6 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (setq jedi:complete-on-dot t)
     (add-hook 'python-mode-hook 'jedi:setup))
 
-
   (use-package cc-mode
     :ensure t
     :hook
@@ -131,15 +135,12 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :ensure t
     :init
     (setq elpy-eldoc-show-current-function nil))
-
-  ;; (use-package flycheck
-  ;;   :init
-  ;;   (setq flycheck-flake8rc "~/.flake8"))
 #+end_src
 
 **** git and lsp configuration
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (use-package magit
+    :defer t
     :ensure t
     :hook
     (git-commit-turn-on-fylspell)
@@ -161,8 +162,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :hook
     (after-init . global-company-mode)
     (lsp-mode . company-mode)
-    :bind (:map company-active-map
-                ("<tab>" . company-completion-selection))
+    :bind
+    (:map company-active-map
+          ("<tab>" . company-completion-selection))
     (:map lsp-mode-map
           ("<tab>" . company-indent-or-complete-common))
     :config
@@ -201,7 +203,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
   (use-package yasnippet-snippets
     :ensure t)
-  
+
   (use-package vertico
     :ensure t
     :init
@@ -313,10 +315,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
               (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
           :vars '((user-mail-address . "rwplace@mac.com")
                   (user-full-name . "Rob Place")))))
-
-
 #+end_src
-
 
 ** Custom variables
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
@@ -335,7 +334,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
      '(("gnu" . "https://elpa.gnu.org/packages/")
        ("melpa-stable" . "https://stable.melpa.org/packages/")))
    '(package-selected-packages
-     '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+     '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm  flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
    '(show-trailing-whitespace t))
 
   (custom-set-faces
@@ -421,7 +420,6 @@ Here we set the customizations for the various headline levels in org-mode. We a
 #+end_src
 
 ** Custom faces
-
 #+begin_src emacs-lisp
 
   (custom-set-faces '(mode-line
@@ -440,9 +438,7 @@ Here we set the customizations for the various headline levels in org-mode. We a
 #+RESULTS:
 
 ** org-babel and language configuration
-
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)
@@ -460,17 +456,16 @@ Here we set the customizations for the various headline levels in org-mode. We a
 ** General hooks
 This is where we gather up all of the various hooks used for various modes
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  ;;(setenv "PYTHONPATH" "/the/python/path")
 
 #+end_src
 
 ** Interface configuration
 *** Display configuration
 Have the window sized according to the resolution of the display
-  
+
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (set-face-attribute 'default nil :height 160) ;; Default to 16 point font for this old guy
-  
+
   (defun set-frame-size-according-to-resolution ()
     "Set the default frame size based on display resolution.
   Shamelessly bottowed from Bryan Oakley."
@@ -493,15 +488,14 @@ Have the window sized according to the resolution of the display
 
   (set-frame-size-according-to-resolution)
 #+end_src
-  
+
 *** Line handling
 Line wrap, default tab width, highlighting, etc
-  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (global-visual-line-mode t)
   (global-hl-line-mode)
 #+end_src
-  
+
 *** Mode line customizations
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (setq column-number-mode t)
@@ -510,11 +504,19 @@ Line wrap, default tab width, highlighting, etc
   (display-time-mode)
   (desktop-save-mode)
 #+end_src
-  
+
 *** Keyboard bindings
-  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
+  ;; Make it easy to turn off spell check
+  (global-set-key (kbd "C-c f") 'flyspell-toggle )
+
+  ;; Key binding to split the window horizontally and automatically
+  ;; turn on follow-mode to handle long files
+  (global-set-key (kbd "C-x C-t") (lambda ()
+                                    (interactive)
+                                    (split-window-horizontally)
+                                    (follow-mode)))
+
 #+end_src
 
 *** Buffer customizations
@@ -522,8 +524,6 @@ Line wrap, default tab width, highlighting, etc
   (setq display-buffer-alist nil)
   ;; (setq split-height-threshold 80
   ;;       split-width-thresold 120)
-
-  ;; 
 
   (setq display-buffer-alist '(
                                ("\\*Occur\\*"
@@ -552,7 +552,6 @@ Line wrap, default tab width, highlighting, etc
 : t
 
 ** System specific configurations
-  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (cond
    ((eq system-type 'darwin)

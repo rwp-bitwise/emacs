@@ -69,7 +69,6 @@
   (setq jedi:complete-on-dot t)
   (add-hook 'python-mode-hook 'jedi:setup))
 
-
 (use-package cc-mode
   :ensure t
   :hook
@@ -118,11 +117,8 @@
   :init
   (setq elpy-eldoc-show-current-function nil))
 
-;; (use-package flycheck
-;;   :init
-;;   (setq flycheck-flake8rc "~/.flake8"))
-
 (use-package magit
+  :defer t
   :ensure t
   :hook
   (git-commit-turn-on-fylspell)
@@ -141,8 +137,9 @@
   :hook
   (after-init . global-company-mode)
   (lsp-mode . company-mode)
-  :bind (:map company-active-map
-              ("<tab>" . company-completion-selection))
+  :bind
+  (:map company-active-map
+        ("<tab>" . company-completion-selection))
   (:map lsp-mode-map
         ("<tab>" . company-indent-or-complete-common))
   :config
@@ -293,7 +290,7 @@
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa-stable" . "https://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm  flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
 
 (custom-set-faces
@@ -380,7 +377,7 @@
   '(progn
      (ac-ispell-setup)))
 
-;;(setenv "PYTHONPATH" "/the/python/path")
+
 
 (set-face-attribute 'default nil :height 160) ;; Default to 16 point font for this old guy
 
@@ -415,13 +412,19 @@ Shamelessly bottowed from Bryan Oakley."
 (display-time-mode)
 (desktop-save-mode)
 
-(global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
+;; Make it easy to turn off spell check
+(global-set-key (kbd "C-c f") 'flyspell-toggle )
+
+;; Key binding to split the window horizontally and automatically
+;; turn on follow-mode to handle long files
+(global-set-key (kbd "C-x C-t") (lambda ()
+                                  (interactive)
+                                  (split-window-horizontally)
+                                  (follow-mode)))
 
 (setq display-buffer-alist nil)
 ;; (setq split-height-threshold 80
 ;;       split-width-thresold 120)
-
-;; 
 
 (setq display-buffer-alist '(
                              ("\\*Occur\\*"
