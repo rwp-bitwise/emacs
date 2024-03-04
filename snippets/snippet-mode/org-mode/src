@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
   # name: Source Block
-  # key: <s
+  # key: src
 # --
 
- #+BEGIN_SRC ${1: language}
+#+BEGIN_SRC ${1: language}
   $0
- #+END_SRC
+#+END_SRC

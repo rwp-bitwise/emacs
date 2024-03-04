@@ -69,7 +69,6 @@
   (setq jedi:complete-on-dot t)
   (add-hook 'python-mode-hook 'jedi:setup))
 
-
 (use-package cc-mode
   :ensure t
   :hook
@@ -118,11 +117,8 @@
   :init
   (setq elpy-eldoc-show-current-function nil))
 
-;; (use-package flycheck
-;;   :init
-;;   (setq flycheck-flake8rc "~/.flake8"))
-
 (use-package magit
+  :defer t
   :ensure t
   :hook
   (git-commit-turn-on-fylspell)
@@ -141,8 +137,9 @@
   :hook
   (after-init . global-company-mode)
   (lsp-mode . company-mode)
-  :bind (:map company-active-map
-              ("<tab>" . company-completion-selection))
+  :bind
+  (:map company-active-map
+        ("<tab>" . company-completion-selection))
   (:map lsp-mode-map
         ("<tab>" . company-indent-or-complete-common))
   :config
@@ -164,8 +161,6 @@
   :init
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
                            "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
-  :config
-  (yas-reload-all)
   (yas-global-mode)
   :bind
   (:map yas-minor-mode-map
@@ -198,11 +193,13 @@
   (setq org-log-done 'time
         org-hide-leading-stars t
         org-startup-indented t
-        org-hide-emphasis-markers t)
+        org-hide-emphasis-markers t
+        org-src-tab-acts-natively t)
   (setq-local company-backends '(company-dabbrev))
   :hook
   (org-mode . flyspell-mode)
-  (org-mode . yas-minor-mode)
+
+  ;;(org-mode . yas-minor-mode)
   (org-mode . company-mode)
   (org-mode . visual-line-mode)
   :bind (:map org-mode-map
@@ -215,6 +212,12 @@
 
 (use-package org-mime
   :ensure t)
+
+;;This is a test
+(use-package org-auto-tangle
+  :ensure t
+  :hook
+  (org-mode . org-auto-tangle-mode))
 
 
 (font-lock-add-keywords 'org-mode
@@ -239,11 +242,15 @@
         mu4e-use-fancy-chars t
         mu4e-change-filenames-when-moving t
         mu4e-get-mail-command "mbsync --all"
+        mu4e-update-interval 300
+        ;;mu4e-index-cleanup nil
+        mu4e-index-lazy-check t
+        mu4e-index-update-error-warning nil
         ))
 ;; Show emails as plain text, if possible
-;; (with-eval-after-load "mm-decode"
-;;   (add-to-list 'mm-discouraged-alternatives "text/html")
-;;   (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+(with-eval-after-load "mm-decode"
+  (add-to-list 'mm-discouraged-alternatives "text/html")
+  (add-to-list 'mm-discouraged-alternatives "text/richtext"))
 
 (setq mu4e-contexts
       (list
@@ -293,7 +300,7 @@
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa-stable" . "https://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pycheckers flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm  flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
 
 (custom-set-faces
@@ -380,7 +387,7 @@
   '(progn
      (ac-ispell-setup)))
 
-;;(setenv "PYTHONPATH" "/the/python/path")
+
 
 (set-face-attribute 'default nil :height 160) ;; Default to 16 point font for this old guy
 
@@ -415,13 +422,19 @@ Shamelessly bottowed from Bryan Oakley."
 (display-time-mode)
 (desktop-save-mode)
 
-(global-set-key (kbd "C-c f") 'flyspell-toggle ) ;; Make it easy to turn off spell check
+;; Make it easy to turn off spell check
+(global-set-key (kbd "C-c f") 'flyspell-toggle )
+
+;; Key binding to split the window horizontally and automatically
+;; turn on follow-mode to handle long files
+(global-set-key (kbd "C-x C-t") (lambda ()
+                                  (interactive)
+                                  (split-window-horizontally)
+                                  (follow-mode)))
 
 (setq display-buffer-alist nil)
 ;; (setq split-height-threshold 80
 ;;       split-width-thresold 120)
-
-;; 
 
 (setq display-buffer-alist '(
                              ("\\*Occur\\*"
