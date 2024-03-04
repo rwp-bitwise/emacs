@@ -161,8 +161,6 @@
   :init
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
                            "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
-  :config
-  (yas-reload-all)
   (yas-global-mode)
   :bind
   (:map yas-minor-mode-map
@@ -195,11 +193,13 @@
   (setq org-log-done 'time
         org-hide-leading-stars t
         org-startup-indented t
-        org-hide-emphasis-markers t)
+        org-hide-emphasis-markers t
+        org-src-tab-acts-natively t)
   (setq-local company-backends '(company-dabbrev))
   :hook
   (org-mode . flyspell-mode)
-  (org-mode . yas-minor-mode)
+
+  ;;(org-mode . yas-minor-mode)
   (org-mode . company-mode)
   (org-mode . visual-line-mode)
   :bind (:map org-mode-map
@@ -212,6 +212,12 @@
 
 (use-package org-mime
   :ensure t)
+
+;;This is a test
+(use-package org-auto-tangle
+  :ensure t
+  :hook
+  (org-mode . org-auto-tangle-mode))
 
 
 (font-lock-add-keywords 'org-mode
@@ -236,11 +242,15 @@
         mu4e-use-fancy-chars t
         mu4e-change-filenames-when-moving t
         mu4e-get-mail-command "mbsync --all"
+        mu4e-update-interval 300
+        ;;mu4e-index-cleanup nil
+        mu4e-index-lazy-check t
+        mu4e-index-update-error-warning nil
         ))
 ;; Show emails as plain text, if possible
-;; (with-eval-after-load "mm-decode"
-;;   (add-to-list 'mm-discouraged-alternatives "text/html")
-;;   (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+(with-eval-after-load "mm-decode"
+  (add-to-list 'mm-discouraged-alternatives "text/html")
+  (add-to-list 'mm-discouraged-alternatives "text/richtext"))
 
 (setq mu4e-contexts
       (list
