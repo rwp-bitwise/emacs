@@ -199,8 +199,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       (:map yas-minor-mode-map
             ("C-c C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
-  ;; (use-package yasnippet-snippets
-  ;;   :ensure t)
+  (use-package yasnippet-snippets
+    :ensure t)
 
   (use-package vertico
     :ensure t

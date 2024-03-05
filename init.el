@@ -153,21 +153,21 @@
   (add-to-list 'company-backends 'company-jedi))
 
 (use-package osx-clipboard
-  :ensure t
-  :defer t
-  :if (eq system-type 'darwin))
+    :ensure t
+    :defer t
+    :if (eq system-type 'darwin))
 
-(use-package yasnippet
-  :init
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                           "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
-  (yas-global-mode)
-  :bind
-  (:map yas-minor-mode-map
-        ("C-c C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
+  (use-package yasnippet
+    :init
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
+                             "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
+    (yas-global-mode)
+    :bind
+    (:map yas-minor-mode-map
+          ("C-c C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
-;; (use-package yasnippet-snippets
-;;   :ensure t)
+(use-package yasnippet-snippets
+  :ensure t)
 
 (use-package vertico
   :ensure t
