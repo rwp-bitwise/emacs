@@ -164,10 +164,10 @@
   (yas-global-mode)
   :bind
   (:map yas-minor-mode-map
-        ("C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
+        ("C-c C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
-(use-package yasnippet-snippets
-  :ensure t)
+;; (use-package yasnippet-snippets
+;;   :ensure t)
 
 (use-package vertico
   :ensure t
@@ -185,33 +185,33 @@
   (load-theme 'modus-vivendi-deuteranopia))
 
 ;;
-;; Org mode settings
-;;
-(use-package org
-  :mode (("\\.org$" . org-mode))
-  :init
-  (setq org-log-done 'time
-        org-hide-leading-stars t
-        org-startup-indented t
-        org-hide-emphasis-markers t
-        org-src-tab-acts-natively t)
-  (setq-local company-backends '(company-dabbrev))
-  :hook
-  (org-mode . flyspell-mode)
+  ;; Org mode settings
+  ;;
+  (use-package org
+    :mode (("\\.org$" . org-mode))
+    :init
+    (setq org-log-done 'time
+          org-hide-leading-stars t
+          org-startup-indented t
+          org-hide-emphasis-markers t
+          org-src-tab-acts-natively t)
+    (setq-local company-backends '(company-dabbrev))
+    :hook
+    (org-mode . flyspell-mode)
 
-  ;;(org-mode . yas-minor-mode)
-  (org-mode . company-mode)
-  (org-mode . visual-line-mode)
-  :bind (:map org-mode-map
-              ("C-c i" . org-id-get-create)))
+    (org-mode . yas-minor-mode)
+    (org-mode . company-mode)
+    (org-mode . visual-line-mode)
+    :bind (:map org-mode-map
+                ("C-c i" . org-id-get-create)))
 
-(use-package org-bullets
-  :hook
-  (org-mode . org-bullets-mode)
-  :after org)
+  (use-package org-bullets
+    :hook
+    (org-mode . org-bullets-mode)
+    :after org)
 
-(use-package org-mime
-  :ensure t)
+  (use-package org-mime
+    :ensure t)
 
 ;;This is a test
 (use-package org-auto-tangle
@@ -244,7 +244,7 @@
         mu4e-get-mail-command "mbsync --all"
         mu4e-update-interval 300
         ;;mu4e-index-cleanup nil
-        mu4e-index-lazy-check t
+        ;;mu4e-index-lazy-check t
         mu4e-index-update-error-warning nil
         ))
 ;; Show emails as plain text, if possible
@@ -431,6 +431,14 @@ Shamelessly bottowed from Bryan Oakley."
                                   (interactive)
                                   (split-window-horizontally)
                                   (follow-mode)))
+
+;; Allow for directionally selecting visible buffers
+(global-set-key (kbd "C-c <left>") 'windmove-left)
+(global-set-key (kbd "C-c <right>") 'windmove-right)
+(global-set-key (kbd "C-c <up>") 'windmove-up)
+(global-set-key (kbd "C-c <down>") 'windmove-down)
+
+(setq windmove-wrap-around t)
 
 (setq display-buffer-alist nil)
 ;; (setq split-height-threshold 80

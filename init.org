@@ -184,22 +184,23 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 *** General support for themes and user interface modifications
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (use-package osx-clipboard
-    :ensure t
-    :defer t
-    :if (eq system-type 'darwin))
 
-  (use-package yasnippet
-    :init
-    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                             "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
-    (yas-global-mode)
-    :bind
-    (:map yas-minor-mode-map
-          ("C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
+    (use-package osx-clipboard
+      :ensure t
+      :defer t
+      :if (eq system-type 'darwin))
 
-  (use-package yasnippet-snippets
-    :ensure t)
+    (use-package yasnippet
+      :init
+      (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
+                               "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
+      (yas-global-mode)
+      :bind
+      (:map yas-minor-mode-map
+            ("C-c C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
+
+  ;; (use-package yasnippet-snippets
+  ;;   :ensure t)
 
   (use-package vertico
     :ensure t
@@ -238,7 +239,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       :hook
       (org-mode . flyspell-mode)
 
-      ;;(org-mode . yas-minor-mode)
+      (org-mode . yas-minor-mode)
       (org-mode . company-mode)
       (org-mode . visual-line-mode)
       :bind (:map org-mode-map
@@ -251,6 +252,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
     (use-package org-mime
       :ensure t)
+  
   ;;This is a test
   (use-package org-auto-tangle
     :ensure t
@@ -285,7 +287,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
           mu4e-get-mail-command "mbsync --all"
           mu4e-update-interval 300
           ;;mu4e-index-cleanup nil
-          mu4e-index-lazy-check t
+          ;;mu4e-index-lazy-check t
           mu4e-index-update-error-warning nil
           ))
   ;; Show emails as plain text, if possible
@@ -527,40 +529,48 @@ Line wrap, default tab width, highlighting, etc
                                     (split-window-horizontally)
                                     (follow-mode)))
 
+  ;; Allow for directionally selecting visible buffers
+  (global-set-key (kbd "C-c <left>") 'windmove-left)
+  (global-set-key (kbd "C-c <right>") 'windmove-right)
+  (global-set-key (kbd "C-c <up>") 'windmove-up)
+  (global-set-key (kbd "C-c <down>") 'windmove-down)
 #+end_src
 
 *** Buffer customizations
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (setq display-buffer-alist nil)
-  ;; (setq split-height-threshold 80
-  ;;       split-width-thresold 120)
+    
+    (setq windmove-wrap-around t)
+  
+    (setq display-buffer-alist nil)
+    ;; (setq split-height-threshold 80
+    ;;       split-width-thresold 120)
 
-  (setq display-buffer-alist '(
-                               ("\\*Occur\\*"
-                                (display-buffer-in-side-window)
-                                (display-buffer-reuse-mode-window
-                                 display-buffer-below-selected)
-                                (window-height . fit-window-to-buffer)
-                                (dedicated . t)
-                                (side . right))
+    (setq display-buffer-alist '(
+                                 ("\\*Occur\\*"
+                                  (display-buffer-in-side-window)
+                                  (display-buffer-reuse-mode-window
+                                   display-buffer-below-selected)
+                                  (window-height . fit-window-to-buffer)
+                                  (dedicated . t)
+                                  (side . right))
 
-                               ("\\*Python\\*"
-                                (display-buffer-in-side-window)
-                                (display-buffer-reuse-mode-window
-                                 display-buffer-below-selected)
-                                (window-height . fit-window-to-buffer)
-                                (dedicated . t)
-                                (side . right))
-                               ))
-  (setq switch-to-buffer-in-dedicated-window 'pop)
-  (setq switch-to-buffer-obey-display-actions t)
+                                 ("\\*Python\\*"
+                                  (display-buffer-in-side-window)
+                                  (display-buffer-reuse-mode-window
+                                   display-buffer-below-selected)
+                                  (window-height . fit-window-to-buffer)
+                                  (dedicated . t)
+                                  (side . right))
+                                 ))
+    (setq switch-to-buffer-in-dedicated-window 'pop)
+    (setq switch-to-buffer-obey-display-actions t)
 
 
 #+end_src
 
 #+RESULTS:
 : t
-
+src-lisp
 ** System specific configurations
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (cond
