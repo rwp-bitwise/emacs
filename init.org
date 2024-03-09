@@ -54,41 +54,43 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 *** Packages for programming language support  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (setq treesit-language-source-alist
-  '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-    (c "https://github.com/tree-sitter/tree-sitter-c")
-    (cmake "https://github.com/uyha/tree-sitter-cmake")
-    (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
-    (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-    (css "https://github.com/tree-sitter/tree-sitter-css")
-    (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-    (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-    (go "https://github.com/tree-sitter/tree-sitter-go")
-    (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
-    (html "https://github.com/tree-sitter/tree-sitter-html")
-    (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-    (json "https://github.com/tree-sitter/tree-sitter-json")
-    (lua "https://github.com/Azganoth/tree-sitter-lua")
-    (make "https://github.com/alemuller/tree-sitter-make")
-    (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-    (python "https://github.com/tree-sitter/tree-sitter-python")
-    (r "https://github.com/r-lib/tree-sitter-r")
-    (rust "https://github.com/tree-sitter/tree-sitter-rust")
-    (toml "https://github.com/tree-sitter/tree-sitter-toml")
-    (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-    (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+        (setq treesit-language-source-alist
+        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+          (c "https://github.com/tree-sitter/tree-sitter-c")
+          (cmake "https://github.com/uyha/tree-sitter-cmake")
+          (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+          (css "https://github.com/tree-sitter/tree-sitter-css")
+          (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+          (go "https://github.com/tree-sitter/tree-sitter-go")
+          (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+          (html "https://github.com/tree-sitter/tree-sitter-html")
+          (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (lua "https://github.com/Azganoth/tree-sitter-lua")
+          (make "https://github.com/alemuller/tree-sitter-make")
+          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+          (python "https://github.com/tree-sitter/tree-sitter-python")
+          (r "https://github.com/r-lib/tree-sitter-r")
+          (rust "https://github.com/tree-sitter/tree-sitter-rust")
+          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+          (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-  (use-package jedi
-    :ensure t
-    :config
-    (setq jedi:complete-on-dot t)
-    (add-hook 'python-mode-hook 'jedi:setup))
+        (use-package jedi
+          :ensure t
+          :config
+          (setq jedi:complete-on-dot t)
+          (add-hook 'python-mode-hook 'jedi:setup))
 
-  (use-package cc-mode
-    :ensure t
-    :hook
-    (c-mode . display-line-numbers-mode))
+        (use-package cc-mode
+          :ensure t
+          :hook
+          (c-mode . display-line-numbers-mode)
+          (c++-mode . display-line-numbers-mode))
+
 #+end_src
 
 **** Python specific customizations and coding
@@ -185,19 +187,19 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 *** General support for themes and user interface modifications
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
 
-    (use-package osx-clipboard
-      :ensure t
-      :defer t
-      :if (eq system-type 'darwin))
+     (use-package osx-clipboard
+       :ensure t
+       :defer t
+       :if (eq system-type 'darwin))
 
-    (use-package yasnippet
-      :init
-      (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                               "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
-      (yas-global-mode)
-      :bind
-      (:map yas-minor-mode-map
-            ("C-c C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
+     (use-package yasnippet
+       :init
+       (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
+                                "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
+       (yas-global-mode)
+       :bind
+       (:map yas-minor-mode-map
+             ("C-S->" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
   (use-package yasnippet-snippets
     :ensure t)
@@ -222,7 +224,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 #+end_src
 
 
-*** Org mode customizations 
+*** Org mode customizations
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
     ;;
     ;; Org mode settings
@@ -468,8 +470,12 @@ Here we set the customizations for the various headline levels in org-mode. We a
 ** General hooks
 This is where we gather up all of the various hooks used for various modes
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-
+  (add-hook 'c++-mode-hook 'eglot-ensure)
+  
 #+end_src
+
+#+RESULTS:
+| eglot | display-line-numbers-mode |
 
 ** Interface configuration
 *** Display configuration
@@ -504,7 +510,7 @@ Have the window sized according to the resolution of the display
 *** Line handling
 Line wrap, default tab width, highlighting, etc
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (global-visual-line-mode t)
+  ;;(global-visual-line-mode t)
   (global-hl-line-mode)
 #+end_src
 
@@ -586,7 +592,7 @@ src-lisp
       (message "Emacs server is running")
     (message "Starting server")
     (server-start))
-
+  
 #+end_src
 
 #+BEGIN_SRC emacs-lisp :tangle init.el

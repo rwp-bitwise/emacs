@@ -72,7 +72,8 @@
 (use-package cc-mode
   :ensure t
   :hook
-  (c-mode . display-line-numbers-mode))
+  (c-mode . display-line-numbers-mode)
+  (c++-mode . display-line-numbers-mode))
 
 (use-package pyvenv
   :ensure t
@@ -153,18 +154,18 @@
   (add-to-list 'company-backends 'company-jedi))
 
 (use-package osx-clipboard
-    :ensure t
-    :defer t
-    :if (eq system-type 'darwin))
+     :ensure t
+     :defer t
+     :if (eq system-type 'darwin))
 
-  (use-package yasnippet
-    :init
-    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                             "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
-    (yas-global-mode)
-    :bind
-    (:map yas-minor-mode-map
-          ("C-c C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
+   (use-package yasnippet
+     :init
+     (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
+                              "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
+     (yas-global-mode)
+     :bind
+     (:map yas-minor-mode-map
+           ("C-S->" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
 (use-package yasnippet-snippets
   :ensure t)
@@ -387,7 +388,7 @@
   '(progn
      (ac-ispell-setup)))
 
-
+(add-hook 'c++-mode-hook 'eglot-ensure)
 
 (set-face-attribute 'default nil :height 160) ;; Default to 16 point font for this old guy
 
@@ -413,7 +414,7 @@ Shamelessly bottowed from Bryan Oakley."
 
 (set-frame-size-according-to-resolution)
 
-(global-visual-line-mode t)
+;;(global-visual-line-mode t)
 (global-hl-line-mode)
 
 (setq column-number-mode t)
