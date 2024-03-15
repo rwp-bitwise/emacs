@@ -38,6 +38,21 @@
   (:map flyspell-mode-map
         ("C-;" . flyspell-correct-wrapper)))
 
+(use-package consult
+  :ensure t
+  :bind
+  ("M-s M-b" . consult-buffer)
+  ("M-s M-g" . consult-grep)
+  ("M-s M-o" . consult-outline))
+
+(use-package orderless
+  :ensure t
+  :init
+  (icomplete-mode)
+  :custom
+  (completion-styles '(orderless))
+  (orderless-matching-styles '(orderless-literal)))
+
 (setq treesit-language-source-alist
 '((bash "https://github.com/tree-sitter/tree-sitter-bash")
   (c "https://github.com/tree-sitter/tree-sitter-c")
@@ -72,7 +87,8 @@
 (use-package cc-mode
   :ensure t
   :hook
-  (c-mode . display-line-numbers-mode))
+  (c-mode . display-line-numbers-mode)
+  (c++-mode . display-line-numbers-mode))
 
 (use-package pyvenv
   :ensure t
@@ -103,19 +119,20 @@
         python-python-command "~/python_venv/bin/python3"
         indent-tabs-mode nil
         python-indent-offset 2
-        elpy-enable t
+        ;; elpy-enable t
         tab-width 2)
   (pyvenv-activate "~/python_venv")
   :hook
   (python-mode . display-line-numbers-mode)
-  (python-mode . jedi-mode)
-  (python-mode . lsp-deferred)
+  ;;(python-mode . jedi-mode)
+  ;;(python-mode . lsp-deferred)
+  ;;(python-mode . eglot-ensure)
   (python-mode . yas-minor-mode)) 
 
-(use-package elpy
-  :ensure t
-  :init
-  (setq elpy-eldoc-show-current-function nil))
+;; (use-package elpy
+;;   :ensure t
+;;   :init
+;;   (setq elpy-eldoc-show-current-function nil))
 
 (use-package magit
   :defer t
@@ -133,15 +150,15 @@
 
 (use-package company
   :ensure t
-  :after lsp-mode
+  ;;:after lsp-mode
   :hook
   (after-init . global-company-mode)
-  (lsp-mode . company-mode)
+  ;;(lsp-mode . company-mode)
   :bind
   (:map company-active-map
         ("<tab>" . company-completion-selection))
-  (:map lsp-mode-map
-        ("<tab>" . company-indent-or-complete-common))
+  ;; (:map lsp-mode-map
+  ;;       ("<tab>" . company-indent-or-complete-common))
   :config
   (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
   (setq company-tooltip-align-annotations t)  ; Align annotations to the right
@@ -153,18 +170,18 @@
   (add-to-list 'company-backends 'company-jedi))
 
 (use-package osx-clipboard
-    :ensure t
-    :defer t
-    :if (eq system-type 'darwin))
+     :ensure t
+     :defer t
+     :if (eq system-type 'darwin))
 
-  (use-package yasnippet
-    :init
-    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                             "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
-    (yas-global-mode)
-    :bind
-    (:map yas-minor-mode-map
-          ("C-c C-c C-u" . yas-expand))) ;; This is to work around conflict of key bindings with company
+   (use-package yasnippet
+     :init
+     (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
+                              "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
+     (yas-global-mode)
+     :bind
+     (:map yas-minor-mode-map
+           ("C-S->" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
 (use-package yasnippet-snippets
   :ensure t)
@@ -387,7 +404,9 @@
   '(progn
      (ac-ispell-setup)))
 
-
+(add-hook 'c++-mode-hook 'eglotb-ensure)
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'python-mode-hook 'eglot-ensure)
 
 (set-face-attribute 'default nil :height 160) ;; Default to 16 point font for this old guy
 
@@ -413,8 +432,9 @@ Shamelessly bottowed from Bryan Oakley."
 
 (set-frame-size-according-to-resolution)
 
-(global-visual-line-mode t)
+;;(global-visual-line-mode t)
 (global-hl-line-mode)
+(let ((shell-file-name "/bin/sh")) (shell)) ;; speeds up rendering when tail valouminous amounts of data
 
 (setq column-number-mode t)
 (tool-bar-mode -1)
