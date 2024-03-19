@@ -346,7 +346,10 @@
  '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
  '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
  '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
- '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+ '(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
+ '(eglot-highlight-symbol-face ((t (:inherit bold :background "light green" :foreground "dark blue"))))
+ '(mode-line ((t :background "#8b3626" :foreground "#90ee90" :box "#8b0000")))
+ '(mode-line-inactive ((t :background "#008b8b" :foreground "#969696" :box "#ff34b3"))))
 
 ;;; Org values for variable pitch fonts, only works when a window-system is enabled
 ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
@@ -404,7 +407,7 @@
   '(progn
      (ac-ispell-setup)))
 
-(add-hook 'c++-mode-hook 'eglotb-ensure)
+(add-hook 'c++-mode-hook 'eglot-ensure)
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'python-mode-hook 'eglot-ensure)
 
