@@ -10,6 +10,7 @@
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
+(recentf-mode)
 
 (use-package gptel
   :ensure t)
@@ -105,10 +106,10 @@
         (list (lambda ()
                 (setq python-shell-interpreter "python3")))))
 
-(use-package pylint
-  :init
-  (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
-        flycheck-pylintrc "~/.pylintrc"))
+;; (use-package pylint
+;;   :init
+;;   (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
+;;         flycheck-pylintrc "~/.pylintrc"))
 
 (use-package python-mode
   :ensure nil

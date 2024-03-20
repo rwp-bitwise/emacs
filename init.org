@@ -15,6 +15,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
+  
+  (recentf-mode) ;; keep track of recently opened files, useful for consult
 #+end_src
 
 ** Custom functions
@@ -70,42 +72,42 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 *** Packages for programming language support  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-        (setq treesit-language-source-alist
-        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-          (c "https://github.com/tree-sitter/tree-sitter-c")
-          (cmake "https://github.com/uyha/tree-sitter-cmake")
-          (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
-          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-          (css "https://github.com/tree-sitter/tree-sitter-css")
-          (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-          (go "https://github.com/tree-sitter/tree-sitter-go")
-          (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
-          (html "https://github.com/tree-sitter/tree-sitter-html")
-          (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-          (json "https://github.com/tree-sitter/tree-sitter-json")
-          (lua "https://github.com/Azganoth/tree-sitter-lua")
-          (make "https://github.com/alemuller/tree-sitter-make")
-          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-          (python "https://github.com/tree-sitter/tree-sitter-python")
-          (r "https://github.com/r-lib/tree-sitter-r")
-          (rust "https://github.com/tree-sitter/tree-sitter-rust")
-          (toml "https://github.com/tree-sitter/tree-sitter-toml")
-          (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-          (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+  (setq treesit-language-source-alist
+  '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+    (c "https://github.com/tree-sitter/tree-sitter-c")
+    (cmake "https://github.com/uyha/tree-sitter-cmake")
+    (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+    (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+    (css "https://github.com/tree-sitter/tree-sitter-css")
+    (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+    (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+    (go "https://github.com/tree-sitter/tree-sitter-go")
+    (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+    (html "https://github.com/tree-sitter/tree-sitter-html")
+    (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+    (json "https://github.com/tree-sitter/tree-sitter-json")
+    (lua "https://github.com/Azganoth/tree-sitter-lua")
+    (make "https://github.com/alemuller/tree-sitter-make")
+    (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+    (python "https://github.com/tree-sitter/tree-sitter-python")
+    (r "https://github.com/r-lib/tree-sitter-r")
+    (rust "https://github.com/tree-sitter/tree-sitter-rust")
+    (toml "https://github.com/tree-sitter/tree-sitter-toml")
+    (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+    (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-        (use-package jedi
-          :ensure t
-          :config
-          (setq jedi:complete-on-dot t)
-          (add-hook 'python-mode-hook 'jedi:setup))
+  (use-package jedi
+    :ensure t
+    :config
+    (setq jedi:complete-on-dot t)
+    (add-hook 'python-mode-hook 'jedi:setup))
 
-        (use-package cc-mode
-          :ensure t
-          :hook
-          (c-mode . display-line-numbers-mode)
-          (c++-mode . display-line-numbers-mode))
+  (use-package cc-mode
+    :ensure t
+    :hook
+    (c-mode . display-line-numbers-mode)
+    (c++-mode . display-line-numbers-mode))
 
 #+end_src
 
@@ -126,10 +128,10 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
           (list (lambda ()
                   (setq python-shell-interpreter "python3")))))
 
-  (use-package pylint
-    :init
-    (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
-          flycheck-pylintrc "~/.pylintrc"))
+  ;; (use-package pylint
+  ;;   :init
+  ;;   (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
+  ;;         flycheck-pylintrc "~/.pylintrc"))
 
   (use-package python-mode
     :ensure nil
