@@ -8,14 +8,16 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
   ;;; Code:
 
   (setq max-lisp-eval-depth 2048)
-  (require 'package)
+
   (setq custom-safe-themes t)
+
+  (require 'package)
   (setq epa-pinentry-mode 'loopback)
 
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
-  
+
   (recentf-mode) ;; keep track of recently opened files, useful for consult
 #+end_src
 
@@ -26,49 +28,54 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 ** Configure the packages
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-    (use-package gptel
-      :ensure t)
+  (use-package gptel
+    :ensure t)
 
-    (use-package use-package-ensure-system-package
-      :ensure t)
+  (use-package use-package-ensure-system-package
+    :ensure t)
 
-    (use-package ac-ispell
-      :ensure t)
+  (use-package ac-ispell
+    :ensure t)
 
-    (use-package flyspell
-      :ensure t
-      :hook
-      (text-mode . flyspell-mode)
-      (prog-mode . flyspell-prog-mode)
-      :config
-      (setq ispell-extra-args '(":--sug-mode=ultra"))
-      :bind
-      (:map flyspell-mode-map
-            ("C-;" . flyspell-correct-wrapper)))
+  (use-package flyspell
+    :ensure t
+    :hook
+    (text-mode . flyspell-mode)
+    (prog-mode . flyspell-prog-mode)
+    :config
+    (setq ispell-extra-args '(":--sug-mode=ultra"))
+    :bind
+    (:map flyspell-mode-map
+          ("C-;" . flyspell-correct-wrapper)))
 
-    (use-package flyspell-correct-ivy
-      :ensure t
-      :after flyspell
-      :bind
-      (:map flyspell-mode-map
-            ("C-;" . flyspell-correct-wrapper)))
+  (use-package flyspell-correct-ivy
+    :ensure t
+    :after flyspell
+    :bind
+    (:map flyspell-mode-map
+          ("C-;" . flyspell-correct-wrapper)))
 
-    (use-package consult
-      :ensure t
-      :bind
-      ("M-s M-b" . consult-buffer)
-      ("M-s M-g" . consult-grep)
-      ("M-s M-o" . consult-outline))
+  (use-package consult
+    :ensure t
+    :bind
+    ("M-s M-b" . consult-buffer)
+    ("M-s M-g" . consult-grep)
+    ("M-s M-o" . consult-outline))
 
-    (use-package orderless
-      :ensure t
-      :init
-      (icomplete-mode)
-      :custom
-      (completion-styles '(orderless))
-      (orderless-matching-styles '(orderless-literal)))
+  (use-package consult-dir
+    :ensure t)
+
+  (use-package orderless
+    :ensure t
+    :init
+    (icomplete-mode)
+    :custom
+    (completion-styles '(orderless))
+    (orderless-matching-styles '(orderless-literal)))
 
 #+end_src
+
+#+RESULTS:
 
 *** Packages for programming language support  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
@@ -170,10 +177,10 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (git-commit-mode . ac-ispell-ac-setup)
     (after-save . magit-after-save-refresh-status))
 
-  (use-package lsp-mode
-    :ensure t
-    :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
-                ("M-b" . elpy-nav-backward-block)))
+  ;; (use-package lsp-mode
+  ;;   :ensure t
+  ;;   :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
+  ;;               ("M-b" . elpy-nav-backward-block)))
 #+end_src
 
 **** Company mode for auto completion
@@ -238,9 +245,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 **** The deuteranopia mode is good for people with Red/Green color issues
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (use-package modus-themes
-    :init
-    (setq modus-themes-mode-line '(moody accented borderless))
-    (load-theme 'modus-vivendi-deuteranopia))
+     :init
+  ;;   (setq modus-themes-mode-line '(moody accented borderless))
+     (load-theme 'modus-vivendi-deuteranopia))
 #+end_src
 
 
@@ -488,7 +495,10 @@ This is where we gather up all of the various hooks used for various modes
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (add-hook 'c++-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'eglot-ensure)
-  (add-hook 'python-mode-hook 'eglot-ensure)
+  ;; (add-hook 'python-mode-hook 'eglot-ensure)
+
+  ;; (setq eglot-server-programs
+  ;;     '((python-mode . ("pyright-langserver" "--stdio"))))
 
 #+end_src
 

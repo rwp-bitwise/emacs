@@ -3,14 +3,17 @@
 ;;; Code:
 
 (setq max-lisp-eval-depth 2048)
-(require 'package)
+
 (setq custom-safe-themes t)
+
+(require 'package)
 (setq epa-pinentry-mode 'loopback)
 
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
-(recentf-mode)
+
+(recentf-mode) ;; keep track of recently opened files, useful for consult
 
 (use-package gptel
   :ensure t)
@@ -45,6 +48,9 @@
   ("M-s M-b" . consult-buffer)
   ("M-s M-g" . consult-grep)
   ("M-s M-o" . consult-outline))
+
+(use-package consult-dir
+  :ensure t)
 
 (use-package orderless
   :ensure t
@@ -144,10 +150,10 @@
   (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
 
-(use-package lsp-mode
-  :ensure t
-  :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
-              ("M-b" . elpy-nav-backward-block)))
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
+;;               ("M-b" . elpy-nav-backward-block)))
 
 (use-package company
   :ensure t
@@ -198,9 +204,9 @@
   (marginalia-mode))
 
 (use-package modus-themes
-  :init
-  (setq modus-themes-mode-line '(moody accented borderless))
-  (load-theme 'modus-vivendi-deuteranopia))
+   :init
+;;   (setq modus-themes-mode-line '(moody accented borderless))
+   (load-theme 'modus-vivendi-deuteranopia))
 
 ;;
   ;; Org mode settings
@@ -410,7 +416,10 @@
 
 (add-hook 'c++-mode-hook 'eglot-ensure)
 (add-hook 'c-mode-hook 'eglot-ensure)
-(add-hook 'python-mode-hook 'eglot-ensure)
+;; (add-hook 'python-mode-hook 'eglot-ensure)
+
+;; (setq eglot-server-programs
+;;     '((python-mode . ("pyright-langserver" "--stdio"))))
 
 (set-face-attribute 'default nil :height 160) ;; Default to 16 point font for this old guy
 
