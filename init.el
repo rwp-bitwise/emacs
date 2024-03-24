@@ -14,6 +14,7 @@
         ("melpa" . "http://melpa.org/packages/")))
 
 (recentf-mode) ;; keep track of recently opened files, useful for consult
+(global-visual-line-mode)
 
 (use-package gptel
   :ensure t)
@@ -271,6 +272,7 @@
         ;;mu4e-index-lazy-check t
         mu4e-index-update-error-warning nil
         ))
+
 ;; Show emails as plain text, if possible
 (with-eval-after-load "mm-decode"
   (add-to-list 'mm-discouraged-alternatives "text/html")
