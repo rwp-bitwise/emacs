@@ -1,5 +1,5 @@
 * Package installation and management
-** List the package set we relay on and loop over and pull them all down
+** General configuration
 python, virtualenv, libtool, libtool-bin, and cmake all need to be present on your system for this to work wih all of the packages listed here. 
 
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
@@ -7,13 +7,11 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
   ;;; Code:
 
-  (setq max-lisp-eval-depth 2048)
-
-  (setq custom-safe-themes t)
+  (setq max-lisp-eval-depth 2048
+        custom-safe-themes t
+        epa-pinentry-mode 'loopback)
 
   (require 'package)
-  (setq epa-pinentry-mode 'loopback)
-
   (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("melpa" . "http://melpa.org/packages/")))
@@ -33,7 +31,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 #+end_src
 
-** Configure the packages
+** Completion, spell checking, etc
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (use-package gptel
     :ensure t)
@@ -81,6 +79,34 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (orderless-matching-styles '(orderless-literal)))
 
 #+end_src
+
+**** Company mode and jedi for auto completion
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+  (use-package company
+    :ensure t
+    ;;:after lsp-mode
+    :hook
+    (after-init . global-company-mode)
+    ;;(lsp-mode . company-mode)
+    :bind
+    (:map company-active-map
+          ("<tab>" . company-completion-selection))
+    ;; (:map lsp-mode-map
+    ;;       ("<tab>" . company-indent-or-complete-common))
+    :config
+    (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+    (setq company-tooltip-align-annotations t)  ; Align annotations to the right
+    (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
+
+  (use-package company-jedi
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-jedi))
+
+
+#+end_src
+
+#+RESULTS:
 
 #+RESULTS:
 
@@ -142,11 +168,6 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
           (list (lambda ()
                   (setq python-shell-interpreter "python3")))))
 
-  ;; (use-package pylint
-  ;;   :init
-  ;;   (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
-  ;;         flycheck-pylintrc "~/.pylintrc"))
-
   (use-package python-mode
     :ensure nil
     :mode (("\\.py$" . python-mode))
@@ -166,14 +187,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     ;;(python-mode . eglot-ensure)
     (python-mode . yas-minor-mode)) 
 
-  ;; (use-package elpy
-  ;;   :ensure t
-  ;;   :init
-  ;;   (setq elpy-eldoc-show-current-function nil))
-
 #+end_src
 
-**** git and lsp configuration
+**** magit config
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
   (use-package magit
     :defer t
@@ -184,39 +200,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (git-commit-mode . ac-ispell-ac-setup)
     (after-save . magit-after-save-refresh-status))
 
-  ;; (use-package lsp-mode
-  ;;   :ensure t
-  ;;   :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
-  ;;               ("M-b" . elpy-nav-backward-block)))
 #+end_src
 
-**** Company mode for auto completion
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (use-package company
-    :ensure t
-    ;;:after lsp-mode
-    :hook
-    (after-init . global-company-mode)
-    ;;(lsp-mode . company-mode)
-    :bind
-    (:map company-active-map
-          ("<tab>" . company-completion-selection))
-    ;; (:map lsp-mode-map
-    ;;       ("<tab>" . company-indent-or-complete-common))
-    :config
-    (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
-    (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-    (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
-
-  (use-package company-jedi
-    :ensure t
-    :config
-    (add-to-list 'company-backends 'company-jedi))
-
-
-#+end_src
-
-#+RESULTS:
 
 *** General support for themes and user interface modifications
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
@@ -498,20 +483,27 @@ Here we set the customizations for the various headline levels in org-mode. We a
        (ac-ispell-setup)))
 #+end_src
 
-** General hooks
+** General hooks and configuration
 This is where we gather up all of the various hooks used for various modes
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (add-hook 'c++-mode-hook 'eglot-ensure)
-  (add-hook 'c-mode-hook 'eglot-ensure)
-  ;; (add-hook 'python-mode-hook 'eglot-ensure)
+      (add-hook 'c++-mode-hook 'eglot-ensure)
+      (add-hook 'c-mode-hook 'eglot-ensure)
 
-  ;; (setq eglot-server-programs
-  ;;     '((python-mode . ("pyright-langserver" "--stdio"))))
+      (setq newsticker-url-list
+        '(("slashdot" "https://rss.slashdot.org/Slashdot/slashdotMain" nil nil nil)
+         ("emacs" "https://www.reddit.com/r/emacs/.rss" nil nil nil)
+         ("BaltimoreCounty" "https://www.reddit.com/r/BaltimoreCounty/.rss" nil nil nil)))
+  
+      ;; (add-hook 'python-mode-hook 'eglot-ensure)
+
+      ;; (setq eglot-server-programs
+      ;;     '((python-mode . ("pyright-langserver" "--stdio"))))
 
 #+end_src
 
 #+RESULTS:
-| eglot | display-line-numbers-mode |
+| slashdot | https://rss.slashdot.org/Slashdot/slashdotMain | nil | nil | nil |
+| reddit   | http://www.reddit.com/emacs/.rss               | nil | nil | nil |
 
 ** Interface configuration
 *** Display configuration

@@ -2,13 +2,11 @@
 
 ;;; Code:
 
-(setq max-lisp-eval-depth 2048)
-
-(setq custom-safe-themes t)
+(setq max-lisp-eval-depth 2048
+      custom-safe-themes t
+      epa-pinentry-mode 'loopback)
 
 (require 'package)
-(setq epa-pinentry-mode 'loopback)
-
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
@@ -60,6 +58,27 @@
   :custom
   (completion-styles '(orderless))
   (orderless-matching-styles '(orderless-literal)))
+
+(use-package company
+  :ensure t
+  ;;:after lsp-mode
+  :hook
+  (after-init . global-company-mode)
+  ;;(lsp-mode . company-mode)
+  :bind
+  (:map company-active-map
+        ("<tab>" . company-completion-selection))
+  ;; (:map lsp-mode-map
+  ;;       ("<tab>" . company-indent-or-complete-common))
+  :config
+  (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
+  (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
+
+(use-package company-jedi
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-jedi))
 
 (setq treesit-language-source-alist
 '((bash "https://github.com/tree-sitter/tree-sitter-bash")
@@ -113,11 +132,6 @@
         (list (lambda ()
                 (setq python-shell-interpreter "python3")))))
 
-;; (use-package pylint
-;;   :init
-;;   (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
-;;         flycheck-pylintrc "~/.pylintrc"))
-
 (use-package python-mode
   :ensure nil
   :mode (("\\.py$" . python-mode))
@@ -135,12 +149,7 @@
   ;;(python-mode . jedi-mode)
   ;;(python-mode . lsp-deferred)
   ;;(python-mode . eglot-ensure)
-  (python-mode . yas-minor-mode)) 
-
-;; (use-package elpy
-;;   :ensure t
-;;   :init
-;;   (setq elpy-eldoc-show-current-function nil))
+  (python-mode . yas-minor-mode))
 
 (use-package magit
   :defer t
@@ -150,32 +159,6 @@
   (git-commit-turn-on-auto-fill)
   (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
-
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
-;;               ("M-b" . elpy-nav-backward-block)))
-
-(use-package company
-  :ensure t
-  ;;:after lsp-mode
-  :hook
-  (after-init . global-company-mode)
-  ;;(lsp-mode . company-mode)
-  :bind
-  (:map company-active-map
-        ("<tab>" . company-completion-selection))
-  ;; (:map lsp-mode-map
-  ;;       ("<tab>" . company-indent-or-complete-common))
-  :config
-  (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
-  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-  (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
-
-(use-package company-jedi
-  :ensure t
-  :config
-  (add-to-list 'company-backends 'company-jedi))
 
 (use-package osx-clipboard
      :ensure t
@@ -418,6 +401,12 @@
 
 (add-hook 'c++-mode-hook 'eglot-ensure)
 (add-hook 'c-mode-hook 'eglot-ensure)
+
+(setq newsticker-url-list
+  '(("slashdot" "https://rss.slashdot.org/Slashdot/slashdotMain" nil nil nil)
+   ("emacs" "https://www.reddit.com/r/emacs/.rss" nil nil nil)
+   ("BaltimoreCounty" "https://www.reddit.com/r/BaltimoreCounty/.rss" nil nil nil)))
+
 ;; (add-hook 'python-mode-hook 'eglot-ensure)
 
 ;; (setq eglot-server-programs
