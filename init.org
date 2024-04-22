@@ -90,7 +90,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (:map company-active-map
           ("<tab>" . company-completion-selection))
     :config
-    (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+    (setq company-minimum-prefix-length 1)  ; Set this to adjust the minimum prefix length triggering auto-completion
     (setq company-tooltip-align-annotations t)  ; Align annotations to the right    
     (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
 
