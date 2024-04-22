@@ -2,14 +2,17 @@
 
 ;;; Code:
 
-(setq max-lisp-eval-depth 2048)
-(require 'package)
-(setq custom-safe-themes t)
-(setq epa-pinentry-mode 'loopback)
+(setq max-lisp-eval-depth 2048
+      custom-safe-themes t
+      epa-pinentry-mode 'loopback)
 
+(require 'package)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
+
+(recentf-mode) ;; keep track of recently opened files, useful for consult
+(global-visual-line-mode)
 
 (use-package gptel
   :ensure t)
@@ -45,6 +48,9 @@
   ("M-s M-g" . consult-grep)
   ("M-s M-o" . consult-outline))
 
+(use-package consult-dir
+  :ensure t)
+
 (use-package orderless
   :ensure t
   :init
@@ -53,42 +59,72 @@
   (completion-styles '(orderless))
   (orderless-matching-styles '(orderless-literal)))
 
-(setq treesit-language-source-alist
-'((bash "https://github.com/tree-sitter/tree-sitter-bash")
-  (c "https://github.com/tree-sitter/tree-sitter-c")
-  (cmake "https://github.com/uyha/tree-sitter-cmake")
-  (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
-  (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-  (css "https://github.com/tree-sitter/tree-sitter-css")
-  (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-  (go "https://github.com/tree-sitter/tree-sitter-go")
-  (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
-  (html "https://github.com/tree-sitter/tree-sitter-html")
-  (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-  (json "https://github.com/tree-sitter/tree-sitter-json")
-  (lua "https://github.com/Azganoth/tree-sitter-lua")
-  (make "https://github.com/alemuller/tree-sitter-make")
-  (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-  (python "https://github.com/tree-sitter/tree-sitter-python")
-  (r "https://github.com/r-lib/tree-sitter-r")
-  (rust "https://github.com/tree-sitter/tree-sitter-rust")
-  (toml "https://github.com/tree-sitter/tree-sitter-toml")
-  (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-  (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-  (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
-
-(use-package jedi
-  :ensure t
-  :config
-  (setq jedi:complete-on-dot t)
-  (add-hook 'python-mode-hook 'jedi:setup))
-
-(use-package cc-mode
+(use-package company
   :ensure t
   :hook
-  (c-mode . display-line-numbers-mode)
-  (c++-mode . display-line-numbers-mode))
+  (after-init . global-company-mode)
+  :bind
+  (:map company-active-map
+        ("<tab>" . company-completion-selection))
+  :config
+  (setq company-minimum-prefix-length 1)  ; Set this to adjust the minimum prefix length triggering auto-completion
+  (setq company-tooltip-align-annotations t)  ; Align annotations to the right    
+  (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
+
+(add-hook 'eglot-managed-mode-hook (lambda ()
+                                   (add-to-list 'company-backends
+                                                '(company-capf :with company-yasnippet))))
+(use-package company-jedi
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-jedi))
+
+(setq treesit-language-source-alist
+  '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+    (c "https://github.com/tree-sitter/tree-sitter-c")
+    (cmake "https://github.com/uyha/tree-sitter-cmake")
+    (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+    (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+    (css "https://github.com/tree-sitter/tree-sitter-css")
+    (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+    (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+    (go "https://github.com/tree-sitter/tree-sitter-go")
+    (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+    (html "https://github.com/tree-sitter/tree-sitter-html")
+    (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+    (json "https://github.com/tree-sitter/tree-sitter-json")
+    (lua "https://github.com/Azganoth/tree-sitter-lua")
+    (make "https://github.com/alemuller/tree-sitter-make")
+    (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+    (python "https://github.com/tree-sitter/tree-sitter-python")
+    (r "https://github.com/r-lib/tree-sitter-r")
+    (rust "https://github.com/tree-sitter/tree-sitter-rust")
+    (toml "https://github.com/tree-sitter/tree-sitter-toml")
+    (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+    (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
+  (use-package jedi
+    :ensure t
+    :config
+    (setq jedi:complete-on-dot t)
+    (add-hook 'python-mode-hook 'jedi:setup))
+
+  ;; (use-package flycheck-rust
+  ;;   :ensure t)
+
+  (use-package cc-mode
+    :ensure t
+    :hook
+    (c-mode . display-line-numbers-mode)
+    (c++-mode . display-line-numbers-mode))
+
+(use-package rustic
+  :ensure t
+  :init
+  (setq display-line-numbers-mode nil
+        yas-minor-mode nil
+        rustic-lsp-client 'eglot))
 
 (use-package pyvenv
   :ensure t
@@ -104,11 +140,6 @@
   (setq pyvenv-post-deactivate-hooks
         (list (lambda ()
                 (setq python-shell-interpreter "python3")))))
-
-(use-package pylint
-  :init
-  (setq flycheck-python-pylint-executable "~/python_venv/bin/pylint"
-        flycheck-pylintrc "~/.pylintrc"))
 
 (use-package python-mode
   :ensure nil
@@ -127,12 +158,7 @@
   ;;(python-mode . jedi-mode)
   ;;(python-mode . lsp-deferred)
   ;;(python-mode . eglot-ensure)
-  (python-mode . yas-minor-mode)) 
-
-;; (use-package elpy
-;;   :ensure t
-;;   :init
-;;   (setq elpy-eldoc-show-current-function nil))
+  (python-mode . yas-minor-mode))
 
 (use-package magit
   :defer t
@@ -143,32 +169,6 @@
   (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
 
-(use-package lsp-mode
-  :ensure t
-  :bind (:map elpy-mode-map ("M-d" . elpy-nav-forward-block)
-              ("M-b" . elpy-nav-backward-block)))
-
-(use-package company
-  :ensure t
-  ;;:after lsp-mode
-  :hook
-  (after-init . global-company-mode)
-  ;;(lsp-mode . company-mode)
-  :bind
-  (:map company-active-map
-        ("<tab>" . company-completion-selection))
-  ;; (:map lsp-mode-map
-  ;;       ("<tab>" . company-indent-or-complete-common))
-  :config
-  (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
-  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-  (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
-
-(use-package company-jedi
-  :ensure t
-  :config
-  (add-to-list 'company-backends 'company-jedi))
-
 (use-package osx-clipboard
      :ensure t
      :defer t
@@ -177,11 +177,11 @@
    (use-package yasnippet
      :init
      (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                              "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets/"))
-     (yas-global-mode)
-     :bind
-     (:map yas-minor-mode-map
-           ("C-S->" . yas-expand))) ;; This is to work around conflict of key bindings with company
+                              "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets")))
+     ;;(yas-global-mode))
+     ;; :bind
+     ;; (:map yas-minor-mode-map
+     ;;       ("C-c x" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
 (use-package yasnippet-snippets
   :ensure t)
@@ -197,9 +197,9 @@
   (marginalia-mode))
 
 (use-package modus-themes
-  :init
-  (setq modus-themes-mode-line '(moody accented borderless))
-  (load-theme 'modus-vivendi-deuteranopia))
+   :init
+;;   (setq modus-themes-mode-line '(moody accented borderless))
+   (load-theme 'modus-vivendi-deuteranopia))
 
 ;;
   ;; Org mode settings
@@ -264,6 +264,7 @@
         ;;mu4e-index-lazy-check t
         mu4e-index-update-error-warning nil
         ))
+
 ;; Show emails as plain text, if possible
 (with-eval-after-load "mm-decode"
   (add-to-list 'mm-discouraged-alternatives "text/html")
@@ -409,13 +410,25 @@
 
 (add-hook 'c++-mode-hook 'eglot-ensure)
 (add-hook 'c-mode-hook 'eglot-ensure)
-(add-hook 'python-mode-hook 'eglot-ensure)
+;;(add-hook 'rust-mode 'eglot-ensure)
+
+;;(add-hook 'newsticker-start-hook
+
+(setq newsticker-url-list
+  '(("slashdot" "https://rss.slashdot.org/Slashdot/slashdotMain" nil nil nil)
+   ("emacs" "https://www.reddit.com/r/emacs/.rss" nil nil nil)
+   ("programming" "https://www.reddit.com/r/programming/.rss" nil nil nil)
+   ("cpp" "https://www.reddit.com/r/cpp/.rss" nil nil nil)
+   ("rust" "https://www.reddit.com/r/rust/.rss" nil nil nil)
+   ("BaltimoreCounty" "https://www.reddit.com/r/BaltimoreCounty/.rss" nil nil nil)))
+
+;; (setq lsp-auto-guess-root nil)
 
 (set-face-attribute 'default nil :height 160) ;; Default to 16 point font for this old guy
 
 (defun set-frame-size-according-to-resolution ()
   "Set the default frame size based on display resolution.
-Shamelessly bottowed from Bryan Oakley."
+Shamelessly borrowed from Bryan Oakley."
   (interactive)
   (if window-system
       (progn
@@ -460,13 +473,10 @@ Shamelessly bottowed from Bryan Oakley."
 (global-set-key (kbd "C-c <right>") 'windmove-right)
 (global-set-key (kbd "C-c <up>") 'windmove-up)
 (global-set-key (kbd "C-c <down>") 'windmove-down)
+(global-set-key (kbd "C-c n") 'newsticker-show-news)
 
 (setq windmove-wrap-around t)
-
 (setq display-buffer-alist nil)
-;; (setq split-height-threshold 80
-;;       split-width-thresold 120)
-
 (setq display-buffer-alist '(
                              ("\\*Occur\\*"
                               (display-buffer-in-side-window)
