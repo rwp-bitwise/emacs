@@ -14,6 +14,9 @@
 (recentf-mode) ;; keep track of recently opened files, useful for consult
 (global-visual-line-mode)
 
+(use-package lsp-mode
+  :ensure t)
+
 (use-package gptel
   :ensure t)
 
@@ -59,6 +62,16 @@
   (completion-styles '(orderless))
   (orderless-matching-styles '(orderless-literal)))
 
+(use-package denote
+  :ensure t
+  :custom (denote-directory "~/iClouddrive/Notes/notes"))
+
+(use-package ob-cypher
+  :ensure t)
+
+(use-package s
+  :ensure t)
+
 (use-package company
   :ensure t
   :hook
@@ -68,7 +81,7 @@
         ("<tab>" . company-completion-selection))
   :config
   (setq company-minimum-prefix-length 1)  ; Set this to adjust the minimum prefix length triggering auto-completion
-  (setq company-tooltip-align-annotations t)  ; Align annotations to the right    
+  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
   (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
 
 (add-hook 'eglot-managed-mode-hook (lambda ()
@@ -121,6 +134,7 @@
 
 (use-package rustic
   :ensure t
+  :mode (("\\.org$" . org-mode))
   :init
   (setq display-line-numbers-mode nil
         yas-minor-mode nil
@@ -135,8 +149,7 @@
         python-shell-native-complete nil)
   (setq pyvenv-post-activate-hooks
         (list (lambda ()
-
-                (setq python-shell-interpreter "~/python_venv/bin/python3"))))
+                (setq python-shell-interpreter "~/.venv/bin/python3"))))
   (setq pyvenv-post-deactivate-hooks
         (list (lambda ()
                 (setq python-shell-interpreter "python3")))))
@@ -146,19 +159,34 @@
   :mode (("\\.py$" . python-mode))
   :defer t
   :init
-  (setq python-shell-interpreter "~/python_venv/bin/python3"
-        python-python-command "~/python_venv/bin/python3"
+  (setq ;;python-shell-interpreter "~/python_venv/bin/python3"
+        ;;python-python-command "~/python_venv/bin/python3"
         indent-tabs-mode nil
         python-indent-offset 2
         ;; elpy-enable t
         tab-width 2)
-  (pyvenv-activate "~/python_venv")
+  (pyvenv-activate "~/.venv")
   :hook
   (python-mode . display-line-numbers-mode)
   ;;(python-mode . jedi-mode)
   ;;(python-mode . lsp-deferred)
-  ;;(python-mode . eglot-ensure)
+  (python-mode . eglot-ensure)
   (python-mode . yas-minor-mode))
+
+(setq eglot-server-programs
+    '((python-mode . ("pyright-langserver" "--stdio"
+                      "--plugins=pyright.plugins.flake8.enabled=true"
+                      "--plugins=pyright.plugins.flake8.args=[]"
+                      "--plugins=pyright.plugins.mypy.enabled=true"
+                      "--plugins=pyright.plugins.mypy.args=[]"
+                      "--plugins=pyright.plugins.nosetests.enabled=true"
+                      "--plugins=pyright.plugins.nosetests.args=[]"
+                      "--plugins=pyright.plugins.pydem.enabled=true"
+                      "--plugins=pyright.plugins.pyright-jedi.enabled=true"
+                      "--plugins=pyright.plugins.unittest.enabled=true"
+                      "--plugins=pyright.plugins.vscode-markup-features.enabled=true"
+                      "--plugins=pyright.plugins.virtual-environments.enabled=true"
+                      "--pythonPath=/Users/rplace/.venv/bin/python"))))
 
 (use-package magit
   :defer t
@@ -259,7 +287,7 @@
         mu4e-use-fancy-chars t
         mu4e-change-filenames-when-moving t
         mu4e-get-mail-command "mbsync --all"
-        mu4e-update-interval 300
+        ;;mu4e-update-interval 300
         ;;mu4e-index-cleanup nil
         ;;mu4e-index-lazy-check t
         mu4e-index-update-error-warning nil
@@ -411,6 +439,11 @@
 (add-hook 'c++-mode-hook 'eglot-ensure)
 (add-hook 'c-mode-hook 'eglot-ensure)
 ;;(add-hook 'rust-mode 'eglot-ensure)
+
+(with-eval-after-load 'eglot
+(add-to-list 'eglot-server-programs
+             '(c-mode . ("clangd"))))
+
 
 ;;(add-hook 'newsticker-start-hook
 

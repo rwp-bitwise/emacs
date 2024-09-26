@@ -33,6 +33,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 ** Completion, spell checking, etc
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+  (use-package lsp-mode
+    :ensure t)
+
   (use-package gptel
     :ensure t)
 
@@ -78,6 +81,16 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (completion-styles '(orderless))
     (orderless-matching-styles '(orderless-literal)))
 
+  (use-package denote
+    :ensure t
+    :custom (denote-directory "~/iClouddrive/Notes/notes"))
+
+  (use-package ob-cypher
+    :ensure t)
+
+  (use-package s
+    :ensure t)
+
 #+end_src
 
 **** Company mode and jedi for auto completion
@@ -91,7 +104,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
           ("<tab>" . company-completion-selection))
     :config
     (setq company-minimum-prefix-length 1)  ; Set this to adjust the minimum prefix length triggering auto-completion
-    (setq company-tooltip-align-annotations t)  ; Align annotations to the right    
+    (setq company-tooltip-align-annotations t)  ; Align annotations to the right
     (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
 
   (add-hook 'eglot-managed-mode-hook (lambda ()
@@ -112,52 +125,53 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 *** Packages for programming language support  
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-      (setq treesit-language-source-alist
-      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-        (c "https://github.com/tree-sitter/tree-sitter-c")
-        (cmake "https://github.com/uyha/tree-sitter-cmake")
-        (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
-        (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-        (css "https://github.com/tree-sitter/tree-sitter-css")
-        (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-        (go "https://github.com/tree-sitter/tree-sitter-go")
-        (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
-        (html "https://github.com/tree-sitter/tree-sitter-html")
-        (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-        (json "https://github.com/tree-sitter/tree-sitter-json")
-        (lua "https://github.com/Azganoth/tree-sitter-lua")
-        (make "https://github.com/alemuller/tree-sitter-make")
-        (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-        (python "https://github.com/tree-sitter/tree-sitter-python")
-        (r "https://github.com/r-lib/tree-sitter-r")
-        (rust "https://github.com/tree-sitter/tree-sitter-rust")
-        (toml "https://github.com/tree-sitter/tree-sitter-toml")
-        (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-        (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-        (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+    (setq treesit-language-source-alist
+    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+      (c "https://github.com/tree-sitter/tree-sitter-c")
+      (cmake "https://github.com/uyha/tree-sitter-cmake")
+      (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+      (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+      (css "https://github.com/tree-sitter/tree-sitter-css")
+      (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+      (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+      (go "https://github.com/tree-sitter/tree-sitter-go")
+      (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+      (html "https://github.com/tree-sitter/tree-sitter-html")
+      (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+      (json "https://github.com/tree-sitter/tree-sitter-json")
+      (lua "https://github.com/Azganoth/tree-sitter-lua")
+      (make "https://github.com/alemuller/tree-sitter-make")
+      (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+      (python "https://github.com/tree-sitter/tree-sitter-python")
+      (r "https://github.com/r-lib/tree-sitter-r")
+      (rust "https://github.com/tree-sitter/tree-sitter-rust")
+      (toml "https://github.com/tree-sitter/tree-sitter-toml")
+      (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+      (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+      (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-      (use-package jedi
-        :ensure t
-        :config
-        (setq jedi:complete-on-dot t)
-        (add-hook 'python-mode-hook 'jedi:setup))
-
-      ;; (use-package flycheck-rust
-      ;;   :ensure t)
-
-      (use-package cc-mode
-        :ensure t
-        :hook
-        (c-mode . display-line-numbers-mode)
-        (c++-mode . display-line-numbers-mode))
-
-    (use-package rustic
+    (use-package jedi
       :ensure t
-      :init
-      (setq display-line-numbers-mode nil
-            yas-minor-mode nil
-            rustic-lsp-client 'eglot))
+      :config
+      (setq jedi:complete-on-dot t)
+      (add-hook 'python-mode-hook 'jedi:setup))
+
+    ;; (use-package flycheck-rust
+    ;;   :ensure t)
+
+    (use-package cc-mode
+      :ensure t
+      :hook
+      (c-mode . display-line-numbers-mode)
+      (c++-mode . display-line-numbers-mode))
+
+  (use-package rustic
+    :ensure t
+    :mode (("\\.org$" . org-mode))
+    :init
+    (setq display-line-numbers-mode nil
+          yas-minor-mode nil
+          rustic-lsp-client 'eglot))
 
 #+end_src
 
@@ -174,8 +188,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
           python-shell-native-complete nil)
     (setq pyvenv-post-activate-hooks
           (list (lambda ()
-
-                  (setq python-shell-interpreter "~/python_venv/bin/python3"))))
+                  (setq python-shell-interpreter "~/.venv/bin/python3"))))
     (setq pyvenv-post-deactivate-hooks
           (list (lambda ()
                   (setq python-shell-interpreter "python3")))))
@@ -185,21 +198,39 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :mode (("\\.py$" . python-mode))
     :defer t
     :init
-    (setq python-shell-interpreter "~/python_venv/bin/python3"
-          python-python-command "~/python_venv/bin/python3"
+    (setq ;;python-shell-interpreter "~/python_venv/bin/python3"
+          ;;python-python-command "~/python_venv/bin/python3"
           indent-tabs-mode nil
           python-indent-offset 2
           ;; elpy-enable t
           tab-width 2)
-    (pyvenv-activate "~/python_venv")
+    (pyvenv-activate "~/.venv")
     :hook
     (python-mode . display-line-numbers-mode)
     ;;(python-mode . jedi-mode)
     ;;(python-mode . lsp-deferred)
-    ;;(python-mode . eglot-ensure)
-    (python-mode . yas-minor-mode)) 
+    (python-mode . eglot-ensure)
+    (python-mode . yas-minor-mode))
+
+  (setq eglot-server-programs
+      '((python-mode . ("pyright-langserver" "--stdio"
+                        "--plugins=pyright.plugins.flake8.enabled=true"
+                        "--plugins=pyright.plugins.flake8.args=[]"
+                        "--plugins=pyright.plugins.mypy.enabled=true"
+                        "--plugins=pyright.plugins.mypy.args=[]"
+                        "--plugins=pyright.plugins.nosetests.enabled=true"
+                        "--plugins=pyright.plugins.nosetests.args=[]"
+                        "--plugins=pyright.plugins.pydem.enabled=true"
+                        "--plugins=pyright.plugins.pyright-jedi.enabled=true"
+                        "--plugins=pyright.plugins.unittest.enabled=true"
+                        "--plugins=pyright.plugins.vscode-markup-features.enabled=true"
+                        "--plugins=pyright.plugins.virtual-environments.enabled=true"
+                        "--pythonPath=/Users/rplace/.venv/bin/python"))))
 
 #+end_src
+
+#+RESULTS:
+| /path/to/your/virtualenv/lib/pythonX.Y/site-packages |
 
 **** magit config
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
@@ -320,7 +351,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
           mu4e-use-fancy-chars t
           mu4e-change-filenames-when-moving t
           mu4e-get-mail-command "mbsync --all"
-          mu4e-update-interval 300
+          ;;mu4e-update-interval 300
           ;;mu4e-index-cleanup nil
           ;;mu4e-index-lazy-check t
           mu4e-index-update-error-warning nil
@@ -504,6 +535,11 @@ This is where we gather up all of the various hooks used for various modes
   (add-hook 'c-mode-hook 'eglot-ensure)
   ;;(add-hook 'rust-mode 'eglot-ensure)
 
+  (with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(c-mode . ("clangd"))))
+
+
   ;;(add-hook 'newsticker-start-hook
 
   (setq newsticker-url-list
@@ -515,7 +551,7 @@ This is where we gather up all of the various hooks used for various modes
      ("BaltimoreCounty" "https://www.reddit.com/r/BaltimoreCounty/.rss" nil nil nil)))
 
   ;; (setq lsp-auto-guess-root nil)
-  
+
 #+end_src
 
 #+RESULTS:
