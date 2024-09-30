@@ -92,30 +92,30 @@
   :config
   (add-to-list 'company-backends 'company-jedi))
 
-(setq treesit-language-source-alist
-  '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-    (c "https://github.com/tree-sitter/tree-sitter-c")
-    (cmake "https://github.com/uyha/tree-sitter-cmake")
-    (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
-    (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-    (css "https://github.com/tree-sitter/tree-sitter-css")
-    (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-    (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-    (go "https://github.com/tree-sitter/tree-sitter-go")
-    (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
-    (html "https://github.com/tree-sitter/tree-sitter-html")
-    (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-    (json "https://github.com/tree-sitter/tree-sitter-json")
-    (lua "https://github.com/Azganoth/tree-sitter-lua")
-    (make "https://github.com/alemuller/tree-sitter-make")
-    (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-    (python "https://github.com/tree-sitter/tree-sitter-python")
-    (r "https://github.com/r-lib/tree-sitter-r")
-    (rust "https://github.com/tree-sitter/tree-sitter-rust")
-    (toml "https://github.com/tree-sitter/tree-sitter-toml")
-    (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-    (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+;; (setq treesit-language-source-alist
+  ;; '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+  ;;   (c "https://github.com/tree-sitter/tree-sitter-c")
+  ;;   (cmake "https://github.com/uyha/tree-sitter-cmake")
+  ;;   (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+  ;;   (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+  ;;   (css "https://github.com/tree-sitter/tree-sitter-css")
+  ;;   (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+  ;;   (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+  ;;   (go "https://github.com/tree-sitter/tree-sitter-go")
+  ;;   (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+  ;;   (html "https://github.com/tree-sitter/tree-sitter-html")
+  ;;   (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+  ;;   (json "https://github.com/tree-sitter/tree-sitter-json")
+  ;;   (lua "https://github.com/Azganoth/tree-sitter-lua")
+  ;;   (make "https://github.com/alemuller/tree-sitter-make")
+  ;;   (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+  ;;   (python "https://github.com/tree-sitter/tree-sitter-python")
+  ;;   (r "https://github.com/r-lib/tree-sitter-r")
+  ;;   (rust "https://github.com/tree-sitter/tree-sitter-rust")
+  ;;   (toml "https://github.com/tree-sitter/tree-sitter-toml")
+  ;;   (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+  ;;   (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+  ;;   (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
   (use-package jedi
     :ensure t
@@ -156,37 +156,35 @@
 
 (use-package python-mode
   :ensure nil
-  :mode (("\\.py$" . python-mode))
+  :mode (("\\.py$" . python-ts-mode))
   :defer t
   :init
   (setq ;;python-shell-interpreter "~/python_venv/bin/python3"
-        ;;python-python-command "~/python_venv/bin/python3"
-        indent-tabs-mode nil
-        python-indent-offset 2
-        ;; elpy-enable t
-        tab-width 2)
+   ;;python-python-command "~/python_venv/bin/python3"
+   indent-tabs-mode nil
+   python-indent-offset 2)
+
   (pyvenv-activate "~/.venv")
   :hook
-  (python-mode . display-line-numbers-mode)
-  ;;(python-mode . jedi-mode)
-  ;;(python-mode . lsp-deferred)
-  (python-mode . eglot-ensure)
-  (python-mode . yas-minor-mode))
+  (python-ts-mode . display-line-numbers-mode)
+  (python-ts-mode . eglot-ensure)
+  (python-ts-mode . company-mode)
+  (python-ts-mode . yas-minor-mode))
 
-(setq eglot-server-programs
-    '((python-mode . ("pyright-langserver" "--stdio"
-                      "--plugins=pyright.plugins.flake8.enabled=true"
-                      "--plugins=pyright.plugins.flake8.args=[]"
-                      "--plugins=pyright.plugins.mypy.enabled=true"
-                      "--plugins=pyright.plugins.mypy.args=[]"
-                      "--plugins=pyright.plugins.nosetests.enabled=true"
-                      "--plugins=pyright.plugins.nosetests.args=[]"
-                      "--plugins=pyright.plugins.pydem.enabled=true"
-                      "--plugins=pyright.plugins.pyright-jedi.enabled=true"
-                      "--plugins=pyright.plugins.unittest.enabled=true"
-                      "--plugins=pyright.plugins.vscode-markup-features.enabled=true"
-                      "--plugins=pyright.plugins.virtual-environments.enabled=true"
-                      "--pythonPath=/Users/rplace/.venv/bin/python"))))
+;; (setq eglot-server-programs
+;;       '((python-ts-mode . ("pyright-langserver" "--stdio"
+;;                         "--plugins=pyright.plugins.flake8.enabled=true"
+;;                         "--plugins=pyright.plugins.flake8.args=[]"
+;;                         "--plugins=pyright.plugins.mypy.enabled=true"
+;;                         "--plugins=pyright.plugins.mypy.args=[]"
+;;                         "--plugins=pyright.plugins.nosetests.enabled=true"
+;;                         "--plugins=pyright.plugins.nosetests.args=[]"
+;;                         "--plugins=pyright.plugins.pydem.enabled=true"
+;;                         "--plugins=pyright.plugins.pyright-jedi.enabled=true"
+;;                         "--plugins=pyright.plugins.unittest.enabled=true"
+;;                         "--plugins=pyright.plugins.vscode-markup-features.enabled=true"
+;;                         "--plugins=pyright.plugins.virtual-environments.enabled=true"
+;;                         "--pythonPath=/Users/rplace/.venv/bin/python"))))
 
 (use-package magit
   :defer t
@@ -273,67 +271,68 @@
                         '(("^ *\\([-]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-(add-to-list 'load-path "/opt/homebrew/share/emacs/site-lisp/mu4e")
-(require 'mu4e)
-(use-package mu4e
-  :ensure nil
-  :config
-  (setq user-mail-address "rwplace@gmail.com"
-        send-mail-function 'smtpmail-send-it
-        sendmail-program "/opt/homebrew/bin/msmtp"
-        message-send-mail-function 'message-send-mail-with-sendmail
-        message-sendmail-f-is-evil t
-        smtpmail-auth-credentials "~/.authinfo.gpg"
-        smtpmail-stream-type 'starttls
-        mu4e-maildir "~/Mail"
-        mu4e-mu-binary "/opt/homebrew/bin/mu"
-        mu4e-compose-dont=reply-to-self t
-        mu4e-use-fancy-chars t
-        mu4e-change-filenames-when-moving t
-        mu4e-get-mail-command "mbsync --all"
-        ;;mu4e-update-interval 300
-        ;;mu4e-index-cleanup nil
-        ;;mu4e-index-lazy-check t
-        mu4e-index-update-error-warning nil
-        ))
+(if (file-exists-p "/opt/homebrew/bin/mu")
+  (add-to-list 'load-path "/opt/homebrew/share/emacs/site-lisp/mu4e")
+  (require 'mu4e)
+  (use-package mu4e
+    :ensure nil
+    :config
+    (setq user-mail-address "rwplace@gmail.com"
+          send-mail-function 'smtpmail-send-it
+          sendmail-program "/opt/homebrew/bin/msmtp"
+          message-send-mail-function 'message-send-mail-with-sendmail
+          message-sendmail-f-is-evil t
+          smtpmail-auth-credentials "~/.authinfo.gpg"
+          smtpmail-stream-type 'starttls
+          mu4e-maildir "~/Mail"
+          mu4e-mu-binary "/opt/homebrew/bin/mu"
+          mu4e-compose-dont=reply-to-self t
+          mu4e-use-fancy-chars t
+          mu4e-change-filenames-when-moving t
+          mu4e-get-mail-command "mbsync --all"
+          ;;mu4e-update-interval 300
+          ;;mu4e-index-cleanup nil
+          ;;mu4e-index-lazy-check t
+          mu4e-index-update-error-warning nil
+          ))
 
-;; Show emails as plain text, if possible
-(with-eval-after-load "mm-decode"
-  (add-to-list 'mm-discouraged-alternatives "text/html")
-  (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+  ;; Show emails as plain text, if possible
+  (with-eval-after-load "mm-decode"
+    (add-to-list 'mm-discouraged-alternatives "text/html")
+    (add-to-list 'mm-discouraged-alternatives "text/richtext"))
 
-(setq mu4e-contexts
-      (list
-       (make-mu4e-context
-        :name "gmail-rwplace"
-        :match-func
-        (lambda (msg)
-          (when msg
-            (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
-        :vars '((user-mail-address . "rwplace@gmail.com")
-                (user-full-name . "Rob Place")
-                (mu4e-sent-folder . "/Gmail/Sent")
-                (mu4e-drafts-folder . "/Gmail/Drafts")
-                (mu4e-refile-folder . "/Gmail/All Mail")))
-       (make-mu4e-context
-        :name "alldyn"
-        :match-func
-        (lambda (msg)
-          (when msg
-            (string-prefix-p "/Alldyn" (mu4e-message-field msg :maildir))))
-        :vars '((user-mail-address . "robert.place@alldyn.com")
-                (user-full-name . "Rob Place")
-                (mu4e-sent-folder . "/Alldyn/Sent")
-                (mu4e-drafts-folder . "/Alldyn/Drafts")
-                (mu4e-refile-folder . "/Alldyn/All Mail")))
-       (make-mu4e-context
-        :name "icloud"
-        :match-func
-        (lambda (msg)
-          (when msg
-            (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
-        :vars '((user-mail-address . "rwplace@mac.com")
-                (user-full-name . "Rob Place")))))
+  (setq mu4e-contexts
+        (list
+         (make-mu4e-context
+          :name "gmail-rwplace"
+          :match-func
+          (lambda (msg)
+            (when msg
+              (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+          :vars '((user-mail-address . "rwplace@gmail.com")
+                  (user-full-name . "Rob Place")
+                  (mu4e-sent-folder . "/Gmail/Sent")
+                  (mu4e-drafts-folder . "/Gmail/Drafts")
+                  (mu4e-refile-folder . "/Gmail/All Mail")))
+         (make-mu4e-context
+          :name "alldyn"
+          :match-func
+          (lambda (msg)
+            (when msg
+              (string-prefix-p "/Alldyn" (mu4e-message-field msg :maildir))))
+          :vars '((user-mail-address . "robert.place@alldyn.com")
+                  (user-full-name . "Rob Place")
+                  (mu4e-sent-folder . "/Alldyn/Sent")
+                  (mu4e-drafts-folder . "/Alldyn/Drafts")
+                  (mu4e-refile-folder . "/Alldyn/All Mail")))
+         (make-mu4e-context
+          :name "icloud"
+          :match-func
+          (lambda (msg)
+            (when msg
+              (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
+          :vars '((user-mail-address . "rwplace@mac.com")
+                  (user-full-name . "Rob Place"))))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -442,6 +441,7 @@
 
 (add-hook 'c++-mode-hook 'eglot-ensure)
 (add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'python-ts-hook 'eglot-ensure)
 ;;(add-hook 'rust-mode 'eglot-ensure)
 
 (with-eval-after-load 'eglot
