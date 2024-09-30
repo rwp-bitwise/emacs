@@ -225,38 +225,42 @@
   (marginalia-mode))
 
 (use-package modus-themes
-   :init
+  :ensure t
+  :init
 ;;   (setq modus-themes-mode-line '(moody accented borderless))
    (load-theme 'modus-vivendi-deuteranopia))
 
 ;;
-  ;; Org mode settings
-  ;;
-  (use-package org
-    :mode (("\\.org$" . org-mode))
-    :init
-    (setq org-log-done 'time
-          org-hide-leading-stars t
-          org-startup-indented t
-          org-hide-emphasis-markers t
-          org-src-tab-acts-natively t)
-    (setq-local company-backends '(company-dabbrev))
-    :hook
-    (org-mode . flyspell-mode)
+;; Org mode settings
+;;
+(use-package org-bullets
+  :ensure t)
 
-    (org-mode . yas-minor-mode)
-    (org-mode . company-mode)
-    (org-mode . visual-line-mode)
-    :bind (:map org-mode-map
-                ("C-c i" . org-id-get-create)))
+(use-package org
+  :mode (("\\.org$" . org-mode))
+  :init
+  (setq org-log-done 'time
+        org-hide-leading-stars t
+        org-startup-indented t
+        org-hide-emphasis-markers t
+        org-src-tab-acts-natively t)
+  (setq-local company-backends '(company-dabbrev))
+  :hook
+  (org-mode . flyspell-mode)
 
-  (use-package org-bullets
-    :hook
-    (org-mode . org-bullets-mode)
-    :after org)
+  (org-mode . yas-minor-mode)
+  (org-mode . company-mode)
+  (org-mode . visual-line-mode)
+  :bind (:map org-mode-map
+              ("C-c i" . org-id-get-create)))
 
-  (use-package org-mime
-    :ensure t)
+(use-package org-bullets
+  :hook
+  (org-mode . org-bullets-mode)
+  :after org)
+
+(use-package org-mime
+  :ensure t)
 
 ;;This is a test
 (use-package org-auto-tangle
