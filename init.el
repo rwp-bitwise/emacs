@@ -17,6 +17,13 @@
 (use-package lsp-mode
   :ensure t)
 
+(use-package eglot
+  :ensure t
+  :bind
+  (:map eglot-mode-map
+        ("C-c s" . eglot-find-declaration)))
+
+
 (use-package gptel
   :ensure t)
 
@@ -92,36 +99,36 @@
   :config
   (add-to-list 'company-backends 'company-jedi))
 
-;; (setq treesit-language-source-alist
-  ;; '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-  ;;   (c "https://github.com/tree-sitter/tree-sitter-c")
-  ;;   (cmake "https://github.com/uyha/tree-sitter-cmake")
-  ;;   (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
-  ;;   (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-  ;;   (css "https://github.com/tree-sitter/tree-sitter-css")
-  ;;   (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-  ;;   (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-  ;;   (go "https://github.com/tree-sitter/tree-sitter-go")
-  ;;   (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
-  ;;   (html "https://github.com/tree-sitter/tree-sitter-html")
-  ;;   (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-  ;;   (json "https://github.com/tree-sitter/tree-sitter-json")
-  ;;   (lua "https://github.com/Azganoth/tree-sitter-lua")
-  ;;   (make "https://github.com/alemuller/tree-sitter-make")
-  ;;   (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-  ;;   (python "https://github.com/tree-sitter/tree-sitter-python")
-  ;;   (r "https://github.com/r-lib/tree-sitter-r")
-  ;;   (rust "https://github.com/tree-sitter/tree-sitter-rust")
-  ;;   (toml "https://github.com/tree-sitter/tree-sitter-toml")
-  ;;   (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-  ;;   (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-  ;;   (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+(setq treesit-language-source-alist
+  '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+    (c "https://github.com/tree-sitter/tree-sitter-c")
+    (cmake "https://github.com/uyha/tree-sitter-cmake")
+    (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+    (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+    (css "https://github.com/tree-sitter/tree-sitter-css")
+    (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+    (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+    (go "https://github.com/tree-sitter/tree-sitter-go")
+    (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+    (html "https://github.com/tree-sitter/tree-sitter-html")
+    (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+    (json "https://github.com/tree-sitter/tree-sitter-json")
+    (lua "https://github.com/Azganoth/tree-sitter-lua")
+    (make "https://github.com/alemuller/tree-sitter-make")
+    (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+    (python "https://github.com/tree-sitter/tree-sitter-python")
+    (r "https://github.com/r-lib/tree-sitter-r")
+    (rust "https://github.com/tree-sitter/tree-sitter-rust")
+    (toml "https://github.com/tree-sitter/tree-sitter-toml")
+    (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+    (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-  (use-package jedi
-    :ensure t
-    :config
-    (setq jedi:complete-on-dot t)
-    (add-hook 'python-mode-hook 'jedi:setup))
+  ;; (use-package jedi
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq jedi:complete-on-dot t)
+  ;;   (add-hook 'python-mode-hook 'jedi:setup))
 
   ;; (use-package flycheck-rust
   ;;   :ensure t)
@@ -154,7 +161,7 @@
         (list (lambda ()
                 (setq python-shell-interpreter "python3")))))
 
-(use-package python-mode
+(use-package python
   :ensure nil
   :mode (("\\.py$" . python-ts-mode))
   :defer t
@@ -170,21 +177,6 @@
   (python-ts-mode . eglot-ensure)
   (python-ts-mode . company-mode)
   (python-ts-mode . yas-minor-mode))
-
-;; (setq eglot-server-programs
-;;       '((python-ts-mode . ("pyright-langserver" "--stdio"
-;;                         "--plugins=pyright.plugins.flake8.enabled=true"
-;;                         "--plugins=pyright.plugins.flake8.args=[]"
-;;                         "--plugins=pyright.plugins.mypy.enabled=true"
-;;                         "--plugins=pyright.plugins.mypy.args=[]"
-;;                         "--plugins=pyright.plugins.nosetests.enabled=true"
-;;                         "--plugins=pyright.plugins.nosetests.args=[]"
-;;                         "--plugins=pyright.plugins.pydem.enabled=true"
-;;                         "--plugins=pyright.plugins.pyright-jedi.enabled=true"
-;;                         "--plugins=pyright.plugins.unittest.enabled=true"
-;;                         "--plugins=pyright.plugins.vscode-markup-features.enabled=true"
-;;                         "--plugins=pyright.plugins.virtual-environments.enabled=true"
-;;                         "--pythonPath=/Users/rplace/.venv/bin/python"))))
 
 (use-package magit
   :defer t
