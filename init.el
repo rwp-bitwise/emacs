@@ -1,18 +1,25 @@
+;; [[file:init.org::*General configuration][General configuration:1]]
 ;;; package init.el --- emacs init and config
 
 ;;; Code:
-
 (setq max-lisp-eval-depth 2048
       custom-safe-themes t
       epa-pinentry-mode 'loopback)
 
 (require 'package)
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")))
+
+(add-to-list 'package-archives
+           '("org" . "http://orgmode.org/elpa/") t)
+;; (add-to-list 'package-archives
+;;            '("gnu-elpa" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives
+           '("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages") t)
+(add-to-list 'package-archives
+           '("melpa" . "https://stable.melpa.org/packages/") t)
 
 (recentf-mode) ;; keep track of recently opened files, useful for consult
 (global-visual-line-mode)
+;; General configuration:1 ends here
 
 (use-package lsp-mode
   :ensure t)
@@ -83,17 +90,20 @@
   :ensure t
   :hook
   (after-init . global-company-mode)
+
   :bind
   (:map company-active-map
         ("<tab>" . company-completion-selection))
-  :config
-  (setq company-minimum-prefix-length 1)  ; Set this to adjust the minimum prefix length triggering auto-completion
-  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-  (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
 
-(add-hook 'eglot-managed-mode-hook (lambda ()
-                                   (add-to-list 'company-backends
-                                                '(company-capf :with company-yasnippet))))
+  :config
+  (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
+  (setq company-idle-delay 0.2))  ; Adjust this to control the delay before showing suggestions
+
+;; (add-hook 'eglot-managed-mode-hook (lambda ()
+;;                                    (add-to-list 'company-backends
+;;                                                 '(company-capf :with company-yasnippet))))
+
 (use-package company-jedi
   :ensure t
   :config
@@ -124,14 +134,14 @@
     (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-  ;; (use-package jedi
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq jedi:complete-on-dot t)
-  ;;   (add-hook 'python-mode-hook 'jedi:setup))
+  (use-package jedi
+    :ensure t
+    :config
+    (setq jedi:complete-on-dot t)
+    (add-hook 'python-mode-hook 'jedi:setup))
 
-  ;; (use-package flycheck-rust
-  ;;   :ensure t)
+  (use-package flycheck-rust
+    :ensure t)
 
   (use-package cc-mode
     :ensure t
@@ -188,18 +198,19 @@
   (after-save . magit-after-save-refresh-status))
 
 (use-package osx-clipboard
-     :ensure t
-     :defer t
-     :if (eq system-type 'darwin))
+  :ensure t
+  :defer t
+  :if (eq system-type 'darwin))
 
-   (use-package yasnippet
-     :init
-     (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                              "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets")))
-     ;;(yas-global-mode))
-     ;; :bind
-     ;; (:map yas-minor-mode-map
-     ;;       ("C-c x" . yas-expand))) ;; This is to work around conflict of key bindings with company
+(use-package yasnippet
+  :init
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
+                           "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets"))
+  (yas-global-mode)
+
+  :bind
+  (:map yas-minor-mode-map
+        ("C-c x" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
 (use-package yasnippet-snippets
   :ensure t)
@@ -220,9 +231,18 @@
 ;;   (setq modus-themes-mode-line '(moody accented borderless))
    (load-theme 'modus-vivendi-deuteranopia))
 
+(defun org-completion-at-point ()
+  (let ((element (org-element-at-point)))
+    (when (member (org-element-property :language element)
+		  '("emacs-lisp" "elisp"))
+      (funcall #'elisp-completion-at-point))))
 ;;
 ;; Org mode settings
 ;;
+(add-hook 'completion-at-point-functions 'org-completion-at-point nil t)
+(add-hook 'org-mode-hook (lambda ()
+                           (add-hook 'completion-at-point-functions 'org-completion-at-point t)))
+
 (use-package org-bullets
   :ensure t)
 
@@ -234,7 +254,7 @@
         org-startup-indented t
         org-hide-emphasis-markers t
         org-src-tab-acts-natively t)
-  (setq-local company-backends '(company-dabbrev))
+        ;;company-backends '(company-dabbrev))
   :hook
   (org-mode . flyspell-mode)
 
@@ -244,7 +264,7 @@
   :bind (:map org-mode-map
               ("C-c i" . org-id-get-create)))
 
-(use-package org-bullets
+  (use-package org-bullets
   :hook
   (org-mode . org-bullets-mode)
   :after org)
@@ -263,68 +283,65 @@
                         '(("^ *\\([-]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-(if (file-exists-p "/opt/homebrew/bin/mu")
-  (add-to-list 'load-path "/opt/homebrew/share/emacs/site-lisp/mu4e")
-  (require 'mu4e)
-  (use-package mu4e
-    :ensure nil
-    :config
-    (setq user-mail-address "rwplace@gmail.com"
-          send-mail-function 'smtpmail-send-it
-          sendmail-program "/opt/homebrew/bin/msmtp"
-          message-send-mail-function 'message-send-mail-with-sendmail
-          message-sendmail-f-is-evil t
-          smtpmail-auth-credentials "~/.authinfo.gpg"
-          smtpmail-stream-type 'starttls
-          mu4e-maildir "~/Mail"
-          mu4e-mu-binary "/opt/homebrew/bin/mu"
-          mu4e-compose-dont=reply-to-self t
-          mu4e-use-fancy-chars t
-          mu4e-change-filenames-when-moving t
-          mu4e-get-mail-command "mbsync --all"
-          ;;mu4e-update-interval 300
-          ;;mu4e-index-cleanup nil
-          ;;mu4e-index-lazy-check t
-          mu4e-index-update-error-warning nil
-          ))
+(add-to-list 'load-path "/opt/homebrew/share/emacs/site-lisp/mu4e")
+(require 'mu4e)
 
-  ;; Show emails as plain text, if possible
-  (with-eval-after-load "mm-decode"
-    (add-to-list 'mm-discouraged-alternatives "text/html")
-    (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+(setq user-mail-address "rwplace@gmail.com"
+      send-mail-function 'smtpmail-send-it
+      sendmail-program "/opt/homebrew/bin/msmtp"
+      message-send-mail-function 'message-send-mail-with-sendmail
+      message-sendmail-f-is-evil t
+      smtpmail-auth-credentials "~/.authinfo.gpg"
+      smtpmail-stream-type 'starttls
+      mu4e-maildir "~/Mail"
+      mu4e-mu-binary "/opt/homebrew/bin/mu"
+      mu4e-compose-dont=reply-to-self t
+      mu4e-use-fancy-chars t
+      mu4e-change-filenames-when-moving t
+      mu4e-get-mail-command "mbsync --all"
+      ;;mu4e-update-interval 300
+      ;;mu4e-index-cleanup nil
+      ;;mu4e-index-lazy-check t
+      mu4e-index-update-error-warning nil
+      )
 
-  (setq mu4e-contexts
-        (list
-         (make-mu4e-context
-          :name "gmail-rwplace"
-          :match-func
-          (lambda (msg)
-            (when msg
-              (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
-          :vars '((user-mail-address . "rwplace@gmail.com")
-                  (user-full-name . "Rob Place")
-                  (mu4e-sent-folder . "/Gmail/Sent")
-                  (mu4e-drafts-folder . "/Gmail/Drafts")
-                  (mu4e-refile-folder . "/Gmail/All Mail")))
-         (make-mu4e-context
-          :name "alldyn"
-          :match-func
-          (lambda (msg)
-            (when msg
-              (string-prefix-p "/Alldyn" (mu4e-message-field msg :maildir))))
-          :vars '((user-mail-address . "robert.place@alldyn.com")
-                  (user-full-name . "Rob Place")
-                  (mu4e-sent-folder . "/Alldyn/Sent")
-                  (mu4e-drafts-folder . "/Alldyn/Drafts")
-                  (mu4e-refile-folder . "/Alldyn/All Mail")))
-         (make-mu4e-context
-          :name "icloud"
-          :match-func
-          (lambda (msg)
-            (when msg
-              (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
-          :vars '((user-mail-address . "rwplace@mac.com")
-                  (user-full-name . "Rob Place"))))))
+;; Show emails as plain text, if possible
+(with-eval-after-load "mm-decode"
+  (add-to-list 'mm-discouraged-alternatives "text/html")
+  (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+
+(setq mu4e-contexts
+      (list
+       (make-mu4e-context
+        :name "gmail-rwplace"
+        :match-func
+        (lambda (msg)
+          (when msg
+            (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+        :vars '((user-mail-address . "rwplace@gmail.com")
+                (user-full-name . "Rob Place")
+                (mu4e-sent-folder . "/Gmail/Sent")
+                (mu4e-drafts-folder . "/Gmail/Drafts")
+                (mu4e-refile-folder . "/Gmail/All Mail")))
+       (make-mu4e-context
+        :name "alldyn"
+        :match-func
+        (lambda (msg)
+          (when msg
+            (string-prefix-p "/Alldyn" (mu4e-message-field msg :maildir))))
+        :vars '((user-mail-address . "robert.place@alldyn.com")
+                (user-full-name . "Rob Place")
+                (mu4e-sent-folder . "/Alldyn/Sent")
+                (mu4e-drafts-folder . "/Alldyn/Drafts")
+                (mu4e-refile-folder . "/Alldyn/All Mail")))
+       (make-mu4e-context
+        :name "icloud"
+        :match-func
+        (lambda (msg)
+          (when msg
+            (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
+        :vars '((user-mail-address . "rwplace@mac.com")
+                (user-full-name . "Rob Place")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -337,9 +354,9 @@
    '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
  '(org-agenda-files
    '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
- '(package-archives
-   '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa-stable" . "https://stable.melpa.org/packages/")))
+ ;; '(package-archives
+ ;;   '(("gnu" . "https://elpa.gnu.org/packages/")
+ ;;     ("melpa-stable" . "https://stable.melpa.org/packages/")))
  '(package-selected-packages
    '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm  flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
@@ -425,7 +442,7 @@
    (C . t)))
 
 ;;(global-flycheck-mode)
-(global-company-mode)
+;;(global-company-mode)
 
 (eval-after-load "auto-complete"
   '(progn
@@ -503,6 +520,10 @@ Shamelessly borrowed from Bryan Oakley."
 (global-set-key (kbd "C-c <up>") 'windmove-up)
 (global-set-key (kbd "C-c <down>") 'windmove-down)
 (global-set-key (kbd "C-c n") 'newsticker-show-news)
+
+;; ;; native tab completion
+;; (setq tab-always-indent 'complete)
+;; (add-to-list 'completion-styles 'initials t)
 
 (setq windmove-wrap-around t)
 (setq display-buffer-alist nil)
