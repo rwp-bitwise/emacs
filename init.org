@@ -4,22 +4,31 @@ If you want to be able to make changes directly in the init.el and have them loa
 ** General configuration
 python, virtualenv, libtool, libtool-bin, and cmake all need to be present on your system for this to work wih all of the packages listed here. 
 
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :cache yes :comments link
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   ;;; package init.el --- emacs init and config
 
   ;;; Code:
   (setq max-lisp-eval-depth 2048
 	custom-safe-themes t
-	epa-pinentry-mode 'loopback)
+	epa-pinentry-mode 'loopback
+	initial-scratch-message nil)
 
   (require 'package)
 
-  (add-to-list 'package-archives
-	     '("org" . "http://orgmode.org/elpa/") t)
-  (add-to-list 'package-archives
-	     '("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages") t)
-  (add-to-list 'package-archives
-	     '("melpa" . "https://stable.melpa.org/packages/") t)
+  (setq rwp/package-archives
+	'(("org" . "http://orgmode.org/elpa/")
+	  ("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages")
+	  ("melpa" . "https://stable.melpa.org/packages/")))
+
+  (dolist (archive rwp/package-archives)
+    (add-to-list 'package-archives archive t))
+
+  ;; (add-to-list 'package-archives
+  ;;            '("org" . "http://orgmode.org/elpa/") t)
+  ;; (add-to-list 'package-archives
+  ;;            '("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages") t)
+  ;; (add-to-list 'package-archives
+  ;;            '("melpa" . "https://stable.melpa.org/packages/") t)
 
   (recentf-mode) ;; keep track of recently opened files, useful for consult
   (global-visual-line-mode)
@@ -27,28 +36,33 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 ** Custom functions
 #+begin_src emacs-lisp :tangle "init.el" :comments link
-  (setq 'this is a functio
   (defun org-completion-at-point ()
-    (let* ((element (org-element-at-point))
-	   (lang (org-element-property :language element)))
-      (when-let (fn (alist-get lang org-completion-functions-alist
-			       nil nil #'string=))
-	(funcall fn))))
+  (let ((element (org-element-at-point)))
+    (when (member (org-element-property :language element)
+		  '("emacs-lisp" "elisp"))
+      (funcall #'elisp-completion-at-point))))
 
   ;; (defvar org-completion-functions-alist
   ;;   '(("emacs-lisp" . elisp-completion-at-point)
-  ;;     ("python"     . org-python-completion-at-point))
-  ;;   "Alist for configuring language completion functions.")
-  (defun org-python-completion-at-point ()
-    "For org-mode modified version of `python-completion-at-point'."
-    (let* ((info (org-babel-get-src-block-info))
-	   (session (alist-get :session (nth 2 info)))
-	   (buffer (get-buffer (org-babel-python-with-earmuffs session)))
-	   (process (get-buffer-process buffer)))
-      (when (and process
-		 (with-current-buffer buffer
-		   (python-util-comint-end-of-output-p)))
-	(python-shell-completion-at-point process))))
+  ;;     ("python"     . org-python-completion-at-point)))
+
+  ;; (defun org-completion-at-point ()
+  ;;   (let* ((element (org-element-at-point))
+  ;;          (lang (org-element-property :language element)))
+  ;;     (when-let (fn (alist-get lang org-completion-functions-alist
+  ;;                              nil nil #'string=))
+  ;;       (funcall fn))))
+
+  ;; (defun org-python-completion-at-point ()
+  ;;   "For org-mode modified version of `python-completion-at-point'."
+  ;;   (let* ((info (org-babel-get-src-block-info))
+  ;;          (session (alist-get :session (nth 2 info)))
+  ;;          (buffer (get-buffer (org-babel-python-with-earmuffs session)))
+  ;;          (process (get-buffer-process buffer)))
+  ;;     (when (and process
+  ;;                (with-current-buffer buffer
+  ;;                  (python-util-comint-end-of-output-p)))
+  ;;        (python-shell-completion-at-point process))))
 #+end_src
 
 #+RESULTS:
@@ -56,8 +70,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 ** Completion, spell checking, etc
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
-  (use-package lsp-mode
-    :ensure t)
+  ;; (use-package lsp-mode
+  ;;   :ensure t)
 
   (use-package eglot
     :ensure t
@@ -65,6 +79,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (:map eglot-mode-map
 	  ("C-c s" . eglot-find-declaration)))
 
+  (use-package docker
+    :ensure t)
 
   (use-package gptel
     :ensure t)
@@ -160,6 +176,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
       (css "https://github.com/tree-sitter/tree-sitter-css")
       (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+      (docker "https://github.com/camdencheek/tree-sitter-dockerfile")
       (elisp "https://github.com/Wilfred/tree-sitter-elisp")
       (go "https://github.com/tree-sitter/tree-sitter-go")
       (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
@@ -205,36 +222,36 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 **** Python specific customizations and coding
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
-  ;; (use-package pyvenv
-  ;;   :ensure t
-  ;;   :init
-  ;;   (pyvenv-mode t)
-  ;;   (setq pyvenv-env-name "~/python_venv"
-  ;;         python-shell-completion-native-enable nil
-  ;;         python-shell-native-complete nil)
-  ;;   (setq pyvenv-post-activate-hooks
-  ;;         (list (lambda ()
-  ;;                 (setq python-shell-interpreter "~/.venv/bin/python3"))))
-  ;;   (setq pyvenv-post-deactivate-hooks
-  ;;         (list (lambda ()
-  ;;                 (setq python-shell-interpreter "python3")))))
+  (use-package pyvenv
+    :ensure t
+    :init
+    (pyvenv-mode t)
+    (setq pyvenv-env-name "/Users/rplace/src/alldyn/modules/modules"
+	  python-shell-completion-native-enable nil
+	  python-shell-native-complete nil))
+    ;; (setq pyvenv-post-activate-hooks
+    ;;       (list (lambda ()
+    ;;       	(setq python-shell-interpreter "/Users/rplace/src/clarivault/python/clarivault/bin/python"))))
+    ;; (setq pyvenv-post-deactivate-hooks
+    ;;       (list (lambda ()
+    ;;       	(setq python-shell-interpreter "python")))))
 
   (use-package python
-    :ensure nil
-    :mode (("\\.py$" . python-ts-mode))
+    :ensure t
+    :mode (("\\.py$" . python-mode))
     :defer t
     :init
-    (setq ;;python-shell-interpreter "~/python_venv/bin/python3"
-     ;;python-python-command "~/python_venv/bin/python3"
-     indent-tabs-mode nil
-     python-indent-offset 2)
+    (setq indent-tabs-mode nil
+	  python-indent-offset 2)
 
-    (pyvenv-activate "~/.venv")
+    ;; (pyvenv-activate "/Users/rplace/src/clarivault/clarivault")
+
     :hook
-    (python-ts-mode . display-line-numbers-mode)
-    (python-ts-mode . eglot-ensure)
-    (python-ts-mode . company-mode)
-    (python-ts-mode . yas-minor-mode))
+    (python-mode . display-line-numbers-mode)
+    (python-mode . eglot-ensure)
+    (python-mode . company-mode)
+    (python-mode . pyvenv-activate)
+    (python-mode . yas-minor-mode))
 #+end_src
 
 #+RESULTS:
@@ -304,14 +321,8 @@ These hooks are used to allow for code completion in org code blocks. This is no
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   ;;
   ;; Org mode settings
-  ;;
+  ;; https://dalanicolai.github.io/posts/fixing-org-mode-coding-assistance/
   (add-hook 'completion-at-point-functions 'org-completion-at-point nil t)
-  (add-hook 'org-mode-hook (lambda ()
-			     (add-hook 'completion-at-point-functions 'org-completion-at-point t)))
-  (defvar org-completion-functions-alist
-    '(("emacs-lisp" . elisp-completion-at-point)
-      ("python"     . org-python-completion-at-point))
-    "Alist for configuring language completion functions.")
 #+end_src
 
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
@@ -325,12 +336,12 @@ These hooks are used to allow for code completion in org code blocks. This is no
 	  org-hide-leading-stars t
 	  org-startup-indented t
 	  org-hide-emphasis-markers t
+	  org-element-cache-persistent nil
 	  org-src-tab-acts-natively t)
 	  ;; company-backends '(company-dabbrev))
-    :hook
+    :hook 
     (org-mode . flyspell-mode)
     (org-mode . yas-minor-mode)
-    (org-mode . company-mode)
     (org-mode . visual-line-mode)
     :bind (:map org-mode-map
 		("C-c i" . org-id-get-create)))
@@ -410,6 +421,17 @@ These hooks are used to allow for code completion in org code blocks. This is no
 		  (mu4e-sent-folder . "/Alldyn/Sent")
 		  (mu4e-drafts-folder . "/Alldyn/Drafts")
 		  (mu4e-refile-folder . "/Alldyn/All Mail")))
+		(make-mu4e-context
+	  :name "clarivault"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Clarivault" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "robert.place@clarivault.com")
+		  (user-full-name . "Rob Place")
+		  (mu4e-sent-folder . "/clarivault/Sent")
+		  (mu4e-drafts-folder . "/clarivault/Drafts")
+		  (mu4e-refile-folder . "/clarivault/All Mail")))
 	 (make-mu4e-context
 	  :name "icloud"
 	  :match-func
@@ -421,7 +443,6 @@ These hooks are used to allow for code completion in org code blocks. This is no
 #+end_src
 
 #+RESULTS:
-| /opt/homebrew/share/emacs/site-lisp/mu4e | /Users/rplace/.emacs.d/elpa/ac-ispell-20151101.226 | /Users/rplace/.emacs.d/elpa/adaptive-wrap-0.8 | /Users/rplace/.emacs.d/elpa/alect-themes-20211022.1651 | /Users/rplace/.emacs.d/elpa/cider-20240121.2104 | /Users/rplace/.emacs.d/elpa/clojure-mode-20231124.1721 | /Users/rplace/.emacs.d/elpa/company-c-headers-20190825.1631 | /Users/rplace/.emacs.d/elpa/company-irony-20190124.2346 | /Users/rplace/.emacs.d/elpa/company-irony-c-headers-1.0.0 | /Users/rplace/.emacs.d/elpa/company-jedi-20200324.25 | /Users/rplace/.emacs.d/elpa/company-20240107.2310 | /Users/rplace/.emacs.d/elpa/consult-dir-0.1 | /Users/rplace/.emacs.d/elpa/cyberpunk-theme-20240112.1944 | /Users/rplace/.emacs.d/elpa/denote-3.1.0 | /Users/rplace/.emacs.d/elpa/eglot-1.17 | /Users/rplace/.emacs.d/elpa/embark-consult-20240205.2122 | /Users/rplace/.emacs.d/elpa/consult-20240314.642 | /Users/rplace/.emacs.d/elpa/embark-20240221.1649 | /Users/rplace/.emacs.d/elpa/epkg-marginalia-1.0.0 | /Users/rplace/.emacs.d/elpa/epkg-4.0.2 | /Users/rplace/.emacs.d/elpa/closql-2.0.0 | /Users/rplace/.emacs.d/elpa/emacsql-4.0.3 | /Users/rplace/.emacs.d/elpa/expand-region-20240119.1039 | /Users/rplace/.emacs.d/elpa/flycheck-rust-1.1 | /Users/rplace/.emacs.d/elpa/flycheck-20230813.620 | /Users/rplace/.emacs.d/elpa/flyspell-correct-ivy-20220520.630 | /Users/rplace/.emacs.d/elpa/flyspell-correct-20220520.630 | /Users/rplace/.emacs.d/elpa/git-20140128.1041 | /Users/rplace/.emacs.d/elpa/gptel-20240221.811 | /Users/rplace/.emacs.d/elpa/haskell-mode-20240116.1718 | /Users/rplace/.emacs.d/elpa/helm-mu-20230408.2126 | /Users/rplace/.emacs.d/elpa/helm-20240121.728 | /Users/rplace/.emacs.d/elpa/helm-core-20240123.1249 | /Users/rplace/.emacs.d/elpa/highlight-indentation-20210221.1418 | /Users/rplace/.emacs.d/elpa/irony-20231018.1915 | /Users/rplace/.emacs.d/elpa/ivy-20231025.2311 | /Users/rplace/.emacs.d/elpa/jedi-20191011.1750 | /Users/rplace/.emacs.d/elpa/auto-complete-20240101.831 | /Users/rplace/.emacs.d/elpa/jedi-core-20210503.1315 | /Users/rplace/.emacs.d/elpa/epc-20140610.534 | /Users/rplace/.emacs.d/elpa/ctable-20210128.629 | /Users/rplace/.emacs.d/elpa/concurrent-20170601.435 | /Users/rplace/.emacs.d/elpa/jinja2-mode-20220117.807 | /Users/rplace/.emacs.d/elpa/json-mode-20231223.548 | /Users/rplace/.emacs.d/elpa/json-snatcher-20200916.1717 | /Users/rplace/.emacs.d/elpa/jsonrpc-1.0.25 | /Users/rplace/.emacs.d/elpa/llama-0.3.1 | /Users/rplace/.emacs.d/elpa/lsp-mode-9.0.0 | /Users/rplace/.emacs.d/elpa/eldoc-1.15.0 | /Users/rplace/.emacs.d/elpa/lv-0.15.0 | /Users/rplace/.emacs.d/elpa/magit-20240112.2212 | /Users/rplace/.emacs.d/elpa/git-commit-20240123.1358 | /Users/rplace/.emacs.d/elpa/magit-section-20240114.13 | /Users/rplace/.emacs.d/elpa/marginalia-1.7 | /Users/rplace/.emacs.d/elpa/modus-themes-4.5.0 | /Users/rplace/.emacs.d/elpa/mu4e-overview-0.4.1 | /Users/rplace/.emacs.d/elpa/mu4e-views-20230105.1443 | /Users/rplace/.emacs.d/elpa/esxml-20230308.2254 | /Users/rplace/.emacs.d/elpa/kv-20140108.1534 | /Users/rplace/.emacs.d/elpa/mu4easy-1.4 | /Users/rplace/.emacs.d/elpa/mu4e-alert-20230722.1746 | /Users/rplace/.emacs.d/elpa/ht-20230703.558 | /Users/rplace/.emacs.d/elpa/alert-20221213.1619 | /Users/rplace/.emacs.d/elpa/log4e-20240123.1313 | /Users/rplace/.emacs.d/elpa/gntp-20141025.250 | /Users/rplace/.emacs.d/elpa/mu4e-column-faces-20221213.2206 | /Users/rplace/.emacs.d/elpa/ob-cypher-20200521.936 | /Users/rplace/.emacs.d/elpa/dash-functional-20210826.1149 | /Users/rplace/.emacs.d/elpa/cypher-mode-20151110.1142 | /Users/rplace/.emacs.d/elpa/orderless-20240312.1914 | /Users/rplace/.emacs.d/elpa/org-ai-20240103.235 | /Users/rplace/.emacs.d/elpa/org-auto-tangle-0.6.0 | /Users/rplace/.emacs.d/elpa/async-20240108.1526 | /Users/rplace/.emacs.d/elpa/org-bullets-20200317.1740 | /Users/rplace/.emacs.d/elpa/org-mime-0.3.4 | /Users/rplace/.emacs.d/elpa/org-msg-20240116.2218 | /Users/rplace/.emacs.d/elpa/htmlize-20210825.2150 | /Users/rplace/.emacs.d/elpa/org-notebook-20170322.452 | /Users/rplace/.emacs.d/elpa/osx-clipboard-20141012.717 | /Users/rplace/.emacs.d/elpa/package-safe-delete-20150116.1607 | /Users/rplace/.emacs.d/elpa/paredit-20221127.1452 | /Users/rplace/.emacs.d/elpa/parseedn-20231203.1909 | /Users/rplace/.emacs.d/elpa/parseclj-20231203.1905 | /Users/rplace/.emacs.d/elpa/pinentry-0.1 | /Users/rplace/.emacs.d/elpa/pkg-info-20150517.1143 | /Users/rplace/.emacs.d/elpa/epl-20180205.2049 | /Users/rplace/.emacs.d/elpa/popup-20240101.830 | /Users/rplace/.emacs.d/elpa/prescient-20231205.137 | /Users/rplace/.emacs.d/elpa/projectile-20240123.1424 | /Users/rplace/.emacs.d/elpa/pyenv-mode-20230821.1645 | /Users/rplace/.emacs.d/elpa/pylint-20221117.1303 | /Users/rplace/.emacs.d/elpa/python-environment-20150310.853 | /Users/rplace/.emacs.d/elpa/deferred-20170901.1330 | /Users/rplace/.emacs.d/elpa/python-mode-20231218.645 | /Users/rplace/.emacs.d/elpa/pythonic-20230821.1733 | /Users/rplace/.emacs.d/elpa/pyvenv-20211014.707 | /Users/rplace/.emacs.d/elpa/queue-0.2 | /Users/rplace/.emacs.d/elpa/rustic-20230130.912 | /Users/rplace/.emacs.d/elpa/markdown-mode-20240107.831 | /Users/rplace/.emacs.d/elpa/f-20231219.750 | /Users/rplace/.emacs.d/elpa/rust-mode-1.0.6 | /Users/rplace/.emacs.d/elpa/s-20220902.1511 | /Users/rplace/.emacs.d/elpa/sesman-20240115.2143 | /Users/rplace/.emacs.d/elpa/smart-mode-line-20211005.233 | /Users/rplace/.emacs.d/elpa/rich-minority-20190419.1136 | /Users/rplace/.emacs.d/elpa/spinner-1.7.4 | /Users/rplace/.emacs.d/elpa/transient-20240121.2000 | /Users/rplace/.emacs.d/elpa/tree-sitter-langs-0.12.225 | /Users/rplace/.emacs.d/elpa/tree-sitter-0.18.0 | /Users/rplace/.emacs.d/elpa/tsc-0.18.0 | /Users/rplace/.emacs.d/elpa/use-package-ensure-system-package-20221209.2013 | /Users/rplace/.emacs.d/elpa/system-packages-20220409.1023 | /Users/rplace/.emacs.d/elpa/vertico-1.9 | /Users/rplace/.emacs.d/elpa/vterm-20240102.1640 | /Users/rplace/.emacs.d/elpa/websocket-20230809.305 | /Users/rplace/.emacs.d/elpa/wfnames-20230924.1538 | /Users/rplace/.emacs.d/elpa/with-editor-20240101.2226 | /Users/rplace/.emacs.d/elpa/compat-30.0.0.0 | /Users/rplace/.emacs.d/elpa/wrap-region-20140117.720 | /Users/rplace/.emacs.d/elpa/dash-20240103.1301 | /Users/rplace/.emacs.d/elpa/xterm-color-2.0 | /Users/rplace/.emacs.d/elpa/xwidgets-reuse-20231205.1315 | /Users/rplace/.emacs.d/elpa/yaml-mode-20231120.546 | /Users/rplace/.emacs.d/elpa/yasnippet-snippets-1.1 | /Users/rplace/.emacs.d/elpa/yasnippet-0.14.1 | /Library/Application Support/Emacs/29.2/site-lisp | /Library/Application Support/Emacs/site-lisp | /Applications/Emacs.app/Contents/Resources/lisp | /Applications/Emacs.app/Contents/Resources/lisp/vc | /Applications/Emacs.app/Contents/Resources/lisp/use-package | /Applications/Emacs.app/Contents/Resources/lisp/url | /Applications/Emacs.app/Contents/Resources/lisp/textmodes | /Applications/Emacs.app/Contents/Resources/lisp/progmodes | /Applications/Emacs.app/Contents/Resources/lisp/play | /Applications/Emacs.app/Contents/Resources/lisp/org | /Applications/Emacs.app/Contents/Resources/lisp/nxml | /Applications/Emacs.app/Contents/Resources/lisp/net | /Applications/Emacs.app/Contents/Resources/lisp/mh-e | /Applications/Emacs.app/Contents/Resources/lisp/mail | /Applications/Emacs.app/Contents/Resources/lisp/leim | /Applications/Emacs.app/Contents/Resources/lisp/language | /Applications/Emacs.app/Contents/Resources/lisp/international | /Applications/Emacs.app/Contents/Resources/lisp/image | /Applications/Emacs.app/Contents/Resources/lisp/gnus | /Applications/Emacs.app/Contents/Resources/lisp/eshell | /Applications/Emacs.app/Contents/Resources/lisp/erc | /Applications/Emacs.app/Contents/Resources/lisp/emulation | /Applications/Emacs.app/Contents/Resources/lisp/emacs-lisp | /Applications/Emacs.app/Contents/Resources/lisp/cedet | /Applications/Emacs.app/Contents/Resources/lisp/calendar | /Applications/Emacs.app/Contents/Resources/lisp/calc | /Applications/Emacs.app/Contents/Resources/lisp/obsolete |
 
 ** Custom variables
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
@@ -436,11 +457,8 @@ These hooks are used to allow for code completion in org code blocks. This is no
      '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
    '(org-agenda-files
      '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
-   ;; '(package-archives
-   ;;   '(("gnu" . "https://elpa.gnu.org/packages/")
-   ;;     ("melpa-stable" . "https://stable.melpa.org/packages/")))
    '(package-selected-packages
-     '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm  flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+     '(eglot docker docker-compose-mode dockerfile-mode cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
    '(show-trailing-whitespace t))
 
   (custom-set-faces
@@ -448,6 +466,9 @@ These hooks are used to allow for code completion in org code blocks. This is no
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
+   '(eglot-highlight-symbol-face ((t (:inherit bold :background "light green" :foreground "dark blue"))))
+   '(mode-line ((t :background "#8b3626" :foreground "#90ee90" :box "#8b0000")))
+   '(mode-line-inactive ((t :background "#008b8b" :foreground "#969696" :box "#ff34b3")))
    '(org-block ((t (:inherit fixed-pitch))))
    '(org-code ((t (:inherit (shadow fixed-pitch)))))
    '(org-document-info ((t (:foreground "dark orange"))))
@@ -469,10 +490,7 @@ These hooks are used to allow for code completion in org code blocks. This is no
    '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
    '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-   '(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
-   '(eglot-highlight-symbol-face ((t (:inherit bold :background "light green" :foreground "dark blue"))))
-   '(mode-line ((t :background "#8b3626" :foreground "#90ee90" :box "#8b0000")))
-   '(mode-line-inactive ((t :background "#008b8b" :foreground "#969696" :box "#ff34b3"))))
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 #+end_src
 
 #+RESULTS:

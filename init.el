@@ -4,56 +4,72 @@
 ;;; Code:
 (setq max-lisp-eval-depth 2048
       custom-safe-themes t
-      epa-pinentry-mode 'loopback)
+      epa-pinentry-mode 'loopback
+      initial-scratch-message nil)
 
 (require 'package)
 
-(add-to-list 'package-archives
-           '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives
-           '("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages") t)
-(add-to-list 'package-archives
-           '("melpa" . "https://stable.melpa.org/packages/") t)
+(setq rwp/package-archives
+      '(("org" . "http://orgmode.org/elpa/")
+	("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages")
+	("melpa" . "https://stable.melpa.org/packages/")))
+
+(dolist (archive rwp/package-archives)
+  (add-to-list 'package-archives archive t))
+
+;; (add-to-list 'package-archives
+;;            '("org" . "http://orgmode.org/elpa/") t)
+;; (add-to-list 'package-archives
+;;            '("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages") t)
+;; (add-to-list 'package-archives
+;;            '("melpa" . "https://stable.melpa.org/packages/") t)
 
 (recentf-mode) ;; keep track of recently opened files, useful for consult
 (global-visual-line-mode)
 ;; General configuration:1 ends here
 
 ;; [[file:init.org::*Custom functions][Custom functions:1]]
-(setq 'this is a functio
 (defun org-completion-at-point ()
-  (let* ((element (org-element-at-point))
-         (lang (org-element-property :language element)))
-    (when-let (fn (alist-get lang org-completion-functions-alist
-                             nil nil #'string=))
-      (funcall fn))))
+(let ((element (org-element-at-point)))
+  (when (member (org-element-property :language element)
+                '("emacs-lisp" "elisp"))
+    (funcall #'elisp-completion-at-point))))
 
 ;; (defvar org-completion-functions-alist
 ;;   '(("emacs-lisp" . elisp-completion-at-point)
-;;     ("python"     . org-python-completion-at-point))
-;;   "Alist for configuring language completion functions.")
-(defun org-python-completion-at-point ()
-  "For org-mode modified version of `python-completion-at-point'."
-  (let* ((info (org-babel-get-src-block-info))
-         (session (alist-get :session (nth 2 info)))
-         (buffer (get-buffer (org-babel-python-with-earmuffs session)))
-         (process (get-buffer-process buffer)))
-    (when (and process
-               (with-current-buffer buffer
-                 (python-util-comint-end-of-output-p)))
-      (python-shell-completion-at-point process))))
+;;     ("python"     . org-python-completion-at-point)))
+
+;; (defun org-completion-at-point ()
+;;   (let* ((element (org-element-at-point))
+;;          (lang (org-element-property :language element)))
+;;     (when-let (fn (alist-get lang org-completion-functions-alist
+;;                              nil nil #'string=))
+;;       (funcall fn))))
+
+;; (defun org-python-completion-at-point ()
+;;   "For org-mode modified version of `python-completion-at-point'."
+;;   (let* ((info (org-babel-get-src-block-info))
+;;          (session (alist-get :session (nth 2 info)))
+;;          (buffer (get-buffer (org-babel-python-with-earmuffs session)))
+;;          (process (get-buffer-process buffer)))
+;;     (when (and process
+;;                (with-current-buffer buffer
+;;                  (python-util-comint-end-of-output-p)))
+;;        (python-shell-completion-at-point process))))
 ;; Custom functions:1 ends here
 
 ;; [[file:init.org::*Completion, spell checking, etc][Completion, spell checking, etc:1]]
-(use-package lsp-mode
-  :ensure t)
+;; (use-package lsp-mode
+;;   :ensure t)
 
 (use-package eglot
   :ensure t
   :bind
   (:map eglot-mode-map
-        ("C-c s" . eglot-find-declaration)))
+	("C-c s" . eglot-find-declaration)))
 
+(use-package docker
+  :ensure t)
 
 (use-package gptel
   :ensure t)
@@ -73,14 +89,14 @@
   (setq ispell-extra-args '(":--sug-mode=ultra"))
   :bind
   (:map flyspell-mode-map
-        ("C-;" . flyspell-correct-wrapper)))
+	("C-;" . flyspell-correct-wrapper)))
 
 (use-package flyspell-correct-ivy
   :ensure t
   :after flyspell
   :bind
   (:map flyspell-mode-map
-        ("C-;" . flyspell-correct-wrapper)))
+	("C-;" . flyspell-correct-wrapper)))
 
 (use-package consult
   :ensure t
@@ -118,7 +134,7 @@
   (after-init . global-company-mode)
   :bind
   (:map company-active-map
-        ("<tab>" . company-completion-selection))
+	("<tab>" . company-completion-selection))
   :config
   (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
   (setq company-tooltip-align-annotations t)  ; Align annotations to the right
@@ -142,6 +158,7 @@
     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
     (css "https://github.com/tree-sitter/tree-sitter-css")
     (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+    (docker "https://github.com/camdencheek/tree-sitter-dockerfile")
     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
     (go "https://github.com/tree-sitter/tree-sitter-go")
     (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
@@ -179,41 +196,41 @@
   :mode (("\\.org$" . org-mode))
   :init
   (setq display-line-numbers-mode nil
-        yas-minor-mode nil
-        rustic-lsp-client 'eglot))
+	yas-minor-mode nil
+	rustic-lsp-client 'eglot))
 ;; Packages for programming language support:1 ends here
 
 ;; [[file:init.org::*Python specific customizations and coding][Python specific customizations and coding:1]]
-;; (use-package pyvenv
-;;   :ensure t
-;;   :init
-;;   (pyvenv-mode t)
-;;   (setq pyvenv-env-name "~/python_venv"
-;;         python-shell-completion-native-enable nil
-;;         python-shell-native-complete nil)
-;;   (setq pyvenv-post-activate-hooks
-;;         (list (lambda ()
-;;                 (setq python-shell-interpreter "~/.venv/bin/python3"))))
-;;   (setq pyvenv-post-deactivate-hooks
-;;         (list (lambda ()
-;;                 (setq python-shell-interpreter "python3")))))
+(use-package pyvenv
+  :ensure t
+  :init
+  (pyvenv-mode t)
+  (setq pyvenv-env-name "/Users/rplace/src/alldyn/modules/modules"
+	python-shell-completion-native-enable nil
+	python-shell-native-complete nil))
+  ;; (setq pyvenv-post-activate-hooks
+  ;;       (list (lambda ()
+  ;;       	(setq python-shell-interpreter "/Users/rplace/src/clarivault/python/clarivault/bin/python"))))
+  ;; (setq pyvenv-post-deactivate-hooks
+  ;;       (list (lambda ()
+  ;;       	(setq python-shell-interpreter "python")))))
 
 (use-package python
-  :ensure nil
-  :mode (("\\.py$" . python-ts-mode))
+  :ensure t
+  :mode (("\\.py$" . python-mode))
   :defer t
   :init
-  (setq ;;python-shell-interpreter "~/python_venv/bin/python3"
-   ;;python-python-command "~/python_venv/bin/python3"
-   indent-tabs-mode nil
-   python-indent-offset 2)
+  (setq indent-tabs-mode nil
+        python-indent-offset 2)
 
-  (pyvenv-activate "~/.venv")
+  ;; (pyvenv-activate "/Users/rplace/src/clarivault/clarivault")
+  
   :hook
-  (python-ts-mode . display-line-numbers-mode)
-  (python-ts-mode . eglot-ensure)
-  (python-ts-mode . company-mode)
-  (python-ts-mode . yas-minor-mode))
+  (python-mode . display-line-numbers-mode)
+  (python-mode . eglot-ensure)
+  (python-mode . company-mode)
+  (python-mode . pyvenv-activate)
+  (python-mode . yas-minor-mode))
 ;; Python specific customizations and coding:1 ends here
 
 ;; [[file:init.org::*magit config][magit config:1]]
@@ -236,12 +253,12 @@
 (use-package yasnippet
   :init
   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                           "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets"))
+			   "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets"))
   (yas-global-mode)
 
   :bind
   (:map yas-minor-mode-map
-        ("C-c x" . yas-expand))) ;; This is to work around conflict of key bindings with company
+	("C-c x" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
 (use-package yasnippet-snippets
   :ensure t)
@@ -268,14 +285,8 @@
 ;; [[file:init.org::*Org mode customizations][Org mode customizations:1]]
 ;;
 ;; Org mode settings
-;;
+;; https://dalanicolai.github.io/posts/fixing-org-mode-coding-assistance/
 (add-hook 'completion-at-point-functions 'org-completion-at-point nil t)
-(add-hook 'org-mode-hook (lambda ()
-                           (add-hook 'completion-at-point-functions 'org-completion-at-point t)))
-(defvar org-completion-functions-alist
-  '(("emacs-lisp" . elisp-completion-at-point)
-    ("python"     . org-python-completion-at-point))
-  "Alist for configuring language completion functions.")
 ;; Org mode customizations:1 ends here
 
 ;; [[file:init.org::*Org mode customizations][Org mode customizations:2]]
@@ -286,18 +297,18 @@
   :mode (("\\.org$" . org-mode))
   :init
   (setq org-log-done 'time
-        org-hide-leading-stars t
-        org-startup-indented t
-        org-hide-emphasis-markers t
-        org-src-tab-acts-natively t)
-        ;; company-backends '(company-dabbrev))
-  :hook
+	org-hide-leading-stars t
+	org-startup-indented t
+	org-hide-emphasis-markers t
+	org-element-cache-persistent nil
+	org-src-tab-acts-natively t)
+	;; company-backends '(company-dabbrev))
+  :hook 
   (org-mode . flyspell-mode)
   (org-mode . yas-minor-mode)
-  (org-mode . company-mode)
   (org-mode . visual-line-mode)
   :bind (:map org-mode-map
-              ("C-c i" . org-id-get-create)))
+	      ("C-c i" . org-id-get-create)))
 
   (use-package org-bullets
   :hook
@@ -315,8 +326,8 @@
 
 
 (font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+			'(("^ *\\([-]\\) "
+			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 ;; Org mode customizations:2 ends here
 
 ;; [[file:init.org::*Email config and customization][Email config and customization:1]]
@@ -350,35 +361,46 @@
 (setq mu4e-contexts
       (list
        (make-mu4e-context
-        :name "gmail-rwplace"
-        :match-func
-        (lambda (msg)
-          (when msg
-            (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
-        :vars '((user-mail-address . "rwplace@gmail.com")
-                (user-full-name . "Rob Place")
-                (mu4e-sent-folder . "/Gmail/Sent")
-                (mu4e-drafts-folder . "/Gmail/Drafts")
-                (mu4e-refile-folder . "/Gmail/All Mail")))
+	:name "gmail-rwplace"
+	:match-func
+	(lambda (msg)
+	  (when msg
+	    (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	:vars '((user-mail-address . "rwplace@gmail.com")
+		(user-full-name . "Rob Place")
+		(mu4e-sent-folder . "/Gmail/Sent")
+		(mu4e-drafts-folder . "/Gmail/Drafts")
+		(mu4e-refile-folder . "/Gmail/All Mail")))
        (make-mu4e-context
-        :name "alldyn"
-        :match-func
-        (lambda (msg)
-          (when msg
-            (string-prefix-p "/Alldyn" (mu4e-message-field msg :maildir))))
-        :vars '((user-mail-address . "robert.place@alldyn.com")
-                (user-full-name . "Rob Place")
-                (mu4e-sent-folder . "/Alldyn/Sent")
-                (mu4e-drafts-folder . "/Alldyn/Drafts")
-                (mu4e-refile-folder . "/Alldyn/All Mail")))
+	:name "alldyn"
+	:match-func
+	(lambda (msg)
+	  (when msg
+	    (string-prefix-p "/Alldyn" (mu4e-message-field msg :maildir))))
+	:vars '((user-mail-address . "robert.place@alldyn.com")
+		(user-full-name . "Rob Place")
+		(mu4e-sent-folder . "/Alldyn/Sent")
+		(mu4e-drafts-folder . "/Alldyn/Drafts")
+		(mu4e-refile-folder . "/Alldyn/All Mail")))
+              (make-mu4e-context
+	:name "clarivault"
+	:match-func
+	(lambda (msg)
+	  (when msg
+	    (string-prefix-p "/Clarivault" (mu4e-message-field msg :maildir))))
+	:vars '((user-mail-address . "robert.place@clarivault.com")
+		(user-full-name . "Rob Place")
+		(mu4e-sent-folder . "/clarivault/Sent")
+		(mu4e-drafts-folder . "/clarivault/Drafts")
+		(mu4e-refile-folder . "/clarivault/All Mail")))
        (make-mu4e-context
-        :name "icloud"
-        :match-func
-        (lambda (msg)
-          (when msg
-            (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
-        :vars '((user-mail-address . "rwplace@mac.com")
-                (user-full-name . "Rob Place")))))
+	:name "icloud"
+	:match-func
+	(lambda (msg)
+	  (when msg
+	    (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
+	:vars '((user-mail-address . "rwplace@mac.com")
+		(user-full-name . "Rob Place")))))
 ;; Email config and customization:1 ends here
 
 ;; [[file:init.org::*Custom variables][Custom variables:1]]
@@ -393,11 +415,8 @@
    '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
  '(org-agenda-files
    '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
- ;; '(package-archives
- ;;   '(("gnu" . "https://elpa.gnu.org/packages/")
- ;;     ("melpa-stable" . "https://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm  flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+   '(eglot docker docker-compose-mode dockerfile-mode cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
 
 (custom-set-faces
@@ -405,6 +424,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(eglot-highlight-symbol-face ((t (:inherit bold :background "light green" :foreground "dark blue"))))
+ '(mode-line ((t :background "#8b3626" :foreground "#90ee90" :box "#8b0000")))
+ '(mode-line-inactive ((t :background "#008b8b" :foreground "#969696" :box "#ff34b3")))
  '(org-block ((t (:inherit fixed-pitch))))
  '(org-code ((t (:inherit (shadow fixed-pitch)))))
  '(org-document-info ((t (:foreground "dark orange"))))
@@ -426,10 +448,7 @@
  '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
  '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
  '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
- '(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
- '(eglot-highlight-symbol-face ((t (:inherit bold :background "light green" :foreground "dark blue"))))
- '(mode-line ((t :background "#8b3626" :foreground "#90ee90" :box "#8b0000")))
- '(mode-line-inactive ((t :background "#008b8b" :foreground "#969696" :box "#ff34b3"))))
+ '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 ;; Custom variables:1 ends here
 
 ;; [[file:init.org::*Org-mode bits to allow for variable pitch fonts][Org-mode bits to allow for variable pitch fonts:1]]
@@ -438,15 +457,15 @@
 
 (when window-system
   (let* ((variable-tuple
-          (cond ;;((x-list-fonts "ETBembo")         '(:font "ETBembo"))
-                ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
-                ;;((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-                ((x-list-fonts "Verdana")         '(:font "Verdana"))
-                ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-                (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-         (base-font-color     (face-foreground 'default nil 'default))
-         (headline
-          `(:inherit default :weight bold :foreground ,base-font-color))) ;
+	  (cond ;;((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+		((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+		;;((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+		((x-list-fonts "Verdana")         '(:font "Verdana"))
+		((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+		(nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+	 (base-font-color     (face-foreground 'default nil 'default))
+	 (headline
+	  `(:inherit default :weight bold :foreground ,base-font-color))) ;
 ;; Org-mode bits to allow for variable pitch fonts:1 ends here
 
 ;; [[file:init.org::*Here we set the customizations for the various headline levels in org-mode. We also set the areas where we still want fixed width fonts like tables and code blocks.][Here we set the customizations for the various headline levels in org-mode. We also set the areas where we still want fixed width fonts like tables and code blocks.:1]]
@@ -502,7 +521,7 @@
 
 (with-eval-after-load 'eglot
 (add-to-list 'eglot-server-programs
-             '(c-mode . ("clangd"))))
+	     '(c-mode . ("clangd"))))
 
 
 ;;(add-hook 'newsticker-start-hook
@@ -527,19 +546,19 @@ Shamelessly borrowed from Bryan Oakley."
   (interactive)
   (if window-system
       (progn
-        ;; use 120 char wide window for largeish displays
-        ;; and smaller 80 column windows for smaller displays
-        ;; pick whatever numbers make sense for you
-        (if (> (x-display-pixel-width) 1280)
-            (add-to-list 'default-frame-alist (cons 'width 220))
-          (add-to-list 'default-frame-alist (cons 'width 80)))
-        ;; for the height, subtract a couple hundred pixels
-        ;; from the screen height (for panels, menubars and
-        ;; whatnot), then divide by the height of a char to
-        ;; get the height we want
-        (add-to-list 'default-frame-alist
-                     (cons 'height (/ (- (x-display-pixel-height) 200)
-                                      (frame-char-height)))))))
+	;; use 120 char wide window for largeish displays
+	;; and smaller 80 column windows for smaller displays
+	;; pick whatever numbers make sense for you
+	(if (> (x-display-pixel-width) 1280)
+	    (add-to-list 'default-frame-alist (cons 'width 220))
+	  (add-to-list 'default-frame-alist (cons 'width 80)))
+	;; for the height, subtract a couple hundred pixels
+	;; from the screen height (for panels, menubars and
+	;; whatnot), then divide by the height of a char to
+	;; get the height we want
+	(add-to-list 'default-frame-alist
+		     (cons 'height (/ (- (x-display-pixel-height) 200)
+				      (frame-char-height)))))))
 
 (set-frame-size-according-to-resolution)
 ;; Display configuration:1 ends here
@@ -565,9 +584,9 @@ Shamelessly borrowed from Bryan Oakley."
 ;; Key binding to split the window horizontally and automatically
 ;; turn on follow-mode to handle long files
 (global-set-key (kbd "C-x C-t") (lambda ()
-                                  (interactive)
-                                  (split-window-horizontally)
-                                  (follow-mode)))
+				  (interactive)
+				  (split-window-horizontally)
+				  (follow-mode)))
 
 ;; Allow for directionally selecting visible buffers
 (global-set-key (kbd "C-c <left>") 'windmove-left)
@@ -581,22 +600,22 @@ Shamelessly borrowed from Bryan Oakley."
 (setq windmove-wrap-around t)
 (setq display-buffer-alist nil)
 (setq display-buffer-alist '(
-                             ("\\*Occur\\*"
-                              (display-buffer-in-side-window)
-                              (display-buffer-reuse-mode-window
-                               display-buffer-below-selected)
-                              (window-height . fit-window-to-buffer)
-                              (dedicated . t)
-                              (side . right))
+			     ("\\*Occur\\*"
+			      (display-buffer-in-side-window)
+			      (display-buffer-reuse-mode-window
+			       display-buffer-below-selected)
+			      (window-height . fit-window-to-buffer)
+			      (dedicated . t)
+			      (side . right))
 
-                             ("\\*Python\\*"
-                              (display-buffer-in-side-window)
-                              (display-buffer-reuse-mode-window
-                               display-buffer-below-selected)
-                              (window-height . fit-window-to-buffer)
-                              (dedicated . t)
-                              (side . right))
-                             ))
+			     ("\\*Python\\*"
+			      (display-buffer-in-side-window)
+			      (display-buffer-reuse-mode-window
+			       display-buffer-below-selected)
+			      (window-height . fit-window-to-buffer)
+			      (dedicated . t)
+			      (side . right))
+			     ))
 (setq switch-to-buffer-in-dedicated-window 'pop)
 (setq switch-to-buffer-obey-display-actions t)
 ;; Buffer customizations:1 ends here
