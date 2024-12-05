@@ -12,10 +12,55 @@
 (setq rwp/package-archives
       '(("org" . "http://orgmode.org/elpa/")
 	("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages")
-	("melpa" . "https://stable.melpa.org/packages/")))
+        ("melpa-experimental" . "https://melpa.org/packages/")
+	("melpa-stable" . "https://stable.melpa.org/packages/")))
+
 
 (dolist (archive rwp/package-archives)
   (add-to-list 'package-archives archive t))
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(use-package copilot
+  :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
+  :ensure t
+  :bind ("C-x <return>" . copilot-accept-completion))
+
+(require 'copilot)
+
+;; (use-package copilot-chat
+;;   :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
+;;   :after (request)
+;;   :ensure t)
+
+(use-package copilot-chat
+  :init
+  ;; (setq copilot-chat-server "http://127.0.0.1:8080"
+  (setq copilot-chat-front-end "markdown")
+  
+  :ensure t)
+
+(defun copilot-chat-review ()
+  "Review the current region or buffer with Copilot."
+  (interactive)
+  (let ((start (if (use-region-p) (region-beginning) (point-min)))
+        (end (if (use-region-p) (region-end) (point-max))))
+    (copilot-chat--ask "Review this code:" (buffer-substring-no-properties start end))))
+
 
 ;; (add-to-list 'package-archives
 ;;            '("org" . "http://orgmode.org/elpa/") t)
@@ -411,6 +456,7 @@
  ;; If there is more than one, they won't work right.
  '(ac-ispell-fuzzy-limit 4)
  '(ac-ispell-requires 4)
+ '(copilot-chat-model "claude-3.5-sonnet")
  '(custom-safe-themes
    '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
  '(org-agenda-files
@@ -639,3 +685,80 @@ Shamelessly borrowed from Bryan Oakley."
 ;; [[file:init.org::*System specific configurations][System specific configurations:2]]
 ;;; init.el ends here
 ;; System specific configurations:2 ends here
+
+
+;; (defun copilot-complete ()
+;;   (interactive)
+;;   (let* ((spot (point))
+;;          (inhibit-quit t)
+;;          (curfile (buffer-file-name))
+;;          (cash (concat curfile ".cache"))
+;;          (hist (concat curfile ".prompt"))
+;;          (lang (file-name-extension curfile))
+
+;;          ;; extract current line, to left of caret
+;;          ;; and the previous line, to give the llm
+;;          (code (save-excursion
+;;                  (dotimes (i 2)
+;;                    (when (> (line-number-at-pos) 1)
+;;                      (previous-line)))
+;;                  (beginning-of-line)
+;;                  (buffer-substring-no-properties (point) spot)))
+
+;;          ;; create new prompt for this interaction
+;;          (system "\
+;; You are an Emacs code generator. \
+;; Writing comments is forbidden. \
+;; Writing test code is forbidden. \
+;; Writing English explanations is forbidden. ")
+;;          (prompt (format
+;;                   "[INST]%sGenerate %s code to complete:[/INST]\n```%s\n%s"
+;;                   (if (file-exists-p cash) "" system) lang lang code)))
+
+;;     ;; iterate text deleted within editor then purge it from prompt
+;;     (when kill-ring
+;;       (save-current-buffer
+;;         (find-file hist)
+;;         (dotimes (i 10)
+;;           (let ((substring (current-kill i t)))
+;;             (when (and substring (string-match-p "\n.*\n" substring))
+;;               (goto-char (point-min))
+;;               (while (search-forward substring nil t)
+;;                 (delete-region (- (point) (length substring)) (point))))))
+;;         (save-buffer 0)
+;;         (kill-buffer (current-buffer))))
+
+;;     ;; append prompt for current interaction to the big old prompt
+;;     (write-region prompt nil hist 'append 'silent)
+
+;;     ;; run llamafile streaming stdout into buffer catching ctrl-g
+;;     (with-local-quit
+;;       (call-process "/usr/local/bin/ape"
+;;                     nil (list (current-buffer) nil) t
+;;                     "--prompt-cache" cash
+;;                     "--prompt-cache-all"
+;;                     "--silent-prompt"
+;;                     "--temp" "0"
+;;                     "-c" "1024"
+;;                     "-ngl" "35"
+;;                     "-r" "```"
+;;                     "-r" "\n}"
+;;                     "-f" hist
+;;                     "/usr/local/bin/wizardcoder-python-34b-v1.0.Q3_K_M.llamafile"))
+
+;;     ;; get rid of most markdown syntax
+;;     (let ((end (point)))
+;;       (save-excursion
+;;         (goto-char spot)
+;;         (while (search-forward "\\_" end t)
+;;           (backward-char)
+;;           (delete-backward-char 1 nil)
+;;           (setq end (- end 1)))
+;;         (goto-char spot)
+;;         (while (search-forward "```" end t)
+;;           (delete-backward-char 3 nil)
+;;           (setq end (- end 3))))
+
+;;       ;; append generated code to prompt
+;;       (write-region spot end hist 'append 'silent))))
+
