@@ -427,7 +427,6 @@
 		(mu4e-sent-folder . "/Alldyn/Sent")
 		(mu4e-drafts-folder . "/Alldyn/Drafts")
 		(mu4e-refile-folder . "/Alldyn/All Mail")))
-              (make-mu4e-context
        (make-mu4e-context
 	:name "icloud"
 	:match-func
