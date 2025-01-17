@@ -265,6 +265,7 @@
   :mode (("\\.py$" . python-mode))
   :defer t
   :init
+  (python-mode)
   (setq indent-tabs-mode nil
         python-indent-offset 2)
 
@@ -274,7 +275,6 @@
   (python-mode . display-line-numbers-mode)
   (python-mode . eglot-ensure)
   (python-mode . company-mode)
-  (python-mode . pyvenv-activate)
   (python-mode . yas-minor-mode))
 ;; Python specific customizations and coding:1 ends here
 
@@ -392,9 +392,9 @@
       mu4e-use-fancy-chars t
       mu4e-change-filenames-when-moving t
       mu4e-get-mail-command "mbsync --all"
-      ;;mu4e-update-interval 300
-      ;;mu4e-index-cleanup nil
-      ;;mu4e-index-lazy-check t
+      mu4e-update-interval 100
+      mu4e-index-cleanup nil
+      mu4e-index-lazy-check t
       mu4e-index-update-error-warning nil
       )
 
@@ -428,16 +428,6 @@
 		(mu4e-drafts-folder . "/Alldyn/Drafts")
 		(mu4e-refile-folder . "/Alldyn/All Mail")))
               (make-mu4e-context
-	:name "clarivault"
-	:match-func
-	(lambda (msg)
-	  (when msg
-	    (string-prefix-p "/Clarivault" (mu4e-message-field msg :maildir))))
-	:vars '((user-mail-address . "robert.place@clarivault.com")
-		(user-full-name . "Rob Place")
-		(mu4e-sent-folder . "/clarivault/Sent")
-		(mu4e-drafts-folder . "/clarivault/Drafts")
-		(mu4e-refile-folder . "/clarivault/All Mail")))
        (make-mu4e-context
 	:name "icloud"
 	:match-func
