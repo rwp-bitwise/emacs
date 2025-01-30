@@ -61,14 +61,6 @@
         (end (if (use-region-p) (region-end) (point-max))))
     (copilot-chat--ask "Review this code:" (buffer-substring-no-properties start end))))
 
-
-;; (add-to-list 'package-archives
-;;            '("org" . "http://orgmode.org/elpa/") t)
-;; (add-to-list 'package-archives
-;;            '("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages") t)
-;; (add-to-list 'package-archives
-;;            '("melpa" . "https://stable.melpa.org/packages/") t)
-
 (recentf-mode) ;; keep track of recently opened files, useful for consult
 (global-visual-line-mode)
 ;; General configuration:1 ends here
@@ -103,7 +95,7 @@
 ;;        (python-shell-completion-at-point process))))
 ;; Custom functions:1 ends here
 
-;; [[file:init.org::*Completion, spell checking, etc][Completion, spell checking, etc:1]]
+[[file:init.org::*Completion, spell checking, etc][Completion, spell checking, etc:1]]
 ;; (use-package lsp-mode
 ;;   :ensure t)
 
@@ -117,7 +109,14 @@
   :ensure t)
 
 (use-package gptel
-  :ensure t)
+    :ensure t
+    :config
+    (setq model "gpt-4-turbo-preview"))
+;; (gptel-make-gpt4all "GPT4All"           ;Name of your choosing
+;;   :protocol "http"
+;;  :host "localhost:4891"                 ;Where it's running
+
+ ;; :models '("mistral-7b-openorca.Q4_0.gguf")) ;Available models
 
 (use-package use-package-ensure-system-package
   :ensure t)

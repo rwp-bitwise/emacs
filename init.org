@@ -68,14 +68,6 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 	  (end (if (use-region-p) (region-end) (point-max))))
       (copilot-chat--ask "Review this code:" (buffer-substring-no-properties start end))))
 
-
-  ;; (add-to-list 'package-archives
-  ;;            '("org" . "http://orgmode.org/elpa/") t)
-  ;; (add-to-list 'package-archives
-  ;;            '("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages") t)
-  ;; (add-to-list 'package-archives
-  ;;            '("melpa" . "https://stable.melpa.org/packages/") t)
-
   (recentf-mode) ;; keep track of recently opened files, useful for consult
   (global-visual-line-mode)
 #+end_src
