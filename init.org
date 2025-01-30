@@ -1,47 +1,124 @@
 * Package installation and management
-** General configuration
-python, virtualenv, libtool, libtool-bin, and cmake all need to be present on your system for this to work wih all of the packages listed here. 
+** General things worth mentioning when using this configuration
+If you want to be able to make changes directly in the init.el and have them loaded back into this org file you need to make sure that every source block "begin_src" contains the ':comment link' section along with the ':tangle init.el' section. This will ensue the correct tags are added to the comments in the lisp.el config so you can run org-babel-detangle to update the org file.
 
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes #+auto_tangle: t
+** General configuration
+python, virtualenv, libtool, libtool-bin, and cmake all need to be present on your system for this to work with all of the packages listed here. You will also need to have the following in your init.el file:
+
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   ;;; package init.el --- emacs init and config
 
   ;;; Code:
-
   (setq max-lisp-eval-depth 2048
-        custom-safe-themes t
-        epa-pinentry-mode 'loopback)
+	custom-safe-themes t
+	epa-pinentry-mode 'loopback
+	initial-scratch-message nil)
 
   (require 'package)
-  (setq package-archives
-        '(("gnu" . "http://elpa.gnu.org/packages/")
-          ("melpa" . "http://melpa.org/packages/")))
+
+  (setq rwp/package-archives
+	'(("org" . "http://orgmode.org/elpa/")
+	  ("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages")
+	  ("melpa-experimental" . "https://melpa.org/packages/")
+	  ("melpa-stable" . "https://stable.melpa.org/packages/")))
+
+
+  (dolist (archive rwp/package-archives)
+    (add-to-list 'package-archives archive t))
+
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name
+	  "straight/repos/straight.el/bootstrap.el"
+	  (or (bound-and-true-p straight-base-dir)
+	      user-emacs-directory)))
+	(bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+
+  (use-package copilot
+    :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
+    :ensure t
+    :bind ("C-x <return>" . copilot-accept-completion))
+
+  (require 'copilot)
+
+  ;; (use-package copilot-chat
+  ;;   :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
+  ;;   :after (request)
+  ;;   :ensure t)
+
+  (use-package copilot-chat
+    :init
+    ;; (setq copilot-chat-server "http://127.0.0.1:8080"
+    (setq copilot-chat-front-end "markdown")
+
+    :ensure t)
+
+  (defun copilot-chat-review ()
+    "Review the current region or buffer with Copilot."
+    (interactive)
+    (let ((start (if (use-region-p) (region-beginning) (point-min)))
+	  (end (if (use-region-p) (region-end) (point-max))))
+      (copilot-chat--ask "Review this code:" (buffer-substring-no-properties start end))))
 
   (recentf-mode) ;; keep track of recently opened files, useful for consult
   (global-visual-line-mode)
+#+end_src
 
+** Custom functions
+#+begin_src emacs-lisp :tangle "init.el" :comments link
+  (defun org-completion-at-point ()
+  (let ((element (org-element-at-point)))
+    (when (member (org-element-property :language element)
+		  '("emacs-lisp" "elisp"))
+      (funcall #'elisp-completion-at-point))))
+
+  ;; (defvar org-completion-functions-alist
+  ;;   '(("emacs-lisp" . elisp-completion-at-point)
+  ;;     ("python"     . org-python-completion-at-point)))
+
+  ;; (defun org-completion-at-point ()
+  ;;   (let* ((element (org-element-at-point))
+  ;;          (lang (org-element-property :language element)))
+  ;;     (when-let (fn (alist-get lang org-completion-functions-alist
+  ;;                              nil nil #'string=))
+  ;;       (funcall fn))))
+
+  ;; (defun org-python-completion-at-point ()
+  ;;   "For org-mode modified version of `python-completion-at-point'."
+  ;;   (let* ((info (org-babel-get-src-block-info))
+  ;;          (session (alist-get :session (nth 2 info)))
+  ;;          (buffer (get-buffer (org-babel-python-with-earmuffs session)))
+  ;;          (process (get-buffer-process buffer)))
+  ;;     (when (and process
+  ;;                (with-current-buffer buffer
+  ;;                  (python-util-comint-end-of-output-p)))
+  ;;        (python-shell-completion-at-point process))))
 #+end_src
 
 #+RESULTS:
-#+begin_example
-
-#+end_example
-
-** Custom functions
-#+begin_src emacs-lisp
-
-#+end_src
+: org-completion-at-point
 
 ** Completion, spell checking, etc
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (use-package lsp-mode
-    :ensure t)
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
+  ;; (use-package lsp-mode
+  ;;   :ensure t)
 
   (use-package eglot
     :ensure t
     :bind
     (:map eglot-mode-map
-          ("C-c s" . eglot-find-declaration)))
+	  ("C-c s" . eglot-find-declaration)))
 
+  (use-package docker
+    :ensure t)
 
   (use-package gptel
     :ensure t)
@@ -61,14 +138,14 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (setq ispell-extra-args '(":--sug-mode=ultra"))
     :bind
     (:map flyspell-mode-map
-          ("C-;" . flyspell-correct-wrapper)))
+	  ("C-;" . flyspell-correct-wrapper)))
 
   (use-package flyspell-correct-ivy
     :ensure t
     :after flyspell
     :bind
     (:map flyspell-mode-map
-          ("C-;" . flyspell-correct-wrapper)))
+	  ("C-;" . flyspell-correct-wrapper)))
 
   (use-package consult
     :ensure t
@@ -97,31 +174,29 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
   (use-package s
     :ensure t)
-
 #+end_src
 
 **** Company mode and jedi for auto completion
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (use-package company
     :ensure t
     :hook
     (after-init . global-company-mode)
     :bind
     (:map company-active-map
-          ("<tab>" . company-completion-selection))
+	  ("<tab>" . company-completion-selection))
     :config
-    (setq company-minimum-prefix-length 1)  ; Set this to adjust the minimum prefix length triggering auto-completion
+    (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
     (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-    (setq company-idle-delay 0.1))  ; Adjust this to control the delay before showing suggestions
+    (setq company-idle-delay 0.2))  ; Adjust this to control the delay before showing suggestions
 
-  (add-hook 'eglot-managed-mode-hook (lambda ()
-                                     (add-to-list 'company-backends
-                                                  '(company-capf :with company-yasnippet))))
+  ;; (add-hook 'eglot-managed-mode-hook (lambda ()
+  ;;                                    (add-to-list 'company-backends
+  ;;                                                 '(company-capf :with company-yasnippet))))
   (use-package company-jedi
     :ensure t
     :config
     (add-to-list 'company-backends 'company-jedi))
-
 #+end_src
 
 #+RESULTS:
@@ -130,8 +205,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 #+RESULTS:
 
 *** Packages for programming language support  
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-    (setq treesit-language-source-alist
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
+  (setq treesit-language-source-alist
     '((bash "https://github.com/tree-sitter/tree-sitter-bash")
       (c "https://github.com/tree-sitter/tree-sitter-c")
       (cmake "https://github.com/uyha/tree-sitter-cmake")
@@ -139,6 +214,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
       (css "https://github.com/tree-sitter/tree-sitter-css")
       (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+      (docker "https://github.com/camdencheek/tree-sitter-dockerfile")
       (elisp "https://github.com/Wilfred/tree-sitter-elisp")
       (go "https://github.com/tree-sitter/tree-sitter-go")
       (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
@@ -156,14 +232,14 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
       (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
       (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-    ;; (use-package jedi
-    ;;   :ensure t
-    ;;   :config
-    ;;   (setq jedi:complete-on-dot t)
-    ;;   (add-hook 'python-mode-hook 'jedi:setup))
+    (use-package jedi
+      :ensure t
+      :config
+      (setq jedi:complete-on-dot t)
+      (add-hook 'python-mode-hook 'jedi:setup))
 
-    ;; (use-package flycheck-rust
-    ;;   :ensure t)
+    (use-package flycheck-rust
+      :ensure t)
 
     (use-package cc-mode
       :ensure t
@@ -176,53 +252,51 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :mode (("\\.org$" . org-mode))
     :init
     (setq display-line-numbers-mode nil
-          yas-minor-mode nil
-          rustic-lsp-client 'eglot))
-
+	  yas-minor-mode nil
+	  rustic-lsp-client 'eglot))
 #+end_src
 
 #+RESULTS:
 
 **** Python specific customizations and coding
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (use-package pyvenv
     :ensure t
     :init
     (pyvenv-mode t)
-    (setq pyvenv-env-name "~/python_venv"
-          python-shell-completion-native-enable nil
-          python-shell-native-complete nil)
-    (setq pyvenv-post-activate-hooks
-          (list (lambda ()
-                  (setq python-shell-interpreter "~/.venv/bin/python3"))))
-    (setq pyvenv-post-deactivate-hooks
-          (list (lambda ()
-                  (setq python-shell-interpreter "python3")))))
+    (setq pyvenv-env-name "/Users/rplace/src/alldyn/modules/modules"
+	  python-shell-completion-native-enable nil
+	  python-shell-native-complete nil))
+    ;; (setq pyvenv-post-activate-hooks
+    ;;       (list (lambda ()
+    ;;       	(setq python-shell-interpreter "/Users/rplace/src/clarivault/python/clarivault/bin/python"))))
+    ;; (setq pyvenv-post-deactivate-hooks
+    ;;       (list (lambda ()
+    ;;       	(setq python-shell-interpreter "python")))))
 
   (use-package python
-    :ensure nil
-    :mode (("\\.py$" . python-ts-mode))
+    :ensure t
+    :mode (("\\.py$" . python-mode))
     :defer t
     :init
-    (setq ;;python-shell-interpreter "~/python_venv/bin/python3"
-     ;;python-python-command "~/python_venv/bin/python3"
-     indent-tabs-mode nil
-     python-indent-offset 2)
+    (python-mode)
+    (setq indent-tabs-mode nil
+	  python-indent-offset 2)
 
-    (pyvenv-activate "~/.venv")
+    ;; (pyvenv-activate "/Users/rplace/src/clarivault/clarivault")
+
     :hook
-    (python-ts-mode . display-line-numbers-mode)
-    (python-ts-mode . eglot-ensure)
-    (python-ts-mode . company-mode)
-    (python-ts-mode . yas-minor-mode))
-
+    (python-mode . display-line-numbers-mode)
+    (python-mode . eglot-ensure)
+    (python-mode . company-mode)
+    (python-mode . yas-minor-mode))
 #+end_src
 
 #+RESULTS:
 | /path/to/your/virtualenv/lib/pythonX.Y/site-packages |
 
 **** magit config
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (use-package magit
     :defer t
     :ensure t
@@ -231,26 +305,25 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (git-commit-turn-on-auto-fill)
     (git-commit-mode . ac-ispell-ac-setup)
     (after-save . magit-after-save-refresh-status))
-
 #+end_src
 
 
 *** General support for themes and user interface modifications
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
+  (use-package osx-clipboard
+    :ensure t
+    :defer t
+    :if (eq system-type 'darwin))
 
-     (use-package osx-clipboard
-       :ensure t
-       :defer t
-       :if (eq system-type 'darwin))
+  (use-package yasnippet
+    :init
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
+			     "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets"))
+    (yas-global-mode)
 
-     (use-package yasnippet
-       :init
-       (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-                                "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets")))
-       ;;(yas-global-mode))
-       ;; :bind
-       ;; (:map yas-minor-mode-map
-       ;;       ("C-c x" . yas-expand))) ;; This is to work around conflict of key bindings with company
+    :bind
+    (:map yas-minor-mode-map
+	  ("C-c x" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
   (use-package yasnippet-snippets
     :ensure t)
@@ -267,22 +340,30 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 #+end_src
 
 #+RESULTS:
+: t
 
 **** The deuteranopia mode is good for people with Red/Green color issues
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-    (use-package modus-themes
-      :ensure t
-      :init
-    ;;   (setq modus-themes-mode-line '(moody accented borderless))
-       (load-theme 'modus-vivendi-deuteranopia))
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
+  (use-package modus-themes
+    :ensure t
+    :init
+  ;;   (setq modus-themes-mode-line '(moody accented borderless))
+     (load-theme 'modus-vivendi-deuteranopia))
 #+end_src
 
 
 *** Org mode customizations
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+
+These hooks are used to allow for code completion in org code blocks. This is not yet working for python, though the code should but something appears amiss with my python set up
+
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   ;;
   ;; Org mode settings
-  ;;
+  ;; https://dalanicolai.github.io/posts/fixing-org-mode-coding-assistance/
+  (add-hook 'completion-at-point-functions 'org-completion-at-point nil t)
+#+end_src
+
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (use-package org-bullets
     :ensure t)
 
@@ -290,21 +371,20 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :mode (("\\.org$" . org-mode))
     :init
     (setq org-log-done 'time
-          org-hide-leading-stars t
-          org-startup-indented t
-          org-hide-emphasis-markers t
-          org-src-tab-acts-natively t)
-    (setq-local company-backends '(company-dabbrev))
-    :hook
+	  org-hide-leading-stars t
+	  org-startup-indented t
+	  org-hide-emphasis-markers t
+	  org-element-cache-persistent nil
+	  org-src-tab-acts-natively t)
+	  ;; company-backends '(company-dabbrev))
+    :hook 
     (org-mode . flyspell-mode)
-
     (org-mode . yas-minor-mode)
-    (org-mode . company-mode)
     (org-mode . visual-line-mode)
     :bind (:map org-mode-map
-                ("C-c i" . org-id-get-create)))
+		("C-c i" . org-id-get-create)))
 
-  (use-package org-bullets
+    (use-package org-bullets
     :hook
     (org-mode . org-bullets-mode)
     :after org)
@@ -320,78 +400,79 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 
   (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+			  '(("^ *\\([-]\\) "
+			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 #+end_src
+
+#+RESULTS:
 
 *** Email config and customization
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-  (if (file-exists-p "/opt/homebrew/bin/mu")
-    (add-to-list 'load-path "/opt/homebrew/share/emacs/site-lisp/mu4e")
-    (require 'mu4e)
-    (use-package mu4e
-      :ensure nil
-      :config
-      (setq user-mail-address "rwplace@gmail.com"
-            send-mail-function 'smtpmail-send-it
-            sendmail-program "/opt/homebrew/bin/msmtp"
-            message-send-mail-function 'message-send-mail-with-sendmail
-            message-sendmail-f-is-evil t
-            smtpmail-auth-credentials "~/.authinfo.gpg"
-            smtpmail-stream-type 'starttls
-            mu4e-maildir "~/Mail"
-            mu4e-mu-binary "/opt/homebrew/bin/mu"
-            mu4e-compose-dont=reply-to-self t
-            mu4e-use-fancy-chars t
-            mu4e-change-filenames-when-moving t
-            mu4e-get-mail-command "mbsync --all"
-            ;;mu4e-update-interval 300
-            ;;mu4e-index-cleanup nil
-            ;;mu4e-index-lazy-check t
-            mu4e-index-update-error-warning nil
-            ))
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
+  (add-to-list 'load-path "/opt/homebrew/share/emacs/site-lisp/mu4e")
+  (require 'mu4e)
 
-    ;; Show emails as plain text, if possible
-    (with-eval-after-load "mm-decode"
-      (add-to-list 'mm-discouraged-alternatives "text/html")
-      (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+  (setq user-mail-address "rwplace@gmail.com"
+	send-mail-function 'smtpmail-send-it
+	sendmail-program "/opt/homebrew/bin/msmtp"
+	message-send-mail-function 'message-send-mail-with-sendmail
+	message-sendmail-f-is-evil t
+	smtpmail-auth-credentials "~/.authinfo.gpg"
+	smtpmail-stream-type 'starttls
+	mu4e-maildir "~/Mail"
+	mu4e-mu-binary "/opt/homebrew/bin/mu"
+	mu4e-compose-dont=reply-to-self t
+	mu4e-use-fancy-chars t
+	mu4e-change-filenames-when-moving t
+	mu4e-get-mail-command "mbsync --all"
+	mu4e-update-interval 100
+	mu4e-index-cleanup nil
+	mu4e-index-lazy-check t
+	mu4e-index-update-error-warning nil
+	)
 
-    (setq mu4e-contexts
-          (list
-           (make-mu4e-context
-            :name "gmail-rwplace"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "rwplace@gmail.com")
-                    (user-full-name . "Rob Place")
-                    (mu4e-sent-folder . "/Gmail/Sent")
-                    (mu4e-drafts-folder . "/Gmail/Drafts")
-                    (mu4e-refile-folder . "/Gmail/All Mail")))
-           (make-mu4e-context
-            :name "alldyn"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/Alldyn" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "robert.place@alldyn.com")
-                    (user-full-name . "Rob Place")
-                    (mu4e-sent-folder . "/Alldyn/Sent")
-                    (mu4e-drafts-folder . "/Alldyn/Drafts")
-                    (mu4e-refile-folder . "/Alldyn/All Mail")))
-           (make-mu4e-context
-            :name "icloud"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "rwplace@mac.com")
-                    (user-full-name . "Rob Place"))))))
+  ;; Show emails as plain text, if possible
+  (with-eval-after-load "mm-decode"
+    (add-to-list 'mm-discouraged-alternatives "text/html")
+    (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+
+  (setq mu4e-contexts
+	(list
+	 (make-mu4e-context
+	  :name "gmail-rwplace"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "rwplace@gmail.com")
+		  (user-full-name . "Rob Place")
+		  (mu4e-sent-folder . "/Gmail/Sent")
+		  (mu4e-drafts-folder . "/Gmail/Drafts")
+		  (mu4e-refile-folder . "/Gmail/All Mail")))
+	 (make-mu4e-context
+	  :name "alldyn"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Alldyn" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "robert.place@alldyn.com")
+		  (user-full-name . "Rob Place")
+		  (mu4e-sent-folder . "/Alldyn/Sent")
+		  (mu4e-drafts-folder . "/Alldyn/Drafts")
+		  (mu4e-refile-folder . "/Alldyn/All Mail")))
+	 (make-mu4e-context
+	  :name "icloud"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "rwplace@mac.com")
+		  (user-full-name . "Rob Place")))))
 #+end_src
 
+#+RESULTS:
+
 ** Custom variables
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (custom-set-variables
    ;; custom-set-variables was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
@@ -399,15 +480,13 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
    ;; If there is more than one, they won't work right.
    '(ac-ispell-fuzzy-limit 4)
    '(ac-ispell-requires 4)
+   '(copilot-chat-model "claude-3.5-sonnet")
    '(custom-safe-themes
      '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
    '(org-agenda-files
      '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
-   '(package-archives
-     '(("gnu" . "https://elpa.gnu.org/packages/")
-       ("melpa-stable" . "https://stable.melpa.org/packages/")))
    '(package-selected-packages
-     '(cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm  flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+     '(eglot docker docker-compose-mode dockerfile-mode cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
    '(show-trailing-whitespace t))
 
   (custom-set-faces
@@ -415,6 +494,9 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
+   '(eglot-highlight-symbol-face ((t (:inherit bold :background "light green" :foreground "dark blue"))))
+   '(mode-line ((t :background "#8b3626" :foreground "#90ee90" :box "#8b0000")))
+   '(mode-line-inactive ((t :background "#008b8b" :foreground "#969696" :box "#ff34b3")))
    '(org-block ((t (:inherit fixed-pitch))))
    '(org-code ((t (:inherit (shadow fixed-pitch)))))
    '(org-document-info ((t (:foreground "dark orange"))))
@@ -436,11 +518,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
    '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
    '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-   '(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
-   '(eglot-highlight-symbol-face ((t (:inherit bold :background "light green" :foreground "dark blue"))))
-   '(mode-line ((t :background "#8b3626" :foreground "#90ee90" :box "#8b0000")))
-   '(mode-line-inactive ((t :background "#008b8b" :foreground "#969696" :box "#ff34b3"))))
-
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 #+end_src
 
 #+RESULTS:
@@ -448,26 +526,26 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 ** Org-mode bits to allow for variable pitch fonts
 Using variable pitch fonts generally only works properly when there is a windowing system involved. We check that here and if there is we set all of our customizations. This section is where we set all of the font preferences
 
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   ;;; Org values for variable pitch fonts, only works when a window-system is enabled
   ;;(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
 
   (when window-system
     (let* ((variable-tuple
-            (cond ;;((x-list-fonts "ETBembo")         '(:font "ETBembo"))
-                  ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
-                  ;;((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-                  ((x-list-fonts "Verdana")         '(:font "Verdana"))
-                  ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-                  (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-           (base-font-color     (face-foreground 'default nil 'default))
-           (headline
-            `(:inherit default :weight bold :foreground ,base-font-color))) ;
+	    (cond ;;((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+		  ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+		  ;;((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+		  ((x-list-fonts "Verdana")         '(:font "Verdana"))
+		  ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+		  (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+	   (base-font-color     (face-foreground 'default nil 'default))
+	   (headline
+	    `(:inherit default :weight bold :foreground ,base-font-color))) ;
 #+end_src
 
-Here we set the customizations for the various headline levels in org-mode. We also set the areas where we still want fixed width fonts like tables and code blocks.
+*** Here we set the customizations for the various headline levels in org-mode. We also set the areas where we still want fixed width fonts like tables and code blocks.
 
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (custom-theme-set-faces
    'user
    `(org-level-8 ((t (,@headline ,@variable-tuple))))
@@ -495,11 +573,10 @@ Here we set the customizations for the various headline levels in org-mode. We a
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
   ) ;; close out window system check
-
 #+end_src
 
 ** Custom faces
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :comments link
 
 
 #+end_src
@@ -507,7 +584,7 @@ Here we set the customizations for the various headline levels in org-mode. We a
 #+RESULTS:
 
 ** org-babel and language configuration
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)
@@ -524,7 +601,8 @@ Here we set the customizations for the various headline levels in org-mode. We a
 
 ** General hooks and configuration
 This is where we gather up all of the various hooks used for various modes
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (add-hook 'c++-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'python-ts-hook 'eglot-ensure)
@@ -532,7 +610,7 @@ This is where we gather up all of the various hooks used for various modes
 
   (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-               '(c-mode . ("clangd"))))
+	       '(c-mode . ("clangd"))))
 
 
   ;;(add-hook 'newsticker-start-hook
@@ -546,7 +624,6 @@ This is where we gather up all of the various hooks used for various modes
      ("BaltimoreCounty" "https://www.reddit.com/r/BaltimoreCounty/.rss" nil nil nil)))
 
   ;; (setq lsp-auto-guess-root nil)
-
 #+end_src
 
 #+RESULTS:
@@ -555,7 +632,7 @@ This is where we gather up all of the various hooks used for various modes
 *** Display configuration
 Have the window sized according to the resolution of the display
 
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (set-face-attribute 'default nil :height 160) ;; Default to 16 point font for this old guy
 
   (defun set-frame-size-according-to-resolution ()
@@ -563,34 +640,34 @@ Have the window sized according to the resolution of the display
   Shamelessly borrowed from Bryan Oakley."
     (interactive)
     (if window-system
-        (progn
-          ;; use 120 char wide window for largeish displays
-          ;; and smaller 80 column windows for smaller displays
-          ;; pick whatever numbers make sense for you
-          (if (> (x-display-pixel-width) 1280)
-              (add-to-list 'default-frame-alist (cons 'width 220))
-            (add-to-list 'default-frame-alist (cons 'width 80)))
-          ;; for the height, subtract a couple hundred pixels
-          ;; from the screen height (for panels, menubars and
-          ;; whatnot), then divide by the height of a char to
-          ;; get the height we want
-          (add-to-list 'default-frame-alist
-                       (cons 'height (/ (- (x-display-pixel-height) 200)
-                                        (frame-char-height)))))))
+	(progn
+	  ;; use 120 char wide window for largeish displays
+	  ;; and smaller 80 column windows for smaller displays
+	  ;; pick whatever numbers make sense for you
+	  (if (> (x-display-pixel-width) 1280)
+	      (add-to-list 'default-frame-alist (cons 'width 220))
+	    (add-to-list 'default-frame-alist (cons 'width 80)))
+	  ;; for the height, subtract a couple hundred pixels
+	  ;; from the screen height (for panels, menubars and
+	  ;; whatnot), then divide by the height of a char to
+	  ;; get the height we want
+	  (add-to-list 'default-frame-alist
+		       (cons 'height (/ (- (x-display-pixel-height) 200)
+					(frame-char-height)))))))
 
   (set-frame-size-according-to-resolution)
 #+end_src
 
 *** Line handling
 Line wrap, default tab width, highlighting, etc
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   ;;(global-visual-line-mode t)
   (global-hl-line-mode)
   (let ((shell-file-name "/bin/sh")) (shell)) ;; speeds up rendering when tail valouminous amounts of data
 #+end_src
 
 *** Mode line customizations
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (setq column-number-mode t)
   (tool-bar-mode -1)
   (display-battery-mode)
@@ -599,16 +676,16 @@ Line wrap, default tab width, highlighting, etc
 #+end_src
 
 *** Keyboard bindings
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   ;; Make it easy to turn off spell check
   (global-set-key (kbd "C-c f") 'flyspell-toggle )
 
   ;; Key binding to split the window horizontally and automatically
   ;; turn on follow-mode to handle long files
   (global-set-key (kbd "C-x C-t") (lambda ()
-                                    (interactive)
-                                    (split-window-horizontally)
-                                    (follow-mode)))
+				    (interactive)
+				    (split-window-horizontally)
+				    (follow-mode)))
 
   ;; Allow for directionally selecting visible buffers
   (global-set-key (kbd "C-c <left>") 'windmove-left)
@@ -616,44 +693,41 @@ Line wrap, default tab width, highlighting, etc
   (global-set-key (kbd "C-c <up>") 'windmove-up)
   (global-set-key (kbd "C-c <down>") 'windmove-down)
   (global-set-key (kbd "C-c n") 'newsticker-show-news)
-
 #+end_src
 
 #+RESULTS:
 : newsticker-show-news
 
 *** Buffer customizations
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
-    (setq windmove-wrap-around t)
-    (setq display-buffer-alist nil)
-    (setq display-buffer-alist '(
-                                 ("\\*Occur\\*"
-                                  (display-buffer-in-side-window)
-                                  (display-buffer-reuse-mode-window
-                                   display-buffer-below-selected)
-                                  (window-height . fit-window-to-buffer)
-                                  (dedicated . t)
-                                  (side . right))
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
+  (setq windmove-wrap-around t)
+  (setq display-buffer-alist nil)
+  (setq display-buffer-alist '(
+			       ("\\*Occur\\*"
+				(display-buffer-in-side-window)
+				(display-buffer-reuse-mode-window
+				 display-buffer-below-selected)
+				(window-height . fit-window-to-buffer)
+				(dedicated . t)
+				(side . right))
 
-                                 ("\\*Python\\*"
-                                  (display-buffer-in-side-window)
-                                  (display-buffer-reuse-mode-window
-                                   display-buffer-below-selected)
-                                  (window-height . fit-window-to-buffer)
-                                  (dedicated . t)
-                                  (side . right))
-                                 ))
-    (setq switch-to-buffer-in-dedicated-window 'pop)
-    (setq switch-to-buffer-obey-display-actions t)
-
-
+			       ("\\*Python\\*"
+				(display-buffer-in-side-window)
+				(display-buffer-reuse-mode-window
+				 display-buffer-below-selected)
+				(window-height . fit-window-to-buffer)
+				(dedicated . t)
+				(side . right))
+			       ))
+  (setq switch-to-buffer-in-dedicated-window 'pop)
+  (setq switch-to-buffer-obey-display-actions t)
 #+end_src
 
 #+RESULTS:
 : t
 
 ** System specific configurations
-#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
   (cond
    ((eq system-type 'darwin)
     (setq mac-option-modifier 'meta)
@@ -667,10 +741,9 @@ Line wrap, default tab width, highlighting, etc
       (message "Emacs server is running")
     (message "Starting server")
     (server-start))
-  
 #+end_src
 
-#+BEGIN_SRC emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el :mkdirp yes :comments link
   ;;; init.el ends here
 #+END_SRC
 
