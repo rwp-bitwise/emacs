@@ -9,6 +9,8 @@
 
 (require 'package)
 
+(global-display-line-numbers-mode t)
+
 (setq rwp/package-archives
       '(("org" . "http://orgmode.org/elpa/")
 	("non-gnu-elpa" . "https://elpa.nongnu.org/nongnu/packages")
@@ -40,13 +42,6 @@
   :ensure t
   :bind ("C-x <return>" . copilot-accept-completion))
 
-(require 'copilot)
-
-;; (use-package copilot-chat
-;;   :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
-;;   :after (request)
-;;   :ensure t)
-
 (use-package copilot-chat
   :init
   ;; (setq copilot-chat-server "http://127.0.0.1:8080"
@@ -60,6 +55,20 @@
   (let ((start (if (use-region-p) (region-beginning) (point-min)))
         (end (if (use-region-p) (region-end) (point-max))))
     (copilot-chat--ask "Review this code:" (buffer-substring-no-properties start end))))
+
+(use-package poetry
+  :ensure t
+  :init
+  (setq elpy-rpc-virtualenv-path 'current))
+  
+
+;; (require 'copilot)
+
+;; (use-package copilot-chat
+;;   :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
+;;   :after (request)
+;;   :ensure t)
+
 
 (recentf-mode) ;; keep track of recently opened files, useful for consult
 (global-visual-line-mode)
@@ -112,11 +121,6 @@
     :ensure t
     :config
     (setq model "gpt-4-turbo-preview"))
-;; (gptel-make-gpt4all "GPT4All"           ;Name of your choosing
-;;   :protocol "http"
-;;  :host "localhost:4891"                 ;Where it's running
-
- ;; :models '("mistral-7b-openorca.Q4_0.gguf")) ;Available models
 
 (use-package use-package-ensure-system-package
   :ensure t)
@@ -135,12 +139,12 @@
   (:map flyspell-mode-map
 	("C-;" . flyspell-correct-wrapper)))
 
-(use-package flyspell-correct-ivy
-  :ensure t
-  :after flyspell
-  :bind
-  (:map flyspell-mode-map
-	("C-;" . flyspell-correct-wrapper)))
+;; (use-package flyspell-correct-ivy
+;;   :ensure t
+;;   :after flyspell
+;;   :bind
+;;   (:map flyspell-mode-map
+;; 	("C-;" . flyspell-correct-wrapper)))
 
 (use-package consult
   :ensure t
@@ -220,11 +224,11 @@
     (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-  (use-package jedi
-    :ensure t
-    :config
-    (setq jedi:complete-on-dot t)
-    (add-hook 'python-mode-hook 'jedi:setup))
+  ;; (use-package jedi
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq jedi:complete-on-dot t)
+  ;;   (add-hook 'python-mode-hook 'jedi:setup))
 
   (use-package flycheck-rust
     :ensure t)
@@ -264,7 +268,7 @@
   :mode (("\\.py$" . python-mode))
   :defer t
   :init
-  (python-mode)
+  ;; (python-mode)
   (setq indent-tabs-mode nil
         python-indent-offset 2)
 
@@ -284,7 +288,7 @@
   :hook
   (git-commit-turn-on-fylspell)
   (git-commit-turn-on-auto-fill)
-  (git-commit-mode . ac-ispell-ac-setup)
+  ;; (git-commit-mode . ac-ispell-ac-setup)
   (after-save . magit-after-save-refresh-status))
 ;; magit config:1 ends here
 
@@ -296,8 +300,8 @@
 
 (use-package yasnippet
   :init
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"
-			   "~/.emacs.d/elpa/yasnippet-snippets-1.0/snippets"))
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+			   
   (yas-global-mode)
 
   :bind
@@ -450,7 +454,7 @@
  '(org-agenda-files
    '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
  '(package-selected-packages
-   '(eglot docker docker-compose-mode dockerfile-mode cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers corfu-candidate-overlay corfu-prescient corfu vterm flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+   '(eglot docker docker-compose-mode dockerfile-mode cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers vterm flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
 
 (custom-set-faces
