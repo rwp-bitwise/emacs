@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-  # name: Org Title Block
-  # key: <t
-# --
-  #+TITLE: ${1:title}
-  #+DATE: \date
-  #+BIND: org-latex-prefer-user-labels t

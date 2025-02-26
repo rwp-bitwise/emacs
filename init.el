@@ -298,15 +298,15 @@
   :defer t
   :if (eq system-type 'darwin))
 
-(use-package yasnippet
-  :init
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
+;; (use-package yasnippet
+;;   :init
+;;   (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippet-mode"))
 			   
-  (yas-global-mode)
+;;   (yas-global-mode)
 
-  :bind
-  (:map yas-minor-mode-map
-	("C-c x" . yas-expand))) ;; This is to work around conflict of key bindings with company
+;;   :bind
+;;   (:map yas-minor-mode-map
+;; 	("C-c x" . yas-expand))) ;; This is to work around conflict of key bindings with company
 
 (use-package yasnippet-snippets
   :ensure t)
