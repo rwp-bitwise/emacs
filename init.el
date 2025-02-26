@@ -10,6 +10,8 @@
 (require 'package)
 
 (global-display-line-numbers-mode t)
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 (setq rwp/package-archives
       '(("org" . "http://orgmode.org/elpa/")
@@ -178,8 +180,8 @@
 ;; [[file:init.org::*Company mode and jedi for auto completion][Company mode and jedi for auto completion:1]]
 (use-package company
   :ensure t
-  :hook
-  (after-init . global-company-mode)
+  ;; :hook
+  ;; (after-init . global-company-mode)
   :bind
   (:map company-active-map
 	("<tab>" . company-completion-selection))
@@ -199,6 +201,7 @@
 
 ;; [[file:init.org::*Packages for programming language support][Packages for programming language support:1]]
 (setq treesit-language-source-alist
+<<<<<<< Updated upstream
   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
     (c "https://github.com/tree-sitter/tree-sitter-c")
     (cmake "https://github.com/uyha/tree-sitter-cmake")
@@ -223,30 +226,148 @@
     (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
     (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+||||||| Stash base
+  '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+    (c "https://github.com/tree-sitter/tree-sitter-c")
+    (cmake "https://github.com/uyha/tree-sitter-cmake")
+    (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+    (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+    (css "https://github.com/tree-sitter/tree-sitter-css")
+    (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+    (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+    (go "https://github.com/tree-sitter/tree-sitter-go")
+    (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+    (html "https://github.com/tree-sitter/tree-sitter-html")
+    (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+    (json "https://github.com/tree-sitter/tree-sitter-json")
+    (lua "https://github.com/Azganoth/tree-sitter-lua")
+    (make "https://github.com/alemuller/tree-sitter-make")
+    (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+    (python "https://github.com/tree-sitter/tree-sitter-python")
+    (r "https://github.com/r-lib/tree-sitter-r")
+    (rust "https://github.com/tree-sitter/tree-sitter-rust")
+    (toml "https://github.com/tree-sitter/tree-sitter-toml")
+    (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+    (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+=======
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (c "https://github.com/tree-sitter/tree-sitter-c")
+        (cmake "https://github.com/uyha/tree-sitter-cmake")
+        (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+        (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+        (css "https://github.com/tree-sitter/tree-sitter-css")
+        (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+        (go "https://github.com/tree-sitter/tree-sitter-go")
+        (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+        (html "https://github.com/tree-sitter/tree-sitter-html")
+        (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+        (json "https://github.com/tree-sitter/tree-sitter-json")
+        (lua "https://github.com/Azganoth/tree-sitter-lua")
+        (make "https://github.com/alemuller/tree-sitter-make")
+        (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (r "https://github.com/r-lib/tree-sitter-r")
+        (rust "https://github.com/tree-sitter/tree-sitter-rust")
+        (toml "https://github.com/tree-sitter/tree-sitter-toml")
+        (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+        (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+        (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+>>>>>>> Stashed changes
 
+<<<<<<< Updated upstream
   ;; (use-package jedi
   ;;   :ensure t
   ;;   :config
   ;;   (setq jedi:complete-on-dot t)
   ;;   (add-hook 'python-mode-hook 'jedi:setup))
+||||||| Stash base
+  (use-package jedi
+    :ensure t
+    :config
+    (setq jedi:complete-on-dot t)
+    (add-hook 'python-mode-hook 'jedi:setup))
+=======
+(use-package jedi
+  :ensure t
+  :config
+  (setq jedi:complete-on-dot t)
+  (add-hook 'python-mode-hook 'jedi:setup))
+>>>>>>> Stashed changes
 
+<<<<<<< Updated upstream
   (use-package flycheck-rust
     :ensure t)
+||||||| Stash base
+  ;; (use-package flycheck-rust
+  ;;   :ensure t)
+=======
+;; (use-package flycheck-rust
+;;    :ensure t)
+>>>>>>> Stashed changes
 
-  (use-package cc-mode
-    :ensure t
-    :hook
-    (c-mode . display-line-numbers-mode)
-    (c++-mode . display-line-numbers-mode))
+(use-package cc-mode
+  :ensure t
+  :hook
+  (c-mode . display-line-numbers-mode)
+  (c++-mode . display-line-numbers-mode))
 
 (use-package rustic
   :ensure t
+<<<<<<< Updated upstream
   :mode (("\\.org$" . org-mode))
   :init
   (setq display-line-numbers-mode nil
 	yas-minor-mode nil
 	rustic-lsp-client 'eglot))
 ;; Packages for programming language support:1 ends here
+||||||| Stash base
+  :init
+  (setq display-line-numbers-mode nil
+        yas-minor-mode nil
+        rustic-lsp-client 'eglot))
+=======
+  :mode (("\\.rs$" . rustic-mode))
+  :config
+  ;;(setq rustic-lsp-client 'eglot)
+  (add-to-list 'ac-modes 'rustic-mode)
+  :hook
+  ;;(rustic-mode . display-line-numbers-mode)
+  (rustic-mode . yas-minor-mode))
+  ;;(rustic-mode . company-mode))
+
+;; (use-package rust-mode
+;;   :ensure t)
+;;   ;; :mode (("\\.rs$" . rust-mode))
+;;   ;; :config
+;;   ;; (setq rust-lsp-client 'eglot)
+;;   ;; :hook
+;;   ;; (rust-mode . display-line-numbers-mode)
+;;   ;; (rust-mode . yas-minor-mode))
+;;   ;; (rust-mode . company-mode))
+
+(use-package lsp-mode
+  :ensure
+  :commands lsp
+  :custom
+  ;; what to use when checking on-save. "check" is default, I prefer clippy
+  (lsp-rust-analyzer-cargo-watch-command "clippy"))
+  ;; (lsp-eldoc-render-all t)
+  ;; (lsp-idle-delay 0.6)
+  ;; This controls the overlays that display type and other hints inline. Enable
+  ;; / disable as you prefer. Well require a `lsp-workspace-restart' to have an
+  ;; ;; effect on open projects.
+  ;; (lsp-rust-analyzer-server-display-inlay-hints t)
+  ;; (lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
+  ;; (lsp-rust-analyzer-display-chaining-hints t)
+  ;; (lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
+  ;; (lsp-rust-analyzer-display-closure-return-type-hints t)
+  ;; (lsp-rust-analyzer-display-parameter-hints nil)
+  ;; (lsp-rust-analyzer-display-reborrow-hints nil))
+;;   ;;:config
+;;   ;;(add-hook 'lsp-mode-hook 'lsp-ui-mode))
+>>>>>>> Stashed changes
 
 ;; [[file:init.org::*Python specific customizations and coding][Python specific customizations and coding:1]]
 (use-package pyvenv
@@ -604,8 +725,14 @@ Shamelessly borrowed from Bryan Oakley."
 ;; [[file:init.org::*Line handling][Line handling:1]]
 ;;(global-visual-line-mode t)
 (global-hl-line-mode)
+<<<<<<< Updated upstream
 (let ((shell-file-name "/bin/sh")) (shell)) ;; speeds up rendering when tail valouminous amounts of data
 ;; Line handling:1 ends here
+||||||| Stash base
+(let ((shell-file-name "/bin/sh")) (shell)) ;; speeds up rendering when tail valouminous amounts of data
+=======
+;;(let ((shell-file-name "/bin/sh")) (shell)) ;; speeds up rendering when tail valouminous amounts of data
+>>>>>>> Stashed changes
 
 ;; [[file:init.org::*Mode line customizations][Mode line customizations:1]]
 (setq column-number-mode t)
