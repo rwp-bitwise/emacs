@@ -450,11 +450,19 @@
  '(ac-ispell-requires 4)
  '(copilot-chat-model "claude-3.5-sonnet")
  '(custom-safe-themes
-   '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d" "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961" default))
+   '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d"
+     "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961"
+     default))
+ '(menu-bar-mode t)
  '(org-agenda-files
-   '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org" "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
+   '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org"
+     "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
  '(package-selected-packages
-   '(eglot docker docker-compose-mode dockerfile-mode cyberpunk-theme dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap yasnippet-snippets company-c-headers vterm flycheck-pyre flycheck-irony irony elpy ac-ispell git osx-clipboard org-notebook alect-themes haskell-mode company-irony))
+   '(eglot docker docker-compose-mode dockerfile-mode cyberpunk-theme
+           dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap
+           yasnippet-snippets company-c-headers vterm flycheck-pyre
+           flycheck-irony irony elpy ac-ispell git osx-clipboard
+           org-notebook alect-themes haskell-mode company-irony))
  '(show-trailing-whitespace t))
 
 (custom-set-faces
