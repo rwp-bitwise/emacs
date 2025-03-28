@@ -204,7 +204,7 @@
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
-pa;; (use-package company
+;; (use-package company
 ;;   :ensure t
 ;;   :hook
 ;;   (after-init . global-company-mode)
@@ -305,8 +305,8 @@ pa;; (use-package company
   :hook
   (python-mode . display-line-numbers-mode)
   (python-mode . eglot-ensure)
-  (python-mode . company-mode)
   (python-mode . yas-minor-mode))
+  ;;(python-mode . company-mode)
 ;; Python specific customizations and coding:1 ends here
 
 ;; [[file:init.org::*magit config][magit config:1]]
@@ -580,7 +580,7 @@ pa;; (use-package company
    (C . t)))
 
 ;;(global-flycheck-mode)
-(global-company-mode)
+;; (global-company-mode)
 
 (eval-after-load "auto-complete"
   '(progn

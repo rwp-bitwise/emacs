@@ -217,7 +217,7 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (add-to-list 'completion-at-point-functions #'cape-elisp-block)
     (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
-  pa;; (use-package company
+  ;; (use-package company
   ;;   :ensure t
   ;;   :hook
   ;;   (after-init . global-company-mode)
@@ -327,8 +327,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :hook
     (python-mode . display-line-numbers-mode)
     (python-mode . eglot-ensure)
-    (python-mode . company-mode)
     (python-mode . yas-minor-mode))
+    ;;(python-mode . company-mode)
 #+end_src
 
 #+RESULTS:
@@ -639,7 +639,7 @@ Using variable pitch fonts generally only works properly when there is a windowi
      (C . t)))
 
   ;;(global-flycheck-mode)
-  (global-company-mode)
+  ;; (global-company-mode)
 
   (eval-after-load "auto-complete"
     '(progn
