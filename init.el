@@ -7,6 +7,13 @@
       epa-pinentry-mode 'loopback
       initial-scratch-message nil)
 
+(setq explicit-shell-file-name "/bin/zsh")
+(setq shell-file-name "zsh")
+(setq explicit-zsh-args '("--login" "--interactive"))
+(defun zsh-shell-mode-setup ()
+  (setq-local comint-process-echoes t))
+(add-hook 'shell-mode-hook #'zsh-shell-mode-setup)
+
 (require 'package)
 
 (global-display-line-numbers-mode t)
@@ -176,25 +183,46 @@
 ;; Completion, spell checking, etc:1 ends here
 
 ;; [[file:init.org::*Company mode and jedi for auto completion][Company mode and jedi for auto completion:1]]
-(use-package company
+(use-package corfu
   :ensure t
-  :hook
-  (after-init . global-company-mode)
-  :bind
-  (:map company-active-map
-	("<tab>" . company-completion-selection))
-  :config
-  (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
-  (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-  (setq company-idle-delay 0.2))  ; Adjust this to control the delay before showing suggestions
+  :custom
+  (corfu-auto t)
+  (corfu-auto-prefix 1)
+  (corfu-quit-no-match nil)
+  (corfu-preview-current nil)
+  (corfu-popupinfo-delay  0.2)
+  (corfu-popupinfo-max-width 70)
+  (corfu-popupinfo-max-height 20)
+  (after-init corfu-global-mode))
+
+(use-package cape
+  :ensure t
+  :custom
+  (cape-mode t)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+
+pa;; (use-package company
+;;   :ensure t
+;;   :hook
+;;   (after-init . global-company-mode)
+;;   :bind
+;;   (:map company-active-map
+;; 	("<tab>" . company-completion-selection))
+;;   :config
+;;   (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+;;   (setq company-tooltip-align-annotations t)  ; Align annotations to the right
+;;   (setq company-idle-delay 0.2))  ; Adjust this to control the delay before showing suggestions
 
 ;; (add-hook 'eglot-managed-mode-hook (lambda ()
 ;;                                    (add-to-list 'company-backends
 ;;                                                 '(company-capf :with company-yasnippet))))
-(use-package company-jedi
-  :ensure t
-  :config
-  (add-to-list 'company-backends 'company-jedi))
+;; (use-package company-jedi
+;;   :ensure t
+;;   :config
+;;   (add-to-list 'company-backends 'company-jedi))
 ;; Company mode and jedi for auto completion:1 ends here
 
 ;; [[file:init.org::*Packages for programming language support][Packages for programming language support:1]]
