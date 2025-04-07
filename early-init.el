@@ -13,3 +13,6 @@
 ;; larger than the system default.
 (setq frame-inhibit-implied-resize t
       frame-resize-pixelwise t)
+
+(print-time-since-init "early-init.el")
+(provide 'early-init)
