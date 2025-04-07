@@ -579,7 +579,7 @@
    (shell . t)
    (C . t)))
 
-;;(global-flycheck-mode)
+(global-flycheck-mode)
 ;; (global-company-mode)
 
 (eval-after-load "auto-complete"
