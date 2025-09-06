@@ -51,6 +51,22 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 
+  (use-package eat
+    :ensure t)
+
+  ;;(setq claude-code-terminal-backend 'eat)
+
+  ;; Install and configure claude-code
+  (use-package claude-code
+    :ensure t
+    :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+    :init  ;; Use :init instead of :config to set this before loading
+    (setq claude-code-terminal-backend 'eat)  
+    :config
+    (claude-code-mode)
+    :bind-keymap 
+    ("C-c c" . claude-code-command-map))
+
   (use-package copilot
     :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
     :ensure t
@@ -95,6 +111,13 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (when (member (org-element-property :language element)
 		  '("emacs-lisp" "elisp"))
       (funcall #'elisp-completion-at-point))))
+  (defun my-python-mode-config ()
+    "For use in `python-mode-hook'."
+    (setq tab-width 2)        ; Defines the width of a tab in this mode
+    (setq python-indent-offset 2) ; Sets the indentation level for Python mode
+    (setq indent-tabs-mode nil)) ; Use space to indent by default, not tab
+
+  (add-hook 'python-mode-hook 'my-python-mode-config)
 
   ;; (defvar org-completion-functions-alist
   ;;   '(("emacs-lisp" . elisp-completion-at-point)
@@ -196,17 +219,17 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 **** Company mode and jedi for auto completion
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
-  (use-package corfu
-    :ensure t
-    :custom
-    (corfu-auto t)
-    (corfu-auto-prefix 1)
-    (corfu-quit-no-match nil)
-    (corfu-preview-current nil)
-    (corfu-popupinfo-delay  0.2)
-    (corfu-popupinfo-max-width 70)
-    (corfu-popupinfo-max-height 20)
-    (after-init corfu-global-mode))
+  ;; (use-package corfu
+  ;;   :ensure t
+  ;;   :custom
+  ;;   (corfu-auto t)
+  ;;   (corfu-auto-prefix 1)
+  ;;   (corfu-quit-no-match nil)
+  ;;   (corfu-preview-current nil)
+  ;;   (corfu-popupinfo-delay  0.2)
+  ;;   (corfu-popupinfo-max-width 70)
+  ;;   (corfu-popupinfo-max-height 20)
+  ;;   (after-init corfu-global-mode))
 
   (use-package cape
     :ensure t
@@ -217,25 +240,25 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     (add-to-list 'completion-at-point-functions #'cape-elisp-block)
     (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
-  ;; (use-package company
-  ;;   :ensure t
-  ;;   :hook
-  ;;   (after-init . global-company-mode)
-  ;;   :bind
-  ;;   (:map company-active-map
-  ;; 	("<tab>" . company-completion-selection))
-  ;;   :config
-  ;;   (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
-  ;;   (setq company-tooltip-align-annotations t)  ; Align annotations to the right
-  ;;   (setq company-idle-delay 0.2))  ; Adjust this to control the delay before showing suggestions
+  (use-package company
+    :ensure t
+    :hook
+    (after-init . global-company-mode)
+    :bind
+    (:map company-active-map
+	  ("<tab>" . company-completion-selection))
+    :config
+    (setq company-minimum-prefix-length 2)  ; Set this to adjust the minimum prefix length triggering auto-completion
+    (setq company-tooltip-align-annotations t)  ; Align annotations to the right
+    (setq company-idle-delay 0.2))  ; Adjust this to control the delay before showing suggestions
 
-  ;; (add-hook 'eglot-managed-mode-hook (lambda ()
-  ;;                                    (add-to-list 'company-backends
-  ;;                                                 '(company-capf :with company-yasnippet))))
-  ;; (use-package company-jedi
-  ;;   :ensure t
-  ;;   :config
-  ;;   (add-to-list 'company-backends 'company-jedi))
+  (add-hook 'eglot-managed-mode-hook (lambda ()
+				     (add-to-list 'company-backends
+						  '(company-capf :with company-yasnippet))))
+  (use-package company-jedi
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-jedi))
 #+end_src
 
 #+RESULTS:
@@ -327,8 +350,8 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
     :hook
     (python-mode . display-line-numbers-mode)
     (python-mode . eglot-ensure)
-    (python-mode . yas-minor-mode))
-    ;;(python-mode . company-mode)
+    (python-mode . yas-minor-mode)
+    (python-mode . company-mode))
 #+end_src
 
 #+RESULTS:
@@ -517,55 +540,15 @@ These hooks are used to allow for code completion in org code blocks. This is no
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
-   '(ac-ispell-fuzzy-limit 4)
-   '(ac-ispell-requires 4)
-   '(copilot-chat-model "claude-3.5-sonnet")
-   '(custom-safe-themes
-     '("a1c18db2838b593fba371cb2623abd8f7644a7811ac53c6530eebdf8b9a25a8d"
-       "603a831e0f2e466480cdc633ba37a0b1ae3c3e9a4e90183833bc4def3421a961"
-       default))
-   '(menu-bar-mode t)
-   '(org-agenda-files
-     '("~/iCloudDrive/Notes/fiserv/ctlm/fiserv.bmc.notes.org"
-       "/Users/rplace/iCloudDrive/Notes/fiserv/ad-cleanup/fiserv.db.project.org"))
-   '(package-selected-packages
-     '(eglot docker docker-compose-mode dockerfile-mode cyberpunk-theme
-	     dracula-theme org-bullets mu4e-views mu4easy adaptive-wrap
-	     yasnippet-snippets company-c-headers vterm flycheck-pyre
-	     flycheck-irony irony elpy ac-ispell git osx-clipboard
-	     org-notebook alect-themes haskell-mode company-irony))
-   '(show-trailing-whitespace t))
+   '(package-vc-selected-packages
+     '((claude-code :url "https://github.com/stevemolitor/claude-code.el"))))
 
   (custom-set-faces
    ;; custom-set-faces was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
-   '(eglot-highlight-symbol-face ((t (:inherit bold :background "light green" :foreground "dark blue"))))
-   '(mode-line ((t :background "#8b3626" :foreground "#90ee90" :box "#8b0000")))
-   '(mode-line-inactive ((t :background "#008b8b" :foreground "#969696" :box "#ff34b3")))
-   '(org-block ((t (:inherit fixed-pitch))))
-   '(org-code ((t (:inherit (shadow fixed-pitch)))))
-   '(org-document-info ((t (:foreground "dark orange"))))
-   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-   '(org-document-title ((t (:inherit default :weight bold :foreground "yellow" :font "Sans Serif" :height 1.75 :underline nil))))
-   '(org-done ((t (:foreground "#00ff00" :weight bold))))
-   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
-   '(org-level-1 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.5))))
-   '(org-level-2 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.25))))
-   '(org-level-3 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.1))))
-   '(org-level-4 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif" :height 1.1))))
-   '(org-level-5 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
-   '(org-level-6 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
-   '(org-level-7 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
-   '(org-level-8 ((t (:inherit default :weight bold :foreground "#d5d2be" :font "Sans Serif"))))
-   '(org-link ((t (:foreground "royal blue" :underline t))))
-   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-property-value ((t (:inherit fixed-pitch))))
-   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
-   '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+   )
 #+end_src
 
 #+RESULTS:
@@ -638,7 +621,7 @@ Using variable pitch fonts generally only works properly when there is a windowi
      (shell . t)
      (C . t)))
 
-  ;;(global-flycheck-mode)
+  (global-flycheck-mode)
   ;; (global-company-mode)
 
   (eval-after-load "auto-complete"
