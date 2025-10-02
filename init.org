@@ -359,14 +359,17 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 **** magit config
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
-  (use-package magit
-    :defer t
-    :ensure t
-    :hook
-    (git-commit-turn-on-fylspell)
-    (git-commit-turn-on-auto-fill)
-    ;; (git-commit-mode . ac-ispell-ac-setup)
-    (after-save . magit-after-save-refresh-status))
+   (use-package magit
+  -  :defer t
+     :ensure t
+  -  :hook
+  -  (git-commit-turn-on-fylspell)
+  -  (git-commit-turn-on-auto-fill)
+  -  ;; (git-commit-mode . ac-ispell-ac-setup)
+  -  (after-save . magit-after-save-refresh-status))
+  +  ;; :hook
+  +  ;; (git-commit-mode . flyspell-mode)
+  +  ;; (git-commit-mode . turn-on-auto-fill))
 #+end_src
 
 
@@ -406,11 +409,13 @@ python, virtualenv, libtool, libtool-bin, and cmake all need to be present on yo
 
 **** The deuteranopia mode is good for people with Red/Green color issues
 #+begin_src emacs-lisp :tangle "init.el" :mkdirp yes :comments link
-  (use-package modus-themes
-    :ensure t
-    :init
-  ;;   (setq modus-themes-mode-line '(moody accented borderless))
-     (load-theme 'modus-vivendi-deuteranopia))
+   (use-package modus-themes
+     :ensure t
+  -  :init
+  +  :config
+   ;;   (setq modus-themes-mode-line '(moody accented borderless))
+  -   (load-theme 'modus-vivendi-deuteranopia))
+  +   (load-theme 'modus-vivendi-deuteranopia t))
 #+end_src
 
 

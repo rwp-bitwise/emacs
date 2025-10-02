@@ -44,21 +44,58 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;; (use-package vterm
+;;   :ensure t
+;;   :demand t)
+
+;; (use-package eat
+;;   :ensure t)
+;; Add just this to your config - nothing else needed
 (use-package eat
   :ensure t)
 
-;;(setq claude-code-terminal-backend 'eat)
+;; Manually load claude-code from git clone
+(add-to-list 'load-path "~/.emacs.d/manual-packages/claude-code")
 
-;; Install and configure claude-code
-(use-package claude-code
-  :ensure t
-  :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
-  :init  ;; Use :init instead of :config to set this before loading
-  (setq claude-code-terminal-backend 'eat)  
-  :config
+;; Set the backend BEFORE loading
+(setq claude-code-terminal-backend 'eat)
+
+;; Now load the library
+(require 'claude-code nil t)  ; nil t means don't error if not found
+
+;; Set up the keybinding
+(when (featurep 'claude-code)
   (claude-code-mode)
-  :bind-keymap 
-  ("C-c c" . claude-code-command-map))
+  (global-set-key (kbd "C-c c") claude-code-command-map))
+;; (setq claude-code-terminal-backend 'eat)
+
+;; (use-package claude-code
+;;   :ensure t
+;;   :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+;;   :init
+;;   ;;(setq claude-code-terminal-backend 'eat)
+;;   :config
+;;   (claude-code-mode)
+;;   :bind-keymap
+;;   ("C-c c" . claude-code-command-map))
+;; (use-package eat
+;;   :ensure t)
+
+;; (use-package vterm
+;;   :ensure t)
+
+;; (setq claude-code-terminal-backend 'eat)
+
+;; ;; Install and configure claude-code
+;; (use-package claude-code
+;;   :ensure t
+;;   :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+;;   :init  ;; Use :init instead of :config to set this before loading
+;;   (setq claude-code-terminal-backend 'eat)  
+;;   :config
+;;   (claude-code-mode)
+;;   :bind-keymap 
+;;   ("C-c c" . claude-code-command-map))
 
 (use-package copilot
   :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
@@ -334,13 +371,10 @@
 
 ;; [[file:init.org::*magit config][magit config:1]]
 (use-package magit
-  :defer t
   :ensure t
-  :hook
-  (git-commit-turn-on-fylspell)
-  (git-commit-turn-on-auto-fill)
-  ;; (git-commit-mode . ac-ispell-ac-setup)
-  (after-save . magit-after-save-refresh-status))
+  ;; :hook
+  ;; (git-commit-mode . flyspell-mode)
+  ;; (git-commit-mode . turn-on-auto-fill))
 ;; magit config:1 ends here
 
 ;; [[file:init.org::*General support for themes and user interface modifications][General support for themes and user interface modifications:1]]
@@ -376,9 +410,9 @@
 ;; [[file:init.org::*The deuteranopia mode is good for people with Red/Green color issues][The deuteranopia mode is good for people with Red/Green color issues:1]]
 (use-package modus-themes
   :ensure t
-  :init
+  :config
 ;;   (setq modus-themes-mode-line '(moody accented borderless))
-   (load-theme 'modus-vivendi-deuteranopia))
+   (load-theme 'modus-vivendi-deuteranopia t))
 ;; The deuteranopia mode is good for people with Red/Green color issues:1 ends here
 
 ;; [[file:init.org::*Org mode customizations][Org mode customizations:1]]
