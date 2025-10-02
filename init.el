@@ -372,9 +372,9 @@
 ;; [[file:init.org::*magit config][magit config:1]]
 (use-package magit
   :ensure t
-  ;; :hook
-  ;; (git-commit-mode . flyspell-mode)
-  ;; (git-commit-mode . turn-on-auto-fill))
+  :hook
+  (git-commit-mode . flyspell-mode)
+  (git-commit-mode . turn-on-auto-fill))
 ;; magit config:1 ends here
 
 ;; [[file:init.org::*General support for themes and user interface modifications][General support for themes and user interface modifications:1]]
